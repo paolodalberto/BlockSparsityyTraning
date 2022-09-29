@@ -15,7 +15,7 @@ export IMAGENET=/imagenet
 For me, `/dockerx/` is the directory for this code. you will find
 `kera_application` sub directory accordingly. It goes without saying
 that you need a location for the training and validation set and the
-type of optimization the training will use. 
+type of optimization the training will use: IMAGENET above. 
 
 `EPOCH, ZEROS, MODEL` are used to specify the number of epochs for
 training, whether you like to sparsify the MODEL. There is somewhere
@@ -25,11 +25,11 @@ example, (224,224) for resnet and (299,299) for inception_v3.
 
 
 So if you like to download and start working using resnet 50 `bash
-/dockerx/test.sh reset` The idead is that we sue a model the resnet50
-and we download the original weight. We train the new model for one
+/dockerx/test.sh reset` The idea is  we use the resnet50
+and we download the original weights. We train the new model for one
 epoch and we store it.
 
-You will notice that now th convolution will have three weights:
+You will notice that now the convolution will have three weights:
 kernel, bias, and gamma. The last one is the mask we are going to use
 to sparsify the convolution.
 
@@ -41,7 +41,7 @@ foce to zero that block. The new convolution will take the
 (H,W,CIN,COUT) and multiply it for a repeated mask LL accordingly to
 the block sizes.
 
-Once we run once the sparsification, the resnet is stored as a sparse
+As soon as we run once the sparsification, the resnet is stored as a sparse
 resnet. The mask L is part of the state of the convolution.  By
 default, we try to sparsify half of the weights. Every time you start
 the process we zero 20% of the available blocks (see the step=20 in
@@ -64,7 +64,8 @@ Every time you execute `bash test.sh q` you will introduce at most 20%
 zeros per layer (of the 1 every 2 blocks).  By default, we compute the
 variance of the volume and we remove the lowest 20%. If for any
 reasons, we are pruning an $row$, we give back the zero and search for
-the next ones. We try to avoid a complete row and column pruning.  
+the next ones. We try to avoid a complete row and column pruning. We sparsify 
+and we do not channel pruning (we do not change the shape and size or any tensor)   
 
 
 In principle, in 5 iterations you should be able to zero all 50%. But
@@ -87,6 +88,9 @@ To create the docker to run this
  docker run -it --network=host --device=/dev/kfd --device=/dev/dri --ipc=host --shm-size 16G --group-add video --cap-add=SYS_PTRACE --security-opt seccomp=unconfined -v /YOUR_DIRECTORY_GOES_HERE/sparsity_by_training/:/dockerx -v /scratch/imagenet_resize/:/imagenet_resize -v /scratch/imagenet/:/imagenet rocm/tensorflow:latest
 ```
 
-
+I will add random thoughts and other considerations as we go along. 
+You may consider this as a penalty $L_Custom$ during optimization that is not literally linear. 
+The main goal of this project is to investigate if we can transform this into a optimization process or 
+at least understand how/what does not work.  
 
 
