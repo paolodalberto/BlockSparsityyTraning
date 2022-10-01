@@ -23,7 +23,7 @@ then
     export EPOCH=1
     unset ZEROS
 
-    python /dockerx/test.py
+    python /dockerx/test_user.py
 fi
 
 #exit
