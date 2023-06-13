@@ -8,61 +8,61 @@ from copy import deepcopy
 import scipy.stats as stats
 import re
 
+if False :
+    import tensorflow_model_optimization as tfmot
 
-import tensorflow_model_optimization as tfmot
-
-###
-## This will be used to quantize a sparse model 
-## The idea is to quantize the map and train it.
-## At this time is just a place holder and we will have to manage the BatchNorm
-###
-class DefaultSparseConvQuantizeConfig(tfmot.quantization.keras.QuantizeConfig):
-    # Configure how to quantize weights.
-    def get_weights_and_quantizers(self, layer):
-      return [
-          (layer.kernel,
-           tfmot.quantization.keras.quantizers.LastValueQuantizer(
-               num_bits=8, symmetric=True, narrow_range=False, per_axis=False
-           )),
-          (layer.bias,
-           tfmot.quantization.keras.quantizers.LastValueQuantizer(
-               num_bits=32, symmetric=True, narrow_range=False, per_axis=False
-           )),
-          (layer.gamma,
-           tfmot.quantization.keras.quantizers.LastValueQuantizer(
-               num_bits=8, symmetric=True, narrow_range=False, per_axis=False
-           ))
-      ]
-
-    # Configure how to quantize activations.
-    def get_activations_and_quantizers(self, layer):
-        return [
-            (layer.activation,
-             tfmot.quantization.keras.quantizers.MovingAverageQuantizer(num_bits=8,
-                                                                        symmetric=False,
-                                                                        narrow_range=False,
-                                                                        per_axis=False)
-            )
-        ]
-
-    def set_quantize_weights(self, layer, quantize_weights):
-      # Add this line for each item returned in `get_weights_and_quantizers`
-      # , in the same order
-      layer.kernel = quantize_weights[0]
-      layer.bias   = quantize_weights[1]
-      layer.gamma  = quantize_weights[2]
-
-    def set_quantize_activations(self, layer, quantize_activations):
-      # Add this line for each item returned in `get_activations_and_quantizers`
-      # , in the same order.
-      layer.activation = quantize_activations[0]
-
-    # Configure how to quantize outputs (may be equivalent to activations).
-    def get_output_quantizers(self, layer):
-      return []
-
-    def get_config(self):
-      return {}
+    ###
+    ## This will be used to quantize a sparse model The idea is to
+    ## quantize the map and train it.  At this time is just a place
+    ## holder and we will have to manage the BatchNorm
+    ###
+    class DefaultSparseConvQuantizeConfig(tfmot.quantization.keras.QuantizeConfig):
+        # Configure how to quantize weights.
+        def get_weights_and_quantizers(self, layer):
+          return [
+              (layer.kernel,
+               tfmot.quantization.keras.quantizers.LastValueQuantizer(
+                   num_bits=8, symmetric=True, narrow_range=False, per_axis=False
+               )),
+              (layer.bias,
+               tfmot.quantization.keras.quantizers.LastValueQuantizer(
+                   num_bits=32, symmetric=True, narrow_range=False, per_axis=False
+               )),
+              (layer.gamma,
+               tfmot.quantization.keras.quantizers.LastValueQuantizer(
+                   num_bits=8, symmetric=True, narrow_range=False, per_axis=False
+               ))
+          ]
+        
+        # Configure how to quantize activations.
+        def get_activations_and_quantizers(self, layer):
+            return [
+                (layer.activation,
+                 tfmot.quantization.keras.quantizers.MovingAverageQuantizer(num_bits=8,
+                                                                            symmetric=False,
+                                                                            narrow_range=False,
+                                                                            per_axis=False)
+                )
+            ]
+        
+        def set_quantize_weights(self, layer, quantize_weights):
+          # Add this line for each item returned in `get_weights_and_quantizers`
+          # , in the same order
+          layer.kernel = quantize_weights[0]
+          layer.bias   = quantize_weights[1]
+          layer.gamma  = quantize_weights[2]
+        
+        def set_quantize_activations(self, layer, quantize_activations):
+          # Add this line for each item returned in `get_activations_and_quantizers`
+          # , in the same order.
+          layer.activation = quantize_activations[0]
+        
+        # Configure how to quantize outputs (may be equivalent to activations).
+        def get_output_quantizers(self, layer):
+          return []
+        
+        def get_config(self):
+          return {}
 
 """
 ###
@@ -232,7 +232,9 @@ def set_block_sparsity(
         model2,
         ratio_file_name: str = None,
         by_lambda      : bool =  False,
-        step           : bool = False
+        step           : bool = False,
+        row            : int  = 0
+        
 ):
 
     from os.path import exists
@@ -253,12 +255,24 @@ def set_block_sparsity(
         if type(l) == SparseBlockConv2d :
             A = True
             while A:
-                r = l.zeros_volumes_per_row(
-                    D[l.name] if l.name in D else 0.5, by_lambda,step
-                )
+
+                if row ==0 :
+                    r = l.zeros_volumes_per_row(
+                        D[l.name] if l.name in D else 0.5, by_lambda,step
+                    )
+                elif row ==1 :
+                    r = l.zeros_volumes_per_col(
+                        D[l.name] if l.name in D else 0.5, by_lambda,step
+                    )
+                elif row ==2 :
+                    r = l.zeros_volumes_per_block(
+                        D[l.name] if l.name in D else 0.5, step, [2,4]
+                    )
+                
                 if r.find("No")<0 :
                     print(r,l.name,l.gamma.shape)
-
+                
+                #import pdb; pdb.set_trace()                    
                 A = False
                 #if False and r.find("No")==0 :
                 #    print(l.gamma)
@@ -293,7 +307,7 @@ def MakeItBlockSparse(
                     'block_dim'           : dim ,
                     'gamma_regularization': None,
                     'drop_out_prob'       : None, 
-                    'sparse_training'     : None
+                    'sparse_training'     : None,
                 }
             )
             
@@ -374,7 +388,7 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                                               ## used
                  # I wanted to believe we could train and find the gamma and thus the zeros.
                  #gamma_regularization =  tf.keras.regularizers.l2(), 
-                 gamma_regularization =  None, #LambdaRegularizer(), 
+                 gamma_regularization =  None, #LambdaRegularizer(),
                  **kwargs):
 
         ## we are calling Conv2D
@@ -384,12 +398,15 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
         self.gamma_regularization = gamma_regularization
         self.drop_out_prob = drop_out_prob
         self.sparse_training = sparse_training
-
+        
+        
     ## so we can create a class from a dictionary only    
     @classmethod
     def from_config(cls, config):
         return cls(**config)
 
+    def set_hessian(self, h): self.hessian.assign([h])
+    def get_hessian(self): return self.hessian[0]
 
     ## we can create a config and then an instance
     def get_config(self):
@@ -401,7 +418,8 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                 #'gamma': self.gamma ,
                 'gamma_regularization': self.gamma_regularization ,
                 'drop_out_prob': self.drop_out_prob,
-                'sparse_training': self.sparse_training
+                'sparse_training': self.sparse_training,
+                'hessian'        : self.hessian
             }
         )
         
@@ -523,6 +541,12 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
             regularizer=self.gamma_regularization if trainable else None,
             trainable=trainable
         )
+        self.hessian = self.add_weight(
+            name='hessian',
+            shape=[1],
+            initializer=keras.initializers.ones,
+            trainable=False
+        )
 
         ## we overwrite the convolution operation so Gamma kick in
         self.repeats = repeats
@@ -572,11 +596,9 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
 
     def constant(self, x):
         return np.sum(x) == x[0]*len(x)
-    
-    def get_gamma_w_cnout(self,
-                          X ,
-                          volume,
-                          step = False):
+
+
+    def V_for_volume(self, X,volume):
         vo = np.zeros(self.gamma.shape)
 
         for i in range(vo.shape[0]):
@@ -594,13 +616,28 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                               j*self.gamma_dim[1]: B2
                 ] 
                 vo[i,j] = volume(subvolume)
-        if False and (np.sum(vo[i,:])==0 or self.constant(vo[i,:])):
-            print(subvolume)
-            #import pdb; pdb.set_trace()
-            vo[i,j] = volume(subvolume)
-            
-        #return vo
-        # import pdb; pdb.set_trace()
+        return vo
+
+    def absolute_order(self,vo):
+        TT= np.argsort(vo.flatten())
+        TTQ = TT*1
+        for i in range(len(TT)):
+            TTQ[TT[i]] = i
+        TTQ.resize(vo.shape)
+        return TTQ
+
+
+    
+    
+    def get_gamma_w_cnout(self,
+                          X ,
+                          volume,
+                          step = False):
+
+        vo = self.V_for_volume(X,volume)
+        TTQ = self.absolute_order(vo)
+
+        ## absolute order
         t = np.argsort(vo)
         if vo.shape[0]>1:
             for i in range(vo.shape[1]):
@@ -608,47 +645,61 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                 for j in range(vo.shape[0]):
                     t[qq[j],i] = j
                 
-        TT= np.argsort(vo.flatten())
-        TTQ = TT*1
-        for i in range(len(TT)):
-            TTQ[TT[i]] = i
-        TTQ.resize(vo.shape)
-        #import pdb; pdb.set_trace()
-        #print(X.shape,vo.shape,t.shape)
-        if False and step:
-            print("KS normalized", stats.kstest((vo-np.mean(vo))/math.sqrt(np.var(vo)), "norm"))
 
 
-        ## column and total order
+        ## column order and total order
+        return t,TTQ
+
+    
+    def get_gamma_w_cnout_2(
+            self,
+            X ,
+            volume,
+            step = False):
+        vo = self.V_for_volume(X,volume)
+        TTQ =self.absolute_order(vo)
+
+    
+        ## absolute order
+        t = np.argsort(vo)
+        if vo.shape[0]>1:
+            for i in range(vo.shape[0]):
+                qq = np.argsort(vo[i,:])
+                for j in range(vo.shape[1]):
+                    t[i,qq[j]] = j
+                
+
+        ## row order and absolute order
         return t,TTQ 
 
-    def get_gamma_w_cnout_(self,
-                          X ,
-                          volume):
-        vo = np.zeros(self.gamma.shape)
+    def get_gamma_w_cnout_3(
+            self,
+            X ,
+            volume,
+            block = [2,4]
+    ):
 
-        for i in range(vo.shape[0]):
+        vo = self.V_for_volume(X,volume)
+        TTQ =self.absolute_order(vo)
         
-            B1 = (i+1)*self.gamma_dim[0] 
-            if B1 > X.shape[2]:
-                B1 = X.shape[2]
-            for j in range(vo.shape[1]):
-                
-                B2 = (j+1)*self.gamma_dim[1]
-                if B2 > X.shape[3]:
-                    B2 = X.shape[3]
-                subvolume = X[:,:,
-                              i*self.gamma_dim[0]: B1,
-                              j*self.gamma_dim[1]: B2
-                ] 
-                vo[i,j] = volume(subvolume)
-        if p.sum(vo[i,:])==0 or self.constant(vo[i,:]):
-            print(subvolume)
-            import pdb; pdb.set_trace()
-            vo[i,j] = volume(subvolume)
-                    
-                
-        return vo
+        
+        CIN, COUT = vo.shape
+        t = np.argsort(vo)
+        if CIN>1:
+            PO = math.ceil(COUT/block[0])
+            PI = math.ceil(CIN/block[0])
+            
+            
+            for o in range(PO):
+                RO = min((o+1)*PO,COUT)
+                for i in range(PI):
+                    RI = min((i+1)*PO,COUT)
+                    t[o*PO:RO,i*PI:RI] = self.absolute_order(
+                        v[o*PO:RO,i*PI:RI]
+                    )
+        ## order per block and total
+        return t,TTQ 
+
 
     ###
     ## Given a volume, a sub tensor of a weight tensor, we compute a
@@ -789,17 +840,8 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
         return A
 
 
-    def pruned_row(self, gamma):
-        CIN, COUT = gamma.shape
-        legal = True
-        count = []
-        for i in range(CIN):
-            if sum(gamma[i,:])==0:
-                legal = False
-                count.append(i)
-        return legal, count
 
-    def set_row(self, gamma, Z1c, QQ, L):
+    def set_row(self, gamma, Z1c, QQ, L, Z1r):
         CIN, COUT = gamma.shape
         count =0
         for i in range(CIN):
@@ -820,8 +862,71 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                 gamma[i,jj]  = 1
                 gamma[ii,jj] = 0
                 #import pdb; pdb.set_trace()
+            elif False and  COUT-sum(gamma[i,:])>Z1r[i]:
+                jj = QQ[i,:] < Z1r[i]
+                gamma[i,jj] ==1
+                count += gamma[ii,jj]
+                gamma[i,jj]  = 1
+                
+                #import pdb; pdb.set_trace()
+        return count
+    def set_col(self, gamma, Z1c, QQ, L, Z1r):
+        CIN, COUT = gamma.shape
+        count =0
+        #print(CIN,COUT)
+        for i in range(COUT):
+            #print("set_col",i,Z1c[i])
+            if sum(gamma[:,i])==0:
+                #import pdb; pdb.set_trace()
+                ## largest element column
+                jj = QQ[:,i] == CIN-1
+                ## next largest row in the column above
+                zup = True
+                while zup and Z1r[jj]<COUT:
+                    ii =(L[jj,:]==Z1r[jj]).flatten()
+                    if gamma[jj,ii] ==1:
+                        zup = False
+                    else:
+                        Z1r[jj] += 1
+                                    
+                count += gamma[jj,ii]
+                gamma[jj,i]  = 1
+                gamma[jj,ii] = 0
+                #
+            elif  False and CIN-sum(gamma[:,i])>Z1c[i]:
+                #import pdb; pdb.set_trace()
+                jj = QQ[:,i] < Z1c[i]
+                gamma[jj,i] =1
+                count += sum( jj)
         return count
     
+    
+
+    ## L is a total Order QQ is a column order
+    def reinstate_row_col(self,gamma,Gamma,L,Zr, i):
+        gamma[i,L[i,:]>=Zr[i]] = Gamma[i, L[i,:]>=Zr[i]]
+    def reinstate_col_col(self,gamma,Gamma, QQ,Zc, i):
+        gamma[QQ[:,i]>=Zc[i],i] = Gamma[QQ[:,i]>=Zc[i],i]
+
+    ## L is a total Order QQ is a rwo order
+    def reinstate_col_row(self,gamma,Gamma,L,Zc, i):
+        gamma[L[:,i]>=Zc,i] = Gamma[L[:,i]>=Zc,i]
+    def reinstate_row_row(self,gamma,Gamma, QQ,Zr, i):
+        gamma[i,QQ[i,:]>=Zr[i]] = Gamma[i,QQ[i,:]>=Zr[i]]
+        
+        
+    ## return the empty rows
+    def pruned_row(self, gamma):
+        CIN, COUT = gamma.shape
+        legal = True
+        count = []
+        for i in range(CIN):
+            if sum(gamma[i,:])==0:
+                legal = False
+                count.append(i)
+        return legal, count
+
+    ## return the columns with too many zeros
     def legal_col(self, gamma, Zc):
         CIN, COUT = gamma.shape
         legal = True
@@ -832,10 +937,40 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                 count.append(i)
                 legal=False
         return legal, count
-        
+    ## no empty rows and just right columns
     def legal(self,gamma,c):
         r0 = self.pruned_row(gamma)
         r1 = self.legal_col(gamma,c)
+        return r0[0] and r1[0], [r0[1], r1[1]]
+
+
+    ## return the columns of gamma that are empty
+    def pruned_col(self, gamma):
+        CIN, COUT = gamma.shape
+        legal = True
+        count = []
+        for i in range(COUT):
+            if sum(gamma[:,i])==0:
+                legal = False
+                count.append(i)
+        return legal, count
+
+    ## return the rows having too many zeros
+    def legal_row(self, gamma, Zc):
+        CIN, COUT = gamma.shape
+        legal = True
+        count = []
+        
+        for i in range(CIN):
+            if COUT-sum(gamma[i,:])>Zc:
+                count.append(i)
+                legal=False
+        return legal, count
+
+    ## no empty col and just right rows
+    def legal_p(self,gamma,c):
+        r0 = self.pruned_col(gamma)
+        r1 = self.legal_row(gamma,c)
         return r0[0] and r1[0], [r0[1], r1[1]]
 
     ###
@@ -850,21 +985,11 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                               verbose = True,
                               step =20):
 
-        funcs = [
-            #self.volume_by_determinant,
-            #("euclidian", self.volume_by_euclidian),
-            ("variance"  , self.volume_by_variance),
-            ("l1"        , self.volume_by_l1)#,
-            #("mean"     , self.volume_by_mean)
-        ]
 
         zero_rate = 1 - sparse_rate
-        
+        import pdb; pdb.set_trace()
         count = 0
 
-        #        L = self.gamma.shape
-        #        if len(L)==2 and L[0]>1 and L[1]>1:
-        #            import pdb; pdb.set_trace()
         
         if by_lambda:
             L   = self.get_gamma_l1_order()
@@ -919,6 +1044,9 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
             Z1r = np.minimum(GZr+Kr, Zr)
 
 
+            import pdb; pdb.set_trace()
+
+            ## using teh total oder I compute row orders
             QQ = TT*1
             for j in range(CIN):
                 S = np.argsort(TT[j,:])
@@ -928,30 +1056,30 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
             if NZG < Z :
                 
                 # we still have zeros to give, we use the minimum set
-                # if legal
+                # We set all zeros if we can
                 gamma = Gamma*1
+                print(self.legal(gamma,Zc))
                 gamma[TT<Z1] =0
-                legal  = True
-                count = 0
-                for i in range(COUT):
-                    if CIN-sum(gamma[:,i])>Zc:
-                        #import pdb; pdb.set_trace()
-                        before = CIN - sum(gamma[:,i])
-                        gamma[L[:,i]>=Zc,i] = Gamma[L[:,i]>=Zc,i]
-                        after = CIN - sum(gamma[:,i])
-                        count += before - after
-                        legal=False
+                l = self.legal(gamma,Zc)
+                print(l)
+                for i in l[1][1]:
+                    before = CIN - sum(gamma[:,i])
+                    #gamma[L[:,i]>=Zc,i] = Gamma[L[:,i]>=Zc,i]
+                    self.reinstate_col_row(gamma,Gamma,L,Zc, i)
+                    after = CIN - sum(gamma[:,i])
+                    count += before - after
+                    legal=False
 
-                ## No ZERO row ( not input channel pruning)
-                for i in range(CIN):
-                    if sum(gamma[i,:])==0:
-                        
-                        before = COUT - sum(gamma[i,:])
-                        gamma[i,QQ[i,:]>=Z1r[i]] = Gamma[i,QQ[i,:]>=Z1r[i]]
-                        after = COUT - sum(gamma[i,:])
-                        count += before - after
-                        legal=False
-                    
+                ## No ZERO col ( not output channel pruning)
+                for i in r[1][0]:
+                    before = COUT - sum(gamma[i,:])
+                    #gamma[i,QQ[i,:]>=Z1r[i]] = Gamma[i,QQ[i,:]>=Z1r[i]]
+                    self.reinstate_row_row(gamma,Gamma, QQ,Z1r, i)
+                    after = COUT - sum(gamma[i,:])
+                    count += before - after
+                    legal=False
+
+                legal = l[0]
                 if legal :
                     self.gamma.assign(gamma)
                     l = self.legal(gamma,Zc)
@@ -992,7 +1120,7 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                         l = self.legal(gamma,Zc)
                         legal = l[0]
                         while count <4  and not legal:
-                            nz = self.set_row(gamma,Z1c,QQ,L)
+                            nz = self.set_row(gamma,Z1r,QQ,L,Z1c)
                             l = self.legal(gamma,Zc)
                             print(nz,l)
                             count +=1
@@ -1006,6 +1134,321 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                             return "Min by column %d %d adjusted %d %d %d" % (
                                 CIN*COUT - sum(sum(gamma)),Z, cc,c, count
                             )
+                ## choice by column
+
+
+            return "No Zeros %d %d " %  (NZG, Z)
+        return "Nothing to do"
+    ###
+    ##  This is the main function to zero at least one volume of the
+    ##  kernel weights. Once we zero the gamma, they stay gamma, You
+    ##  can use a differefnt volume measure.
+    ##
+    ###
+    def zeros_volumes_per_col(self,
+                              sparse_rate= 0.5,
+                              by_lambda = True,
+                              verbose = True,
+                              step =20):
+
+
+        zero_rate = 1 - sparse_rate
+
+        count = 0
+
+        
+        if by_lambda:
+            L   = self.get_gamma_l1_order()
+        else:
+            L,TT = self.get_gamma_w_cnout_2(
+                (self.kernel*self.get_gamma()).numpy(),
+                self.volume_by_variance
+                #self.volume_by_l1
+                #self.volume_by_euclidian
+            )
+            
+        #
+
+        
+        tra = True or (self.kernel.shape[0]>1 or self.kernel.shape[1]>1)
+        
+        if tra and len(L.shape)==2 and L.shape[0]>1 and L.shape[1]>1:
+            ## Gamma :  cin x cout 
+            
+            CIN, COUT = L.shape
+            #print("L", CIN, COUT)
+            ## how many zero we would like to have
+            Zr = int(zero_rate*COUT)    ## per row
+            Zc = int(zero_rate*CIN)     ## per col 
+            Z = int(zero_rate*COUT*CIN) ## per all
+
+            
+            Gamma = self.gamma.numpy().astype(int)
+            #print("GAMMA", Gamma.shape)
+            Gammat = np.transpose(Gamma)
+            # number of zero per row
+            GZc   = CIN -sum(Gamma)
+            # and per column
+            GZr   = COUT - sum(Gammat)
+            ## total number of zeros
+            NZG = CIN*COUT - sum(sum(Gamma))
+            #print("GZc", GZc.shape)
+            #print("GZr",GZr.shape)
+            
+            ## either increment of 1 or step% of what we need, this is
+            ## the number of zeros increment
+            K = max(1,int(step*Z/100))
+            # but no more that the one we need 
+            Z1 = min(NZG+K, Z)
+
+#            print(K,Z)
+#            import pdb; pdb.set_trace()
+            
+            # per dimensions (we are after the columns x output
+            Kc = max(1,int(step*Zc/100))
+            Kr = max(1,int(step*Zr/100))
+            # but no more that the one we need 
+            Z1c = np.minimum(GZc+Kc, Zc)
+            Z1r = np.minimum(GZr+Kr, Zr)
+
+
+
+            
+            QQ = TT*1
+            for j in range(COUT):
+                S = np.argsort(TT[:,j])
+                for i in range(CIN):
+                    QQ[S[i],j] = i
+            
+            if NZG < Z :
+                #import pdb; pdb.set_trace()
+                
+                # we still have zeros to give, we use the minimum set
+                # if legal
+                gamma = Gamma*1
+                print(self.legal_p(gamma,Zr))
+                gamma[TT<Z1] =0
+                l = self.legal_p(gamma,Zr)
+                print(l)
+
+                
+                count = 0
+                ## not too much CIN pruning 
+                for i in l[1][1]:
+                    before = COUT-sum(gamma[i,:])
+                    #gamma[i,L[i,:]>=Z1r[i]] = Gamma[i, L[i,:]>=Z1r[i]]
+                    self.reinstate_row_col(gamma,Gamma,L,Z1r, i)
+                    after = COUT-sum(gamma[i,:])
+                    count += before - after
+                    
+                ## No ZERO col ( not output channel pruning)
+                for i in l[1][0]:
+                    before = CIN - sum(gamma[:,i])
+                    # gamma[QQ[:,i]>=Z1c[i],i] = Gamma[QQ[:,i]>=Z1c[i],i]
+                    self.reinstate_col_col(gamma,Gamma, QQ,Z1c, i)
+                    after = CIN - sum(gamma[:,i])
+                    count += before - after
+
+                legal = l[0]    
+                
+                if legal :
+                    self.gamma.assign(gamma)
+                    l = self.legal_p(gamma,Zr)
+                    
+                    if l[0] is False:
+                        print(l)
+                        import pdb; pdb.set_trace()
+                        self.legal_p(gamma,Zr)
+                        
+                    return "Min Global %d %d " % (CIN*COUT - sum(sum(gamma)),Z )
+                else:
+                    
+                    NZG1 = CIN*COUT - sum(sum(gamma))
+                    if NZG1 - NZG> math.ceil(K/2):
+                        ## I could introduce 1+ zeros .. good enough
+                        l = self.legal_p(gamma,Zr)
+                        
+                        if l[0] is False:
+                            print(l)
+                            import pdb; pdb.set_trace()
+                            self.legal_p(gamma,Zr)
+                            
+                        self.gamma.assign(gamma)
+                        return "Min Global adjusted %d %d %d instead of %d we add %d" % (
+                            CIN*COUT - sum(sum(gamma)),Z,count,K,  NZG1 - NZG
+                        )
+                    else:
+                        Z0 = CIN*COUT - sum(sum(gamma))
+                        print("Zeros", Z0)
+                        cc = count
+                        ## K is the increment we would like to achieve
+                        ## randomly we introduce the least zeros per column 
+                        for i in np.random.permutation(CIN):
+                            if count >0 :
+                                before = COUT - sum(gamma[i,:])
+                                try:
+                                    gamma[i,L[i,:]<Z1r[i]] =0
+                                except Exception as e :
+                                    print(e)
+                                    import pdb; pdb.set_trace()
+                                after = COUT - sum(gamma[i,:])
+                                count -= after-before
+                        c= count
+                        
+                        count = 0
+                        #
+                        l = self.legal_p(gamma,Zr)
+                        legal = l[0]
+                        nz=0
+                        Z1 = CIN*COUT - sum(sum(gamma))
+                        print("ZERO PERM", Z1,l)
+                        while count <4  and not legal:
+                            #import pdb; pdb.set_trace()
+                            print(COUT,len(Z1c), Z1c)
+                            nz += self.set_col(gamma,Z1c,QQ,L,Z1r)
+                            l = self.legal_p(gamma,Zr)
+                            Z2 = CIN*COUT - sum(sum(gamma))
+                            print("Circle", nz,Z2,l)
+                            count += 1
+                            legal = l[0]
+
+                        
+                                               
+                        if legal :
+                            self.gamma.assign(gamma)
+                            S =  "JUCE Min by col %d instead %d " % (CIN*COUT - sum(sum(gamma)),Z )
+                        else:
+                            import pdb; pdb.set_trace()
+                            S =  "Min by col %d %d adjusted %d %d %d %d" % (
+                                CIN*COUT - sum(sum(gamma)),Z, cc,c, count, nz
+                            )
+                            
+                        
+                        return S
+                ## choice by column
+
+
+            return "No Zeros %d %d " %  (NZG, Z)
+        return "Nothing to do"
+    ###
+    ##  This is the main function to zero at least one volume of the
+    ##  kernel weights. Once we zero the gamma, they stay gamma, You
+    ##  can use a differefnt volume measure.
+    ##
+    ###
+    def zeros_volumes_per_block(
+            self,
+            sparse_rate= 0.5,
+            verbose = True,
+            step =20,
+            blocks = [ 4, 2]
+            
+    ):
+
+
+        zero_rate = 1 - sparse_rate
+
+        count = 0
+
+        
+        L,TT = self.get_gamma_w_cnout(
+            (self.kernel*self.get_gamma()).numpy(),
+            self.volume_by_variance
+        )
+
+        
+        tra = True or (self.kernel.shape[0]>1 or self.kernel.shape[1]>1)
+        
+        if tra and len(L.shape)==2 and L.shape[0]>1 and L.shape[1]>1:
+            ## Gamma :  cin x cout 
+            
+            CIN, COUT = L.shape
+            #print("L", CIN, COUT)
+            ## how many zero we would like to have
+            Zr = int(zero_rate*COUT)    ## per row
+            Zc = int(zero_rate*CIN)     ## per col 
+            Z = int(zero_rate*COUT*CIN) ## per all
+            ZBound = int(zero_rate*COUT*CIN) ## per block
+
+            Gamma = self.gamma.numpy().astype(int)
+            
+            ## per each block
+            Zbound = numpy.zeros(blocks[0]*blocks[1]).reshape(blocks)
+            Zblock = numpy.zeros(blocks[0]*blocks[1]).reshape(blocks)
+            for i in range(blocks[0]):
+                AI = min(CIN,(i+1)*math.ceil(CIN/blocks[0]))
+                for j in range(blocks[1]):
+                    BI = min(CIN,(j+1)*math.ceil(COUT/blocks[1]))
+
+                    Zbound[i,j] = math.ceil(zero_rate*COUT/j*CIN/i)
+                    Zblock[i,j] = math.ceil(COUT/j*CIN/i) -\
+                                  sum(Gamma[i*math.ceil(CIN/blocks[0]):AI,
+                                            j*math.ceil(COUT/blocks[1]):BI])
+                    
+            
+            Gamma = self.gamma.numpy().astype(int)
+            #print("GAMMA", Gamma.shape)
+            Gammat = np.transpose(Gamma)
+            # number of zero per row
+            GZc   = CIN -sum(Gamma)
+            # and per column
+            GZr   = COUT - sum(Gammat)
+            ## total number of zeros
+            NZG = CIN*COUT - sum(sum(Gamma))
+            #print("GZc", GZc.shape)
+            #print("GZr",GZr.shape)
+            
+            ## either increment of 1 or step% of what we need, this is
+            ## the number of zeros increment
+            K = max(1,int(step*Z/100))
+            # but no more that the one we need 
+            Z1 = min(NZG+K, Z)
+
+#            print(K,Z)
+#            import pdb; pdb.set_trace()
+            
+            # per dimensions (we are after the columns x output
+            Kc = max(1,int(step*Zc/100))
+            Kr = max(1,int(step*Zr/100))
+            Kb = max(1,int(step*Zbound/100))
+            
+            # but no more that the one we need 
+            Z1c = np.minimum(GZc+Kc, Zc)
+            Z1r = np.minimum(GZr+Kr, Zr)
+            Z1b = np.minimum(Zblock+Kb, Zbound)
+
+            
+            if NZG < Z :
+                
+                # we still have zeros to give, we use the minimum set
+                # if legal
+                gamma = Gamma*1
+                print(self.legal_p(gamma,Zr))
+                for i in range(blocks[0]):
+                    AI = min(CIN,(i+1)*math.ceil(CIN/blocks[0]))
+                    for j in range(blocks[1]):
+                        BI = min(CIN,(j+1)*math.ceil(COUT/blocks[1]))
+                        
+                        gamma[L[i,j]<Z1b[i,j]] = 0
+
+                legal  = True
+                count = 0
+                for i in range(CIN):
+                    if sum(gamma[i,:])==0:
+                        index = TT.index(max(TT[i,:]))
+                        gamma[i,index] =1
+                        count+=1
+                for i in range(COUT):
+                    if sum(gamma[:,i])==0:
+                        index = TT.index(max(TT[:,i]))
+                        gamma[i,index] =1
+                        count+=1
+                self.gamma.assign(gamma)
+                S =  "Min by block %d %d adjusted %d" % (
+                    CIN*COUT - sum(sum(gamma)),Z, count
+                )
+                                    
+                return S
                 ## choice by column
 
 

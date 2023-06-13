@@ -13,6 +13,22 @@ from sparse_conv_2d import SparseBlockConv2d, MakeItBlockSparse, \
 #from keras_applications.resnet50 import ResNet50
 
 
+def get_hessian_j(model, inputs, outputs):
+    with tf.GradientTape() as t2:
+      t2.watch(inputs)
+      with tf.GradientTape() as t1:
+        t1.watch(inputs)
+        loss_f = tf.keras.losses.SparseCategoricalCrossentropy()
+        loss = loss_f(outputs, model(inputs))
+        import pdb; pdb.set_trace()
+        g=t1.gradient(loss ,outputs)
+        
+        print(T, T.shape)
+
+
+def get_hessian_(model, inputs):
+    loss = tf.reduce_sum(model(inputs))
+    return tf.hessians(loss, inputs)
     
 
 
@@ -22,16 +38,23 @@ CIFAR = False
 DENSE=False
 
 def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
-        
-    #import pdb; pdb.set_trace()
+
+    loss = tf.keras.losses.SparseCategoricalCrossentropy()
+    
     model2.compile(optimizer=opt,
-                   loss=tf.keras.losses.SparseCategoricalCrossentropy(), 
+                   loss=loss, 
                    metrics=['accuracy'])
     
+            
+        #
+        #for i in val_ds:
+        #    #T = get_hessian_(model2, i[0])
+        #    T = get_hessian_j(model2, i[0],i[1])
+
     print("Evaluate")
     result = model2.evaluate(val_ds, verbose = 2 if 'ZEROS' in os.environ else 1)
-
     
+
     checkpoint_filepath = logs+'/checkpoint'
     model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
         filepath=checkpoint_filepath,
@@ -51,8 +74,6 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
         verbose = 2 if 'ZEROS' in os.environ else 1,
         callbacks = [model_checkpoint_callback],#[print_weights]
     )
-    print("saving the model")
-    model2.save_weights(logs+"/my_weights.model")
 
     print("Evaluate")
     result = model2.evaluate(val_ds)
@@ -60,13 +81,65 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
     Z = dict(zip(model2.metrics_names, result if type(result) is list else [result]))
     print(Z)
 
+    if 'HESSIAN'  in os.environ:
+        hessian_computed = False
+        for layer in model2.layers:
+            if  type(layer) in [SparseBlockConv2d ] and layer.get_hessian() != 1.0:
+                hessian_computed = True
+                import pdb; pdb.set_trace()
+                break
 
+        #import pdb; pdb.set_trace()
+            
+        if not hessian_computed:
+            from hessian import  HessianMetrics
+            from fit import  FITMetrics
+            #import pdb; pdb.set_trace()
+            F = FITMetrics(model2, val_ds)
+            R = F.trace_hack_paolo()
+            print(R)
+            import pdb; pdb.set_trace()
+
+
+            t_val = []
+            for d  in val_ds:
+                t_val.append(d)
+                if len(t_val)>2:
+                    break
+
+
+                
+            if False :
+                with tf.device('/CPU:0'):
+                    
+                    H = HessianMetrics(model2,t_val)
+                    R = H.trace_hack_paolo(4)
+        
+                #  import pdb; pdb.set_trace()
+
+            import pdb; pdb.set_trace()
+                
+    print("saving the model")
+    model2.save_weights(logs+"/my_weights.model")
+    
+
+
+
+    
 if __name__ == "__main__":
 
     import os
     machine = os.environ['MACHINE']
     OPT     = os.environ['IMAGENET_OPT']
 
+    row_sparse = 1 
+    if 'COL_SPARSE' in os.environ:
+        row_sparse = 1 
+    elif 'ROW_SPARSE' in os.environ:
+        row_sparse = 0 
+    elif 'BLOCK_SPARSE' in os.environ:
+        row_sparse = 2 
+    
     DENSE = False
     try:
         DENSE = os.environ['DENSE']
@@ -113,7 +186,7 @@ if __name__ == "__main__":
         data_dir = os.environ['IMAGENET']
         machine = os.environ['IMAGENET']
         
-        print("reading training set")
+        print("reading training set",data_dir+"/train/")
         train_ds = tf.keras.preprocessing.image_dataset_from_directory(
             data_dir+"/train/", 
             #subset="training",
@@ -126,7 +199,7 @@ if __name__ == "__main__":
         train_ds = train_ds.map(resize_with_crop)
         #train_ds = train_ds[0:50000]
 
-        print("reading validation set")
+        print("reading validation set", data_dir+"/val")
         val_ds = tf.keras.preprocessing.image_dataset_from_directory(
             data_dir+"/val",
             #subset="validation",
@@ -154,7 +227,7 @@ if __name__ == "__main__":
         model2 = MakeItBlockSparse(original_model)
         
         #model2.summary()
-        #import pdb; pdb.set_trace()
+        #
         
     if weights is not None:
         print("reading the weights") 
@@ -163,8 +236,22 @@ if __name__ == "__main__":
         #model2.summary()
         #import pdb; pdb.set_trace()
 
-    if 'ZEROS' in os.environ:
-        set_block_sparsity(model2, None, False ,False)
+
+        
+    hessian_computed = False
+    if 'HESSIAN'  in os.environ:
+        for layer in model2.layers:
+            if  type(layer) in [SparseBlockConv2d ] and layer.get_hessian() != 1.0:
+                hessian_computed = True
+                import pdb; pdb.set_trace()
+                break
+            
+        
+    
+    
+        
+    if (not 'HESSIAN'  in os.environ or  hessian_computed) and 'ZEROS' in os.environ:
+        set_block_sparsity(model2, None, False ,False,row_sparse)
         #model2.summary()
         #import pdb; pdb.set_trace()
 
