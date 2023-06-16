@@ -13,19 +13,17 @@ from sparse_conv_2d import SparseBlockConv2d, MakeItBlockSparse, \
 #from keras_applications.resnet50 import ResNet50
 
 
-def get_hessian_j(model, inputs, outputs):
-    with tf.GradientTape() as t2:
-      t2.watch(inputs)
-      with tf.GradientTape() as t1:
-        t1.watch(inputs)
-        loss_f = tf.keras.losses.SparseCategoricalCrossentropy()
-        loss = loss_f(outputs, model(inputs))
-        import pdb; pdb.set_trace()
-        g=t1.gradient(loss ,outputs)
-        
-        print(T, T.shape)
+def get_hessian_j(model, inputs, outputs,param):
+    with tf.device('/CPU:0'):
+        with tf.GradientTape() as outer_tape:
+            with tf.GradientTape() as inner_tape:
+            
+            
+                loss = model.loss(outputs, model(inputs))
 
-
+            grads = inner_tape.gradient(loss, params)
+        h = outer_tape.gradient(grads, params)
+    return h
 def get_hessian_(model, inputs):
     loss = tf.reduce_sum(model(inputs))
     return tf.hessians(loss, inputs)
@@ -86,38 +84,34 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
         for layer in model2.layers:
             if  type(layer) in [SparseBlockConv2d ] and layer.get_hessian() != 1.0:
                 hessian_computed = True
-                import pdb; pdb.set_trace()
+                #import pdb; pdb.set_trace()
                 break
-
+        hessian_computed = False
         #import pdb; pdb.set_trace()
-            
+        print(hessian_computed)
+        
         if not hessian_computed:
             from hessian import  HessianMetrics
-            from fit import  FITMetrics
-            #import pdb; pdb.set_trace()
-            F = FITMetrics(model2, val_ds)
+            from fit import  FITMetrics, Gradient
+            
+            qtest = train_ds.take(10)
+            
+            # gradient information about this solution point 
+            G = Gradient(model2,qtest)
+            R = G.trace_hack_paolo()
+
+            # gradient information about this solution point 
+            #G2 = GradientTwo(model2,qtest)
+            #R2 = G2.trace_hack_paolo()
+
+            # Fisher/Information 
+            F = FITMetrics(model2, qtest)
             R = F.trace_hack_paolo()
+
+
             print(R)
-            import pdb; pdb.set_trace()
+            #import pdb; pdb.set_trace()
 
-
-            t_val = []
-            for d  in val_ds:
-                t_val.append(d)
-                if len(t_val)>2:
-                    break
-
-
-                
-            if False :
-                with tf.device('/CPU:0'):
-                    
-                    H = HessianMetrics(model2,t_val)
-                    R = H.trace_hack_paolo(4)
-        
-                #  import pdb; pdb.set_trace()
-
-            import pdb; pdb.set_trace()
                 
     print("saving the model")
     model2.save_weights(logs+"/my_weights.model")
@@ -237,21 +231,22 @@ if __name__ == "__main__":
         #import pdb; pdb.set_trace()
 
 
-        
+
     hessian_computed = False
     if 'HESSIAN'  in os.environ:
         for layer in model2.layers:
             if  type(layer) in [SparseBlockConv2d ] and layer.get_hessian() != 1.0:
                 hessian_computed = True
-                import pdb; pdb.set_trace()
+                #import pdb; pdb.set_trace()
                 break
             
-        
+    #hessian_computed = False
     
     
         
     if (not 'HESSIAN'  in os.environ or  hessian_computed) and 'ZEROS' in os.environ:
         set_block_sparsity(model2, None, False ,False,row_sparse)
+
         #model2.summary()
         #import pdb; pdb.set_trace()
 

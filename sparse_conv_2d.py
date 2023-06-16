@@ -250,33 +250,41 @@ def set_block_sparsity(
             k,v = l.split()
             v = float(v)
             D[k] = v
-    
+
+    H =  []
+
     for l in model2.layers:
         if type(l) == SparseBlockConv2d :
-            A = True
-            while A:
+            H.append(l.get_hessian())
+    
+    H = sorted(H)
+    Q_step = [20, 15, 10] 
+            
+    for l in model2.layers:
+        if type(l) == SparseBlockConv2d :
 
-                if row ==0 :
-                    r = l.zeros_volumes_per_row(
-                        D[l.name] if l.name in D else 0.5, by_lambda,step
-                    )
-                elif row ==1 :
-                    r = l.zeros_volumes_per_col(
-                        D[l.name] if l.name in D else 0.5, by_lambda,step
-                    )
-                elif row ==2 :
-                    r = l.zeros_volumes_per_block(
-                        D[l.name] if l.name in D else 0.5, step, [2,4]
-                    )
+            i= H.index(l.get_hessian())
+            j = 0 if i<len(H)/3 else 1 if i<2*len(H)/3 else 2
+            z_step = Q_step[j]
+            print(l.name, i,j,len(H),z_step)
+            if row ==0 :
+                r = l.zeros_volumes_per_row(
+                    D[l.name] if l.name in D else 0.5,
+                    by_lambda,step,z_step
+                )
+            elif row ==1 :
+                r = l.zeros_volumes_per_col(
+                    D[l.name] if l.name in D else 0.5, by_lambda,step,
+                    z_step
+                )
+            elif row ==2 :
+                r = l.zeros_volumes_per_block(
+                    D[l.name] if l.name in D else 0.5, step, z_step,[2,4]
+                )
                 
-                if r.find("No")<0 :
-                    print(r,l.name,l.gamma.shape)
+            if r.find("No")<0 :
+                print(r,l.name,l.gamma.shape)
                 
-                #import pdb; pdb.set_trace()                    
-                A = False
-                #if False and r.find("No")==0 :
-                #    print(l.gamma)
-                #    #import pdb; pdb.set_trace()
             
             if step: import pdb; pdb.set_trace()
 ###
@@ -407,6 +415,9 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
 
     def set_hessian(self, h): self.hessian.assign([h])
     def get_hessian(self): return self.hessian[0]
+
+    def set_gradient(self, h): self.gradient.assign(h)
+    def get_gradient(self): return self.gradient
 
     ## we can create a config and then an instance
     def get_config(self):
@@ -545,6 +556,12 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
             name='hessian',
             shape=[1],
             initializer=keras.initializers.ones,
+            trainable=False
+        )
+        self.gradient = self.add_weight(
+            name='gradient',
+            shape=self.kernel.shape,
+            initializer=keras.initializers.zeros,
             trainable=False
         )
 
@@ -716,15 +733,15 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
         Y = X.flatten()
         S = np.sum(Y*Y)
         return S if np.abs(S)>T else 0.0
-    def volume_by_variance(self,X, T = 0.00000001):
+    def volume_by_variance(self,X):
         S =  np.var(X)
-        return S if np.abs(S)>T else 0.0
-    def volume_by_mean(self,X, T = 0.00000001):
+        return S #if np.abs(S)>T else 0.0
+    def volume_by_mean(self,X):
         S =  np.mean(X)
         return S #if np.abs(S)>T else 0.0
     def volume_by_l1(self,X, T = 0.00000001):
         S =  np.sum(np.fabs(X).flatten())
-        return S if np.abs(S)>T else 0.0
+        return S #if np.abs(S)>T else 0.0
 
     ###
     ## this is used to compare if the Gamma and the volume measure are
@@ -863,16 +880,29 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                 gamma[ii,jj] = 0
                 #import pdb; pdb.set_trace()
             elif False and  COUT-sum(gamma[i,:])>Z1r[i]:
-                jj = QQ[i,:] < Z1r[i]
+                jj = QQ[i,:] >= Z1r[i]
                 gamma[i,jj] ==1
-                count += gamma[ii,jj]
+                count += sum(gamma[ii,jj])
                 gamma[i,jj]  = 1
                 
                 #import pdb; pdb.set_trace()
+        for i in range(COUT):
+            if  CIN-sum(gamma[:,i])>Z1c[i]:
+                #import pdb; pdb.set_trace()
+                jj = L[:,i] >= Z1c[i]
+                gamma[jj,i] =1
+                count += sum( jj)
         return count
     def set_col(self, gamma, Z1c, QQ, L, Z1r):
         CIN, COUT = gamma.shape
         count =0
+        
+        for i in range(CIN):
+            if  COUT-sum(gamma[i,:])>Z1r[i]:
+                #import pdb; pdb.set_trace()
+                jj = L[i,:] >= Z1r[i]
+                gamma[i,jj] =1
+                count += sum(jj)
         #print(CIN,COUT)
         for i in range(COUT):
             #print("set_col",i,Z1c[i])
@@ -889,26 +919,27 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                     else:
                         Z1r[jj] += 1
                                     
-                count += gamma[jj,ii]
+                count += sum(gamma[jj,ii])
                 gamma[jj,i]  = 1
                 gamma[jj,ii] = 0
                 #
-            elif  False and CIN-sum(gamma[:,i])>Z1c[i]:
+            elif  CIN-sum(gamma[:,i])>Z1c[i]:
                 #import pdb; pdb.set_trace()
-                jj = QQ[:,i] < Z1c[i]
+                jj = QQ[:,i] >= Z1c[i]
                 gamma[jj,i] =1
                 count += sum( jj)
+              
         return count
     
     
 
-    ## L is a total Order QQ is a column order
+    ## QQ is a total Order L is a column order
     def reinstate_row_col(self,gamma,Gamma,L,Zr, i):
         gamma[i,L[i,:]>=Zr[i]] = Gamma[i, L[i,:]>=Zr[i]]
     def reinstate_col_col(self,gamma,Gamma, QQ,Zc, i):
         gamma[QQ[:,i]>=Zc[i],i] = Gamma[QQ[:,i]>=Zc[i],i]
 
-    ## L is a total Order QQ is a rwo order
+    ## QQ is a total Order L is a row order
     def reinstate_col_row(self,gamma,Gamma,L,Zc, i):
         gamma[L[:,i]>=Zc,i] = Gamma[L[:,i]>=Zc,i]
     def reinstate_row_row(self,gamma,Gamma, QQ,Zr, i):
@@ -995,7 +1026,9 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
             L   = self.get_gamma_l1_order()
         else:
             L,TT = self.get_gamma_w_cnout(
-                (self.kernel*self.get_gamma()).numpy(),
+                (np.max(np.finfo(np.float32).eps+ tf.abs(self.get_gradient()))*\
+                 self.kernel*self.get_gamma()
+                ).numpy(),
                 self.volume_by_variance
                 #self.volume_by_l1
                 #self.volume_by_euclidian
@@ -1156,12 +1189,14 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
 
         count = 0
 
+
+        AA = (np.max(np.finfo(np.float32).eps+ tf.abs(self.get_gradient()))*self.kernel*self.get_gamma()).numpy()
         
         if by_lambda:
             L   = self.get_gamma_l1_order()
         else:
             L,TT = self.get_gamma_w_cnout_2(
-                (self.kernel*self.get_gamma()).numpy(),
+                AA,
                 self.volume_by_variance
                 #self.volume_by_l1
                 #self.volume_by_euclidian
@@ -1304,7 +1339,7 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                         print("ZERO PERM", Z1,l)
                         while count <4  and not legal:
                             #import pdb; pdb.set_trace()
-                            print(COUT,len(Z1c), Z1c)
+                            #print(COUT,len(Z1c), Z1c)
                             nz += self.set_col(gamma,Z1c,QQ,L,Z1r)
                             l = self.legal_p(gamma,Zr)
                             Z2 = CIN*COUT - sum(sum(gamma))
@@ -1352,7 +1387,7 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
 
         
         L,TT = self.get_gamma_w_cnout(
-            (self.kernel*self.get_gamma()).numpy(),
+            (self.get_gradient()*self.kernel*self.get_gamma()).numpy(),
             self.volume_by_variance
         )
 
