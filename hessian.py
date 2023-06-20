@@ -139,19 +139,22 @@ class GradientTwo:
     def gradient(self, layer):
         params = [  v for v in layer.trainable_variables        ]
         num_data = 0
-        
+        #import pdb; pdb.set_trace()
         ef  = params[0]*0
-        for ds in self.ds:
-            with tf.GradientTape() as outer_tape:
-                with tf.GradientTape() as inner_tape:
+        if True : #with tf.device('/CPU:0'):
+            for ds in self.ds:
+                with tf.GradientTape() as outer_tape:
+                    with tf.GradientTape() as inner_tape:
 
-                    loss = self.model.loss( ds[1],self.model(ds[0],training=True))
-                    
-                grads = inner_tape.gradient(loss, params[0])
+                        loss = self.model.loss( ds[1],self.model(ds[0],training=True))
+                        ## D_p (loss) / Dparam
+                        grads = inner_tape.gradient(loss, params[0])
 
-            h = outer_tape.gradient(grads, params[0])
-            ef += h.numpy()/ds[0].shape[0]
-            num_data += ds[0].shape[0]
+                    ## D_p(D_p(loss)) == D^2 Loss/ d^2 x
+                    ## there is no cross derivation  
+                    h = outer_tape.gradient(grads, params[0])
+                    ef += h.numpy()/ds[0].shape[0]
+                num_data += ds[0].shape[0]
         temp_hv = ef/num_data
         return temp_hv,None 
 

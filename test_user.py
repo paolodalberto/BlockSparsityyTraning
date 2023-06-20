@@ -7,7 +7,7 @@ import keras.backend as K
 from keras.callbacks import LambdaCallback
 from copy import deepcopy
 from sparse_conv_2d import SparseBlockConv2d, MakeItBlockSparse, \
-    check, set_block_sparsity,MakeItBackToDense
+    check, set_block_sparsity,MakeItBackToDense, GradientGradient
 
 #from keras_applications.sparseresnet50 import ResNet50
 #from keras_applications.resnet50 import ResNet50
@@ -91,19 +91,22 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
         print(hessian_computed)
         
         if not hessian_computed:
-            from hessian import  HessianMetrics
+            from hessian import  HessianMetrics, GradientTwo
             from fit import  FITMetrics, Gradient
             
             qtest = train_ds.take(10)
+
+            if True :
+                # gradient of gradient information about this solution point 
+                G = GradientTwo(model2,qtest)
+                R = G.trace_hack_paolo()
+                GradientGradient = True
             
-            # gradient information about this solution point 
-            G = Gradient(model2,qtest)
-            R = G.trace_hack_paolo()
-
-            # gradient information about this solution point 
-            #G2 = GradientTwo(model2,qtest)
-            #R2 = G2.trace_hack_paolo()
-
+            else:
+                # gradient information about this solution point 
+                G2 = Gradient(model2,qtest)
+                R2 = G2.trace_hack_paolo()
+                GradientGradient = False
             # Fisher/Information 
             F = FITMetrics(model2, qtest)
             R = F.trace_hack_paolo()
@@ -111,7 +114,7 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
 
             print(R)
             #import pdb; pdb.set_trace()
-
+            
                 
     print("saving the model")
     model2.save_weights(logs+"/my_weights.model")
@@ -187,7 +190,8 @@ if __name__ == "__main__":
             seed = 123,
             label_mode = 'int',
             image_size=(x, y),
-            batch_size=128
+            #batch_size=128
+            batch_size=64
         )
         # Preprocess the images
         train_ds = train_ds.map(resize_with_crop)
@@ -199,7 +203,8 @@ if __name__ == "__main__":
             #subset="validation",
             label_mode = 'int',
             image_size=(x, y),
-            batch_size=128
+            #batch_size=128
+            batch_size=64
         )
         val_ds = val_ds.map(resize_with_crop)
         

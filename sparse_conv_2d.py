@@ -8,6 +8,10 @@ from copy import deepcopy
 import scipy.stats as stats
 import re
 
+
+GradientGradient = True 
+
+
 if False :
     import tensorflow_model_optimization as tfmot
 
@@ -923,7 +927,7 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                 gamma[jj,i]  = 1
                 gamma[jj,ii] = 0
                 #
-            elif  CIN-sum(gamma[:,i])>Z1c[i]:
+            elif False and CIN-sum(gamma[:,i])>Z1c[i]:
                 #import pdb; pdb.set_trace()
                 jj = QQ[:,i] >= Z1c[i]
                 gamma[jj,i] =1
@@ -1027,7 +1031,7 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
         else:
             L,TT = self.get_gamma_w_cnout(
                 (np.max(np.finfo(np.float32).eps+ tf.abs(self.get_gradient()))*\
-                 self.kernel*self.get_gamma()
+                 (self.kernel**2 if GradientGradient else self.kernel) *self.get_gamma()
                 ).numpy(),
                 self.volume_by_variance
                 #self.volume_by_l1
@@ -1188,9 +1192,9 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
         zero_rate = 1 - sparse_rate
 
         count = 0
-
-
-        AA = (np.max(np.finfo(np.float32).eps+ tf.abs(self.get_gradient()))*self.kernel*self.get_gamma()).numpy()
+        
+        K = self.kernel**2  if GradientGradient else  self.kernel
+        AA = (np.max(np.finfo(np.float32).eps+ tf.abs(self.get_gradient()))*K*self.get_gamma()).numpy()
         
         if by_lambda:
             L   = self.get_gamma_l1_order()
