@@ -7,7 +7,7 @@ import keras.backend as K
 from keras.callbacks import LambdaCallback
 from copy import deepcopy
 from sparse_conv_2d import SparseBlockConv2d, MakeItBlockSparse, \
-    check, set_block_sparsity,MakeItBackToDense, GradientGradient
+    check, set_block_sparsity,set_block_sparsity_priority,MakeItBackToDense, GradientGradient
 
 #from keras_applications.sparseresnet50 import ResNet50
 #from keras_applications.resnet50 import ResNet50
@@ -60,8 +60,37 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
         monitor='val_accuracy',
         mode='max',
         save_best_only=True)
-    
-    
+    #import pdb; pdb.set_trace()
+    A = False
+    if A and 'HESSIAN'  in os.environ:
+        from hessian import  HessianMetrics, GradientTwo
+        from fit import  FITMetrics, Gradient
+            
+        qtest = train_ds.take(50)
+
+
+        if True:
+            # Fisher/Information
+            F = FITMetrics(model2, qtest)
+            R = F.trace_hack_paolo(save_gradient=True)
+            
+        
+        else: # True :
+
+            # gradient of gradient information about this solution point 
+            G = GradientTwo(model2,qtest)
+            R = G.trace_hack_paolo(save_trace=True)
+            GradientGradient = True
+            
+        if False :
+            # gradient information about this solution point 
+            G2 = Gradient(model2,qtest)
+            R2 = G2.trace_hack_paolo()
+            GradientGradient = False
+
+
+        print(R)
+        #import pdb; pdb.set_trace()
     print("Train", os.environ["EPOCH"])
     epoch = int(os.environ["EPOCH"]) if "EPOCH" in os.environ else 30
     epoch *=x 
@@ -94,22 +123,25 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
             from hessian import  HessianMetrics, GradientTwo
             from fit import  FITMetrics, Gradient
             
-            qtest = train_ds.take(10)
+            qtest = train_ds.take(100)
+            if False:
+                # Fisher/Information
+                F = FITMetrics(model2, qtest)
+                R = F.trace_hack_paolo(save_gradient=True)
+            
+        
+            else: # True :
 
-            if True :
                 # gradient of gradient information about this solution point 
                 G = GradientTwo(model2,qtest)
-                R = G.trace_hack_paolo()
+                R = G.trace_hack_paolo(save_trace=True)
                 GradientGradient = True
             
-            else:
+            if False :
                 # gradient information about this solution point 
                 G2 = Gradient(model2,qtest)
                 R2 = G2.trace_hack_paolo()
                 GradientGradient = False
-            # Fisher/Information 
-            F = FITMetrics(model2, qtest)
-            R = F.trace_hack_paolo()
 
 
             print(R)
@@ -248,9 +280,11 @@ if __name__ == "__main__":
     #hessian_computed = False
     
     
-        
+    #import pdb; pdb.set_trace()
+    
     if (not 'HESSIAN'  in os.environ or  hessian_computed) and 'ZEROS' in os.environ:
-        set_block_sparsity(model2, None, False ,False,row_sparse)
+        #set_block_sparsity(model2, None, False ,False,row_sparse)
+        set_block_sparsity_priority(model2, 0.5,row_sparse)
 
         #model2.summary()
         #import pdb; pdb.set_trace()

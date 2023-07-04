@@ -123,7 +123,7 @@ class HessianMetrics:
 
 
 class GradientTwo:
-    def __init__(self, model,  ds):
+    def __init__(self, model,  ds, sparse_rate : int = 0.5):
         """
         model: Keras model
         loss_fn: loss function
@@ -134,7 +134,7 @@ class GradientTwo:
         """
         self.model = model
         self.ds = ds
-
+        self.sparse_rate = sparse_rate
 
     def gradient(self, layer):
         params = [  v for v in layer.trainable_variables        ]
@@ -146,7 +146,9 @@ class GradientTwo:
                 with tf.GradientTape() as outer_tape:
                     with tf.GradientTape() as inner_tape:
 
-                        loss = self.model.loss( ds[1],self.model(ds[0],training=True))
+                        loss = self.model.loss(
+                            ds[1],
+                            self.model(ds[0],training=True))
                         ## D_p (loss) / Dparam
                         grads = inner_tape.gradient(loss, params[0])
 
@@ -158,7 +160,7 @@ class GradientTwo:
         temp_hv = ef/num_data
         return temp_hv,None 
 
-    def trace_hack_paolo(self):
+    def trace_hack_paolo(self, save_trace : bool = False):
         """
         Compute the trace of the Hessian using Hutchinson's method
         max_iter: maximimum number of iterations used to compute trace
@@ -166,15 +168,40 @@ class GradientTwo:
         """
         trace = 0.0
         tr = [ ]
-        for layer in self.model.layers:
-            if len(layer.trainable_variables) > 0 and type(layer) in [SparseBlockConv2d or tf.keras.layers.Conv2D]:
+
+        
+        H =  []
+        
+        for l in self.model.layers:
+            if type(l) == SparseBlockConv2d :
+                H.append([l,l.get_hessian()])
+                
+        #H = sorted(H, key = lambda x: -x[1])
+        G = False
+
+        
+        for layer,h in H:
+            if len(layer.trainable_variables) > 0 and \
+               type(layer) in [SparseBlockConv2d or tf.keras.layers.Conv2D]:
+                
+                gamma = layer.get_gamma()
+                CIN, COUT = gamma.shape
+                Z = int(self.sparse_rate*COUT*CIN)
+                NZG = CIN*COUT - sum(sum(gamma))
+                A = CIN//8==0 or  COUT//8==0
+                if A or  Z == NZG:
+                    continue
                 #import pdb; pdb.set_trace()
                 hv,_ = self.gradient(layer)
                 
                 layer.set_gradient(hv)
                 t = tf.reduce_sum(hv)
-                print(layer.name, t)
+                if save_trace:
+                    layer.set_hessian(t)
+                print("Grad diagonal",layer.name, t, Z,NZG)
                 tr += [ t]
                 
-            #break  # Compute for encoder only
+                break  # Compute for encoder only
+
+        if len(tr)==0 : return 0;
         return np.mean(tr)

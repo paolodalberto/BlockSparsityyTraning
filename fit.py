@@ -116,7 +116,7 @@ class FITMetrics:
       
     """
 
-    def __init__(self, model,  ds, label : int = 1000 ):
+    def __init__(self, model,  ds, label : int = 1000, sparse_rate : int = 0.5 ):
         """
         model: Keras model
         loss_fn: loss function
@@ -127,7 +127,8 @@ class FITMetrics:
         """
         self.model = model
         self.ds = ds
-        self.label = label 
+        self.label = label
+        self.sparse_rate = sparse_rate
 
 
 
@@ -154,6 +155,7 @@ class FITMetrics:
         kl = tf.keras.losses.KLDivergence()
         ef  = 0.0
         count = 0
+        egrad = params[0]*0
         for ds in self.ds:
             V = np.zeros(shape = ((ds[1].shape[0],1000)))
             #import pdb; pdb.set_trace()
@@ -165,18 +167,21 @@ class FITMetrics:
                 pred = self.model(ds[0],training=True)
                 loss =  kl(V,pred)
                 
-            grads = inner_tape.gradient(loss, params[0])
+                grads = inner_tape.gradient(loss, params[0])
+            
+                egrad += grads
             ef += sum((grads.numpy()).flatten()**2)
             num_data += ds[0].shape[0]
             count +=1
-
+            
         temp_hv = ef/count 
+        egrad = egrad/count 
+        
+        return temp_hv,egrad
 
-        return temp_hv,None 
 
 
-
-    def trace_hack_paolo(self):
+    def trace_hack_paolo(self,save_gradient : bool = False):
         """
         Compute the trace of the Hessian using Hutchinson's method
         max_iter: maximimum number of iterations used to compute trace
@@ -186,13 +191,34 @@ class FITMetrics:
         trace_vhv = []
         layer_trace_vhv = []
         trace_weights = []
-        for layer in self.model.layers:
+
+        H =  []
+        
+        for l in self.model.layers:
+            if type(l) == SparseBlockConv2d :
+                H.append([l,l.get_hessian()])
+                
+        H = sorted(H, key = lambda x: -x[1])
+        G = False
+
+        
+        for layer,h in H:
             if len(layer.trainable_variables) > 0 and type(layer) in [SparseBlockConv2d or tf.keras.layers.Conv2D]:
+
+                gamma = layer.get_gamma()
+                CIN, COUT = gamma.shape
+                Z = int(self.sparse_rate*COUT*CIN)
+                NZG = CIN*COUT - sum(sum(gamma))
+                A = CIN//8==0 or  COUT//8==0
+                if A or   Z == NZG:
+                    continue
+                
                 #import pdb; pdb.set_trace()
-                hv,_ = self.trace_hack_ef_kl(layer)
+                hv,g = self.trace_hack_ef_kl(layer)
                 trace_vhv.append(hv)
-                print(layer.name, hv)
+                print("fit",CIN, COUT,layer.name, hv,  Z, NZG)
                 layer.set_hessian(hv)
+                if save_gradient: layer.set_gradient(g)
 
             #break  # Compute for encoder only
         return np.mean(trace_vhv)

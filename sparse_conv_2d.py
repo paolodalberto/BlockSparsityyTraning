@@ -263,7 +263,7 @@ def set_block_sparsity(
     
     H = sorted(H)
     Q_step = [20, 15, 10] 
-            
+    
     for l in model2.layers:
         if type(l) == SparseBlockConv2d :
 
@@ -291,13 +291,88 @@ def set_block_sparsity(
                 
             
             if step: import pdb; pdb.set_trace()
+
+
+            
+            
+def set_block_sparsity_priority(
+        model2,
+        sparse_rate    : float = 0.5,
+        row            : int  = 0
+):
+    by_lambda = step = False
+
+    H =  []
+
+    for l in model2.layers:
+        if type(l) == SparseBlockConv2d :
+            H.append([l,l.get_hessian()])
+    
+    #H = sorted(H, key = lambda x: x[1])
+
+    #import pdb; pdb.set_trace()
+    G = False
+    for l,h in H:
+        if type(l) == SparseBlockConv2d and h >0:
+
+            #import pdb; pdb.set_trace()
+            gamma = l.get_gamma()
+            CIN, COUT = gamma.shape
+            Z = int(sparse_rate*COUT*CIN)
+            NZG = CIN*COUT - sum(sum(gamma))
+            A = CIN>1 and COUT>1
+
+            while A : 
+            
+                if Z == NZG:
+                    A = False
+                    continue
+
+        
+                z_step = 100
+                #import pdb; pdb.set_trace()
+                print(l.name, len(H),z_step)
+                if row ==0 :
+                    r = l.zeros_volumes_per_row(
+                        sparse_rate,
+                        by_lambda,step,z_step
+                    )
+                elif row ==1 :
+                    r = l.zeros_volumes_per_col(
+                        sparse_rate,
+                        by_lambda,step,
+                        z_step
+                    )
+                elif row ==2 :
+                    r = l.zeros_volumes_per_block(
+                        sparse_rate, step, z_step,[2,4]
+                    )
+                
+                if r.find("No")<0 :
+                    print(r,l.name,l.gamma.shape)
+                else:
+                    A = False
+                    gamma = l.get_gamma()
+                    NZG = CIN*COUT - sum(sum(gamma))
+                    
+                    if r.find("Nothing")<0:  G = True
+                    else:  G = False
+        if G: break
+
+    return None
+
+
+
+
+
+    
 ###
 ##  We take every convolution and create a sparse convolution.  A
 ##  sparse convolutio has a bit map like matrix we call gamma. Gamma
 ##  is determined by the block dimension which is 8x8. Now take the
 ##  channel out (N) and the channel input (C) and create a matrix N/8
 ##  x C/8.  This is a weight or a bit map that will multiply the
-##  correspondent volume of the kernel. Gamma can be trainable (see
+##  correspondent volume of the kernel. Gamma can be trainablteste (see
 ##  the normalization above) but we could not make it out: so as
 ##  default it is not trainable.
 ##
@@ -1033,9 +1108,9 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                 (np.max(np.finfo(np.float32).eps+ tf.abs(self.get_gradient()))*\
                  (self.kernel**2 if GradientGradient else self.kernel) *self.get_gamma()
                 ).numpy(),
-                self.volume_by_variance
+                #self.volume_by_variance
                 #self.volume_by_l1
-                #self.volume_by_euclidian
+                self.volume_by_euclidian
             )
             
         #
@@ -1201,9 +1276,9 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
         else:
             L,TT = self.get_gamma_w_cnout_2(
                 AA,
-                self.volume_by_variance
+                #self.volume_by_variance
                 #self.volume_by_l1
-                #self.volume_by_euclidian
+                self.volume_by_l1
             )
             
         #
@@ -1310,7 +1385,8 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                         if l[0] is False:
                             print(l)
                             import pdb; pdb.set_trace()
-                            self.legal_p(gamma,Zr)
+                            self.set_col(gamma,Z1c,QQ,L,Z1r)
+                            print(self.legal_p(gamma,Zr))
                             
                         self.gamma.assign(gamma)
                         return "Min Global adjusted %d %d %d instead of %d we add %d" % (
