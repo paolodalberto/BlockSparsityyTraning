@@ -123,7 +123,7 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
             from hessian import  HessianMetrics, GradientTwo
             from fit import  FITMetrics, Gradient
             
-            qtest = train_ds.take(100)
+            qtest = train_ds.take(200)
             if False:
                 # Fisher/Information
                 F = FITMetrics(model2, qtest)

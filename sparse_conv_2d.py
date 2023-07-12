@@ -1269,7 +1269,10 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
         count = 0
         
         K = self.kernel**2  if GradientGradient else  self.kernel
+
         AA = (np.max(np.finfo(np.float32).eps+ tf.abs(self.get_gradient()))*K*self.get_gamma()).numpy()
+        #import pdb; pdb.set_trace()
+        #AA = (self.kernel*self.get_gamma()).numpy()
         
         if by_lambda:
             L   = self.get_gamma_l1_order()
@@ -1278,7 +1281,7 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
                 AA,
                 #self.volume_by_variance
                 #self.volume_by_l1
-                self.volume_by_l1
+                self.volume_by_euclidian
             )
             
         #
