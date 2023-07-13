@@ -10,6 +10,7 @@ export PYTHONPATH=/dockerx/keras_applications
 export IMAGENET_OPT=SGD
 export MACHINE=xsjfislx31
 export IMAGENET=/imagenet
+export TF_CPP_MIN_LOG_LEVEL=3 
 
 
 if [[ $1 == 'installtfmot' ]]
@@ -31,7 +32,7 @@ fi
 export EPOCH=1
 
 unset ZEROS
-for i in 0 #
+for i in #0 #
 do
     echo $i
     python3 /dockerx/test_user.py  #| grep -v ETA  
@@ -94,7 +95,7 @@ export EPOCH=1
 #2 res5c_branch2b tf.Tensor(26.119617, shape=(), dtype=float32)
 #3 res5c_branch2c tf.Tensor(7.0661697, shape=(), dtype=float32)
 
-for j in 0 1 2 3 4
+for j in 0 #1 2 3 4
 do
     for i in 1 2 3 4 5 6 7 8 9 10
     do
@@ -102,7 +103,7 @@ do
 	python3 /dockerx/test_user.py  #| grep -v ETA  
     done
 done
-for i in 1 2 3 4 5 6 7
+for i in #1 2 3 4 5 6 7
 do
     echo $i
     python3 /dockerx/test_user.py  #| grep -v ETA  

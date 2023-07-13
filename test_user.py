@@ -21,7 +21,7 @@ IMAGENET = True
 CIFAR = False
 DENSE=False
 
-def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
+def boom(model2, opt, train_ds,val_ds, x : int = 1, data_dir = "/imagenet", shape = (224,224) ):
 
         
         #
@@ -104,8 +104,19 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
         if not hessian_computed:
             from hessian import  HessianMetrics, GradientTwo
             from fit import  FITMetrics, Gradient
-            
-            qtest = train_ds.take(200)
+
+            print("reading training set",data_dir+"/train/")
+            train_ds = tf.keras.preprocessing.image_dataset_from_directory(
+                data_dir+"/train/", 
+                #subset="training",
+                seed = 1024-1,
+                label_mode = 'int',
+                image_size= shape,
+                #batch_size=128
+                batch_size=32
+            )
+
+            qtest = train_ds.take(500)
             if False:
                 # Fisher/Information
                 F = FITMetrics(model2, qtest)
@@ -142,7 +153,7 @@ if __name__ == "__main__":
     import os
     machine = os.environ['MACHINE']
     OPT     = os.environ['IMAGENET_OPT']
-
+    
     row_sparse = 1 
     if 'COL_SPARSE' in os.environ:
         row_sparse = 1 
@@ -201,13 +212,13 @@ if __name__ == "__main__":
         
         print("reading training set",data_dir+"/train/")
         train_ds = tf.keras.preprocessing.image_dataset_from_directory(
-            data_dir+"/val/", 
+            data_dir+"/train/", 
             #subset="training",
             seed = 123,
             label_mode = 'int',
             image_size=(x, y),
             #batch_size=128
-            batch_size=32
+            batch_size= 192
         )
 
         options = tf.data.Options()
@@ -225,7 +236,7 @@ if __name__ == "__main__":
             label_mode = 'int',
             image_size=(x, y),
             #batch_size=128
-            batch_size=32
+            batch_size=192
         )
 
         val_ds = val_ds.with_options(options)
@@ -307,20 +318,20 @@ if __name__ == "__main__":
     if OPT == 'ADAM':
         print("ADAM")
         opt = keras.optimizers.Adam(learning_rate=0.001)
-        boom(model2, opt, train_ds,val_ds)
+        boom(model2, opt, train_ds,val_ds,1,data_dir,shapes)
 
     elif OPT == 'SGD':
         print("SGD")
         opt = keras.optimizers.SGD(learning_rate=0.001)
-        boom(model2, opt, train_ds,val_ds)
+        boom(model2, opt, train_ds,val_ds,1,data_dir,shapes)
     elif OPT == "MIX":
         print("MIX")
         opt2 = keras.optimizers.SGD(learning_rate=0.001)
         opt1 = keras.optimizers.Adam(learning_rate=0.001)
         print("ADAM")
-        boom(model2, opt1, train_ds,val_ds)
+        boom(model2, opt1, train_ds,val_ds,1,data_dir,shapes)
         print("SGD")
-        boom(model2, opt2, train_ds,val_ds,x=5)
+        boom(model2, opt2, train_ds,val_ds,5,data_dir,shapes)
 
     if False and weights is not None:
         check(model2)
