@@ -23,7 +23,7 @@ then
     export EPOCH=1
     unset ZEROS
 
-    python /dockerx/test.py
+    python3 /dockerx/test.py
 fi
 
 #exit
@@ -31,10 +31,10 @@ fi
 export EPOCH=1
 
 unset ZEROS
-for i in #0 #
+for i in 0 #
 do
     echo $i
-    python /dockerx/test_user.py  #| grep -v ETA  
+    python3 /dockerx/test_user.py  #| grep -v ETA  
 done
 
 export ZEROS="zeros"
@@ -99,11 +99,11 @@ do
     for i in 1 2 3 4 5 6 7 8 9 10
     do
 	echo $j$i
-	python /dockerx/test_user.py  #| grep -v ETA  
+	python3 /dockerx/test_user.py  #| grep -v ETA  
     done
 done
 for i in 1 2 3 4 5 6 7
 do
     echo $i
-    python /dockerx/test_user.py  #| grep -v ETA  
+    python3 /dockerx/test_user.py  #| grep -v ETA  
 done

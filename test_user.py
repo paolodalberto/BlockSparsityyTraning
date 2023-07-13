@@ -13,22 +13,8 @@ from sparse_conv_2d import SparseBlockConv2d, MakeItBlockSparse, \
 #from keras_applications.resnet50 import ResNet50
 
 
-def get_hessian_j(model, inputs, outputs,param):
-    with tf.device('/CPU:0'):
-        with tf.GradientTape() as outer_tape:
-            with tf.GradientTape() as inner_tape:
-            
-            
-                loss = model.loss(outputs, model(inputs))
-
-            grads = inner_tape.gradient(loss, params)
-        h = outer_tape.gradient(grads, params)
-    return h
-def get_hessian_(model, inputs):
-    loss = tf.reduce_sum(model(inputs))
-    return tf.hessians(loss, inputs)
     
-
+mirrored_strategy = tf.distribute.MirroredStrategy()
 
             
 IMAGENET = True
@@ -37,20 +23,14 @@ DENSE=False
 
 def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
 
-    loss = tf.keras.losses.SparseCategoricalCrossentropy()
-    
-    model2.compile(optimizer=opt,
-                   loss=loss, 
-                   metrics=['accuracy'])
-    
-            
+        
         #
         #for i in val_ds:
         #    #T = get_hessian_(model2, i[0])
         #    T = get_hessian_j(model2, i[0],i[1])
 
-    print("Evaluate")
-    result = model2.evaluate(val_ds, verbose = 2 if 'ZEROS' in os.environ else 1)
+    #print("Evaluate")
+    #result = model2.evaluate(val_ds, verbose = 1) #2 if 'ZEROS' in os.environ else 1)
     
 
     checkpoint_filepath = logs+'/checkpoint'
@@ -93,20 +73,22 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1 ):
         #import pdb; pdb.set_trace()
     print("Train", os.environ["EPOCH"])
     epoch = int(os.environ["EPOCH"]) if "EPOCH" in os.environ else 30
-    epoch *=x 
+    epoch *=x
+
+    
     model2.fit(
         train_ds,
         epochs=epoch,
         validation_data = val_ds,
-        verbose = 2 if 'ZEROS' in os.environ else 1,
+        verbose = 1, #2 if 'ZEROS' in os.environ else 1,
         callbacks = [model_checkpoint_callback],#[print_weights]
     )
 
-    print("Evaluate")
-    result = model2.evaluate(val_ds)
-    print(result)
-    Z = dict(zip(model2.metrics_names, result if type(result) is list else [result]))
-    print(Z)
+    #print("Evaluate")
+    #result = model2.evaluate(val_ds)
+    #print(result)
+    #Z = dict(zip(model2.metrics_names, result if type(result) is list else [result]))
+    #print(Z)
 
     if 'HESSIAN'  in os.environ:
         hessian_computed = False
@@ -182,6 +164,8 @@ if __name__ == "__main__":
         MODEL  = 'resnet50'
         shapes = (224,224)
 
+
+        
     if MODEL == 'resnet50':
         from keras_applications.resnet50 import ResNet50 as Model
     elif MODEL == 'inceptionv3':
@@ -217,14 +201,19 @@ if __name__ == "__main__":
         
         print("reading training set",data_dir+"/train/")
         train_ds = tf.keras.preprocessing.image_dataset_from_directory(
-            data_dir+"/train/", 
+            data_dir+"/val/", 
             #subset="training",
             seed = 123,
             label_mode = 'int',
             image_size=(x, y),
             #batch_size=128
-            batch_size=64
+            batch_size=32
         )
+
+        options = tf.data.Options()
+        options.experimental_distribute.auto_shard_policy = tf.data.experimental.AutoShardPolicy.FILE
+        train_ds = train_ds.with_options(options)
+        
         # Preprocess the images
         train_ds = train_ds.map(resize_with_crop)
         #train_ds = train_ds[0:50000]
@@ -236,26 +225,44 @@ if __name__ == "__main__":
             label_mode = 'int',
             image_size=(x, y),
             #batch_size=128
-            batch_size=64
+            batch_size=32
         )
+
+        val_ds = val_ds.with_options(options)
         val_ds = val_ds.map(resize_with_crop)
         
     
     if IMAGENET:
         print("IMAGENET MODEL")
         inputs = keras.layers.Input(shape=(x,y,3))
-        original_model = Model(
-            True,
-            'imagenet' if weights is None else None, #None,
-            inputs,(x,y,3),
-            classes = 1000,
-            backend=K,
-            layers = keras.layers,
-            models = keras.models,
-            utils   = keras.utils
-        )
-        #import pdb; pdb.set_trace()
-        model2 = MakeItBlockSparse(original_model)
+
+
+        with mirrored_strategy.scope():
+            #if True:
+            original_model = Model(
+                True,
+                'imagenet' if weights is None else None, #None,
+                inputs,(x,y,3),
+                classes = 1000,
+                backend=K,
+                layers = keras.layers,
+                models = keras.models,
+                utils   = keras.utils
+            )
+
+            opt = keras.optimizers.SGD(learning_rate=0.001)
+            loss = tf.keras.losses.SparseCategoricalCrossentropy()
+
+
+            
+            #import pdb; pdb.set_trace()
+            model2 = MakeItBlockSparse(original_model)
+            #model2 = original_model
+            model2.compile(optimizer=opt,
+                          loss=loss, 
+                          metrics=['accuracy'])
+        
+            #model2 = original_model
         
         #model2.summary()
         #
