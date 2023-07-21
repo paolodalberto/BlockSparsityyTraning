@@ -262,7 +262,8 @@ def set_block_sparsity(
             H.append(l.get_hessian())
     
     H = sorted(H)
-    Q_step = [20, 15, 10] 
+    #Q_step = [20, 15, 10]
+    Q_step = [12, 8, 5] 
     
     for l in model2.layers:
         if type(l) == SparseBlockConv2d :
@@ -287,7 +288,7 @@ def set_block_sparsity(
                 )
                 
             if r.find("No")<0 :
-                print(r,l.name,l.gamma.shape)
+                print(z_step,r,l.name,l.gamma.shape)
                 
             
             if step: import pdb; pdb.set_trace()
@@ -1455,6 +1456,73 @@ class SparseBlockConv2d(tf.keras.layers.Conv2D):
     ##
     ###
     def zeros_volumes_per_block(
+            self,
+            sparse_rate= 0.5,
+            verbose = True,
+            step =20,
+            blocks = [ 4, 2]
+            
+    ):
+
+
+        zero_rate = 1 - sparse_rate
+
+        count = 0
+
+        K = self.kernel**2  if GradientGradient else  self.kernel
+        AA = (np.max(np.finfo(np.float32).eps+ tf.abs(self.get_gradient()))*K*self.get_gamma()).numpy()
+
+        
+        L,TT = self.get_gamma_w_cnout(
+            AA,
+            self.volume_by_l1
+            #self.volume_by_variance
+        )
+
+
+        
+        
+        tra = True or (self.kernel.shape[0]>1 or self.kernel.shape[1]>1)
+        
+        if tra and len(L.shape)==2 and L.shape[0]>1 and L.shape[1]>1:
+            ## Gamma :  cin x cout 
+            
+            CIN, COUT = L.shape
+            Z = int(zero_rate*COUT*CIN) ## per all
+
+            Gamma = self.gamma.numpy().astype(int)
+            NZG = CIN*COUT - sum(sum(Gamma))
+            
+            ## either increment of 1 or step% of what we need, this is
+            ## the number of zeros increment
+            K = max(1,int(step*Z/100))
+            # but no more that the one we need 
+            Z1 = min(NZG+K, Z)
+            
+            if NZG < Z :
+                #import pdb; pdb.set_trace()
+
+                gamma = Gamma*1
+                gamma[TT<Z1] = 0
+
+                self.gamma.assign(gamma)
+                S =  "Min by block %d %d adjusted %d" % (
+                    CIN*COUT - sum(sum(gamma)),Z, count
+                )
+                                    
+                return S
+                ## choice by column
+            else:
+                return   "No Zeros %d %d " %  (NZG, Z)
+                
+        return "Nothing to do"
+    ###
+    ##  This is the main function to zero at least one volume of the
+    ##  kernel weights. Once we zero the gamma, they stay gamma, You
+    ##  can use a differefnt volume measure.
+    ##
+    ###
+    def zeros_volumes_per_block_old(
             self,
             sparse_rate= 0.5,
             verbose = True,

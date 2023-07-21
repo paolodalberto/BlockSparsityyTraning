@@ -123,7 +123,7 @@ class HessianMetrics:
 
 
 class GradientTwo:
-    def __init__(self, model,  ds, sparse_rate : int = 0.5):
+    def __init__(self, model,  ds, step : bool = True, sparse_rate : int = 0.5):
         """
         model: Keras model
         loss_fn: loss function
@@ -135,6 +135,8 @@ class GradientTwo:
         self.model = model
         self.ds = ds
         self.sparse_rate = sparse_rate
+        self.step = step
+        self.loss = model.loss #tf.keras.losses.SparseCategoricalCrossentropy(reduction=tf.keras.losses.Reduction.SUM)
 
     def gradient(self, layer):
         params = [  v for v in layer.trainable_variables        ]
@@ -146,9 +148,10 @@ class GradientTwo:
                 with tf.GradientTape() as outer_tape:
                     with tf.GradientTape() as inner_tape:
 
-                        loss = self.model.loss(
+                        loss = self.loss(
                             ds[1],
-                            self.model(ds[0],training=True))
+                            self.model(ds[0],training=True)
+                        )/ds[0].shape[0]
                         ## D_p (loss) / Dparam
                         grads = inner_tape.gradient(loss, params[0])
 
@@ -178,30 +181,30 @@ class GradientTwo:
                 
         #H = sorted(H, key = lambda x: -x[1])
         G = False
-
-        
-        for layer,h in H:
-            if len(layer.trainable_variables) > 0 and \
-               type(layer) in [SparseBlockConv2d or tf.keras.layers.Conv2D]:
-                
-                gamma = layer.get_gamma()
-                CIN, COUT = gamma.shape
-                Z = int(self.sparse_rate*COUT*CIN)
-                NZG = CIN*COUT - sum(sum(gamma))
-                A = CIN//8==0 or  COUT//8==0
-                if A or  Z == NZG:
-                    continue
-                #import pdb; pdb.set_trace()
-                hv,_ = self.gradient(layer)
-                
-                layer.set_gradient(hv)
-                t = tf.reduce_sum(hv)
-                if save_trace:
-                    layer.set_hessian(t)
-                print("Grad diagonal",layer.name, t, Z,NZG)
-                tr += [ t]
-                
-                break  # Compute for encoder only
+        gpus = tf.config.list_physical_devices('GPU')
+        if True : #with tf.device("./GPU:0"):
+            for layer,h in H:
+                if len(layer.trainable_variables) > 0 and \
+                   type(layer) in [SparseBlockConv2d or tf.keras.layers.Conv2D]:
+                    
+                    gamma = layer.get_gamma()
+                    CIN, COUT = gamma.shape
+                    Z = int(self.sparse_rate*COUT*CIN)
+                    NZG = CIN*COUT - sum(sum(gamma))
+                    A = CIN//8==0 or  COUT//8==0
+                    if A or  Z == NZG:
+                        continue
+                    #import pdb; pdb.set_trace()
+                    hv,_ = self.gradient(layer)
+                    
+                    layer.set_gradient(hv)
+                    t = tf.reduce_sum(hv)
+                    if save_trace:
+                        layer.set_hessian(t)
+                    print("Grad diagonal",layer.name, t, Z,NZG)
+                    tr += [ t]
+                    
+                    if self.step: break  # Compute for encoder only
 
         if len(tr)==0 : return 0;
         return np.mean(tr)

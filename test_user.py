@@ -16,6 +16,50 @@ from sparse_conv_2d import SparseBlockConv2d, MakeItBlockSparse, \
     
 mirrored_strategy = tf.distribute.MirroredStrategy()
 
+class SparseModel(keras.callbacks.Callback):
+    """Stop training when the loss is at its min, i.e. the loss stops decreasing.
+
+    Arguments:
+        patience: Number of epochs to wait after min has been hit. After this
+        number of no improvement, training stops.
+    """
+
+    def __init__(self, X_test):
+        self.qtest = X_test
+    def on_epoch_begin(self, epoch, logs=None):
+        HESSIAN = False
+        ZEROS   = False
+        machine = os.environ['MACHINE']
+        #if 'HESSIAN'  in os.environ :
+        #    HESSIAN = True
+        if 'ZEROS'  in os.environ :
+            ZEROS = True
+        
+        if HESSIAN:
+            from hessian import  HessianMetrics, GradientTwo
+            from fit import  FITMetrics, Gradient
+            
+            G = GradientTwo(self.model,self.qtest,
+                            True if machine == "xsjfislx31" else False
+            )
+            R = G.trace_hack_paolo(save_trace=True)
+        if ZEROS:
+            row_sparse = 1 
+            if 'COL_SPARSE' in os.environ:
+                row_sparse = 1 
+            elif 'ROW_SPARSE' in os.environ:
+                row_sparse = 0 
+            elif 'BLOCK_SPARSE' in os.environ:
+                row_sparse = 2
+            
+            if machine == "xsjfislx32":
+                #import pdb; pdb.set_trace()
+
+                set_block_sparsity(self.model, None, False ,False,row_sparse)
+            else:
+                set_block_sparsity_priority(self.model, 0.5,row_sparse)
+#                set_block_sparsity(self.model, None, False ,False,row_sparse)            
+    
             
 IMAGENET = True
 CIFAR = False
@@ -29,8 +73,8 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1, data_dir = "/imagenet", shap
         #    #T = get_hessian_(model2, i[0])
         #    T = get_hessian_j(model2, i[0],i[1])
 
-    #print("Evaluate")
-    #result = model2.evaluate(val_ds, verbose = 1) #2 if 'ZEROS' in os.environ else 1)
+    print("Evaluate")
+    result = model2.evaluate(val_ds, verbose = 1) #2 if 'ZEROS' in os.environ else 1)
     
 
     checkpoint_filepath = logs+'/checkpoint'
@@ -41,36 +85,26 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1, data_dir = "/imagenet", shap
         mode='max',
         save_best_only=True)
     #import pdb; pdb.set_trace()
-    A = False
-    if A and 'HESSIAN'  in os.environ:
-        from hessian import  HessianMetrics, GradientTwo
-        from fit import  FITMetrics, Gradient
-            
-        qtest = train_ds.take(50)
+    C = [ model_checkpoint_callback]
+    if 'HESSIAN'  in os.environ or 'ZEROS' in os.environ:
+        if 'HESSIAN'  in os.environ:
+            train_ds_2 = tf.keras.preprocessing.image_dataset_from_directory(
+                data_dir+"/train/", 
+                #subset="training",
+                seed = 123,
+                label_mode = 'int',
+                image_size=(224,224),
+                batch_size=64
+                #batch_size=64
+            )
+            qtest = train_ds_2.take(200)
+            del train_ds_2
+        else:
+            qtest = train_ds.take(200)
 
+        C.append(SparseModel(qtest))
 
-        if True:
-            # Fisher/Information
-            F = FITMetrics(model2, qtest)
-            R = F.trace_hack_paolo(save_gradient=True)
-            
-        
-        else: # True :
-
-            # gradient of gradient information about this solution point 
-            G = GradientTwo(model2,qtest)
-            R = G.trace_hack_paolo(save_trace=True)
-            GradientGradient = True
-            
-        if False :
-            # gradient information about this solution point 
-            G2 = Gradient(model2,qtest)
-            R2 = G2.trace_hack_paolo()
-            GradientGradient = False
-
-
-        print(R)
-        #import pdb; pdb.set_trace()
+    
     print("Train", os.environ["EPOCH"])
     epoch = int(os.environ["EPOCH"]) if "EPOCH" in os.environ else 30
     epoch *=x
@@ -80,15 +114,10 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1, data_dir = "/imagenet", shap
         train_ds,
         epochs=epoch,
         validation_data = val_ds,
-        verbose = 1, #2 if 'ZEROS' in os.environ else 1,
-        callbacks = [model_checkpoint_callback],#[print_weights]
+        verbose = 2 if 'ZEROS' in os.environ else 1,
+        callbacks = C,
     )
 
-    #print("Evaluate")
-    #result = model2.evaluate(val_ds)
-    #print(result)
-    #Z = dict(zip(model2.metrics_names, result if type(result) is list else [result]))
-    #print(Z)
 
     if 'HESSIAN'  in os.environ:
         hessian_computed = False
@@ -119,14 +148,17 @@ def boom(model2, opt, train_ds,val_ds, x : int = 1, data_dir = "/imagenet", shap
             qtest = train_ds.take(500)
             if False:
                 # Fisher/Information
-                F = FITMetrics(model2, qtest)
+                F = FITMetrics(model2, qtest,
+                True if machine == "xsjfislx31" and epoch==1 else False)
                 R = F.trace_hack_paolo(save_gradient=True)
             
         
             else: # True :
 
                 # gradient of gradient information about this solution point 
-                G = GradientTwo(model2,qtest)
+                G = GradientTwo(model2,qtest,
+                                True if machine == "xsjfislx31" else False
+                )
                 R = G.trace_hack_paolo(save_trace=True)
                 GradientGradient = True
             
@@ -300,7 +332,7 @@ if __name__ == "__main__":
     
     #import pdb; pdb.set_trace()
     
-    if (not 'HESSIAN'  in os.environ or  hessian_computed) and 'ZEROS' in os.environ:
+    if False and (not 'HESSIAN'  in os.environ or  hessian_computed) and 'ZEROS' in os.environ:
         #set_block_sparsity(model2, None, False ,False,row_sparse)
         set_block_sparsity_priority(model2, 0.5,row_sparse)
 
