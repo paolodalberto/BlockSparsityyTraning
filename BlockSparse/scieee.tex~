@@ -1,0 +1,395 @@
+
+
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\input{mydef}
+\begin{document}
+
+%%%%%%%%%%%---SETME-----%%%%%%%%%%%%%
+\title{Weight Block Sparsity: Training, Compilers, and Accelerators  }
+
+\author{
+  \IEEEauthorblockN{Taehee Jeong}  
+  \and
+  \IEEEauthorblockN{Akshay Jain}  
+  \and
+  \IEEEauthorblockN{Shreyas Manjunath}  
+  \and
+  \IEEEauthorblockN{Mrinal Sarmah}  
+  \and
+  \IEEEauthorblockN{Samuel Hsu}
+  \and
+  \IEEEauthorblockN{Nitesh Pipralia}
+  \and
+  \IEEEauthorblockN{ Paolo D'Alberto}
+}
+
+%\renewcommand{\shortauthors}{D'Alberto, et al.}
+\maketitle
+
+\begin{abstract}
+Inference is synonymous of performance: for example, more and faster
+classifications per seconds. As faster and dedicated chips are
+deployed in the field also larger and larger models are domineering
+the public's attention: quantization and sparsification are used to
+fit these large models into more reasonable sized ones. Quantization
+reduces the foot print per model weight and sparsification trims
+superfluous ones.  We present the main ideas about a vertical system
+where convolution and matrix multiplication weights can be trained to
+exploit an 8x8 block sparsity, compilers recognize such a sparsity for
+data compaction and computation splitting into threads and
+cores. 
+
+Blocks present spatial locality that a vector operation makes full use
+and temporal locality for good reuse and cost amortization. If we take
+a Resnet50, we can reduce the weight by half with little accuracy
+loss, In principle, we could achieve the speeds similar to Resnet18
+(resnet25). We shall present performance estimates by accurate and
+complete code generation for a small and efficient set of AIE2 (Xilinx
+Versal FPGAs). We show application for general CPU, GPUS.
+
+\end{abstract}
+
+
+\begin{IEEEkeywords}
+performance, FPGA, data centers, tools
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:introduction}
+
+We must spell out what we mean for block sparsity and for a vertical
+solution. This will provide a clear introduction to the subject of our
+work. Block sparsity is an intuitive concept but it is also a little
+misunderstood because we all have a different mental picture of
+it. Take a matrix multiplication as in Equation \ref{eq:mat}
+\begin{equation}
+  \label{eq:mat}
+  \begin{pmatrix}
+    \Vc{C}_0 & \Vc{C}_1 \\
+    \Vc{C}_2 & \Vc{C}_3 \\ 
+  \end{pmatrix} = 
+  \begin{pmatrix}
+    \Vc{A}_0 & \Vc{A}_1 \\
+    \Vc{A}_2 & \Vc{A}_3 \\ 
+  \end{pmatrix}\\
+  \begin{pmatrix}
+    \Vc{0}   & \Vc{B}_1 \\
+    \Vc{B}_2 & \Vc{0} \\ 
+  \end{pmatrix}\\
+\end{equation}
+This is simply the computation
+{\small \begin{equation}
+  \Vc{C}_0 = \Vc{A}_{1} \Vc{B}_{2}; \;
+  \Vc{C}_1 = \Vc{A}_{0} \Vc{B}_{1}; \;
+  \Vc{C}_2 = \Vc{A}_{3} \Vc{B}_{2}; \;
+  \Vc{C}_3 = \Vc{A}_{2} \Vc{B}_{1}
+\end{equation}}
+and in general with proper $\gamma_i$
+\begin{equation}
+  \Vc{C}_i = \sum_{k=0}^1 \Vc{A}_{2i+ k} \big(\gamma_{2*k+i} \Vc{B}_{2*k+i}\big)
+\end{equation}
+
+
+Where the matrix $\Vc{B}$ is a constant and diagonal and each
+submatrices $\Vc{B_2}$ and $\Vc{B}_1$ can split further down and show
+zero blocks of even smaller sizes. In this work, we chose the basic
+block of being of size $\Vc{B}_i = 8\times 8$. It is arbitrary but it
+is a great starting point for architectures based on AMD AIE2
+products.  For example,
+\begin{equation}
+  \Vc{B} = \dot{\sum}_i \gamma_i \Vc{B}_i, \;\; \gamma_i \in \{0,1\} 
+\end{equation}
+Each block is a constant either non zero or zero:
+{\small \begin{equation*}
+  \Vc{B} = 
+  \begin{bmatrix}
+    \gamma_0\Vc{B}_0   &  ... &   \gamma_0\Vc{B}_{n-1} \\
+    \gamma_n\Vc{B}_{n} &  ... &   \gamma_{2n-1}\Vc{B}_{2n-1} \\
+    ...               &  ... &   ... \\
+    \gamma_{(n-1)n}\Vc{B}_{(n-1)n} & ... &   \gamma_{(n-1)^2}\Vc{B}_{(n-1)^2} \\
+  \end{bmatrix}
+\end{equation*}}
+Of course, the matrix $\Vc{A}$ can have any value and so
+$\Vc{C}$. Some applications have some constraints about the row and
+columns of $\Vc{B}_i$: for example, each row or column cannot be
+zero. In practice, we do not prune the network, we keep the same
+number of {\em channels} every where.
+
+This is a well known data structure in sparse computation field: We can
+use Compress Block Row or Column format (CBR). There are standard
+Matrix Sparse-Matrix Multiplication interfaces and algorithms for CPU
+and GPUs using this data format (where only one operand is sparse).
+
+In the CBR format, the $\gamma_i$ are not present and only non zeros
+elements are stored. In other architectures, we can choose to store
+all non zero blocks in row format and keep a matrix $\Gamma$ of zeros
+and ones (or columns). The $\Gamma$ is a bit matrix (here) but it can
+be represented as a short integer matrix representing the non-zero
+block column and in general two orders of magnitude ($8\times 8 \times
+4$) smaller than the sparse or original $\Vc{B}$ matrix. It is
+possible the problem has inherent block sparsity. In general, we are
+working with {\em man made} block sparsity: the granularity of the
+dense block is a property of the hardware.
+
+In classification, the model weight size determines one important
+aspect of the model complexity: the number of operations per single
+output, the relation between layers (e.g., depth), and redundancy. The
+last property is important for resiliency and also to leave some space
+to learn new features if necessary. Exploiting sparsity is another way
+to reduce redundancy and computation. In our context, sparsity is the
+zeroing of weights (convolution and fully connected): we start with
+dense and model using full precision and we have to find a way to
+chose the binary matrix $\Gamma$ (which is also called a mask). For a
+matrix multiplication $\Gamma \in \B^{n\times m}$. In a convolution,
+$n$ is the number of output channels (divided by 8) and $m$ is the
+number of input channels (as above) and each $\Vc{B}_i \in \R^{8\times
+  h \times w \times 8}$ where $h$ and $w$ are the height and width of
+the convolution kernel. Imagine $\Vc{B}$ having a dimension going into
+the paper of size $k \times w$.
+
+We explore training techniques (PyTorch, Keras is available in
+github): the most successful so far is the simplest: we take a
+pre-trained model, we compute a $\Gamma$ per layer using a function to
+determine the blocks more likely to be zeros (Norm) and then we train
+the model till convergence or accuracy achieved. We take the sparse
+model and we quantize to 8-bit integer computation by using Vitis-AI
+quantizer. The final model is a XIR quantize model (assuming addition
+accumulators are using 32bits). See Section \ref{sec:training}.
+
+For FPGA accelerator using AIE2, we have a custom compiler that takes
+the XIR model and an abstraction of a connected set of AIE2. See
+Section \ref{sec:compiler}. For example, A DDR, one or two memory
+dedicated per column (512KB each called Mem-tile), 1 to 8 columns, 1
+to 8 AIE2 cores per column, and each core has 8*8KB internal
+cores. There are vertical connection and there are horizontal
+connections. Give the HW and per layer, the compiler computes the
+maximum sub-volume computation per core. By heuristics and following a
+schedule, it computes a memory allocation in mem-tile for input,
+outputs, and weights. It formats the weights so that to exploit
+spatial distribution to Mem-tiles and cores into a compact form into a
+single tensor of weight, bias, and $\Gamma$.
+
+With the schedule and the DDR-MemTile allocation, we generate all the
+explicit communications between DDR, MemTile, and cores. Knowing the
+subproblem sizes per core and the computation throughput and with a
+clear specification of what is executed in parallel: we can estimate
+the execution time per layer and of the entire network with an
+accuracy closer to a simulation. The code generate is valid code that
+can be interpreted by the native AIE2 compiler and can be executed.
+This code can be used for further translation for execution. We shall
+use this code to have a detailed time estimates for all parts of the
+computation: we shall show estiamated for two CNN models, a few
+different AIE designs; see Section \ref{sec:experiments}.
+
+In the following Section \ref{sec:motivation}, we shall start with a
+quantitative measure about the advantages of block sparsity in
+general.
+
+\section{Block-Sparse Matrix-Matrix Multiplication}
+\label{sec:motivation}
+
+ As mental and practical exercise, consider $\Gamma$ and
+$\Omega$ two appropriate 0,1 matrices so that for square matrices in
+$\R^{N\times N}$
+\begin{equation}
+  \Vc{C} = (\Gamma \Vc{A}) * (\Omega \Vc{B})
+\end{equation}
+More precisely, consider non-zero blocks of size $k\times k$ so that
+\begin{equation}
+  \Vc{C}_{i*N+j} = \sum_k ( \gamma_{i*N+k} \Vc{A}_{i*N+k} ) (\omega_{k*N+j} \Vc{B}_{k*N+j})
+\end{equation}
+Thanks to the sparsity and if we store only non-zeros, then
+$gamma_{i*N+k}$ is at the very least contiguous but $\omega_{k*N+j}$
+and the right operand accesses are far from being neither simple not
+contiguous.
+\begin{equation}
+  \dot{\Omega}\dot{\Vc{B}} = (\Omega \Vc{B})^t =\Omega^t \Vc{B}^t 
+\end{equation}
+Although expensive, the transposition of a sparse matrix is a sorting
+algorithm: We start from a row order to a column order, then consider
+$K$ non-zeros, $K\log_2(K)$. 
+
+\begin{equation}
+  \Vc{C}_{i*N+j} = \sum_k ( \gamma_{i*N+k} \Vc{A}_{i*N+k} ) (\dot{\omega}_{j*N+k} \dot{\Vc{B}}_{j*N+k})
+\end{equation}
+There will be a meaningful product to compute if and only if
+$\gamma_{i*N+k} =1$, $\dot{\omega}_{j*N+k} =1$, and
+$i*N+k=j*N+k$. Without any extra information, this is simply merge
+sort. If we take $\gamma_{i*N+k} = i*N+k$ when the relative block is
+non zero, nothing otherwise, create a vector, and do the same for
+$\dot{\omega}_{j*N+k}$, then we merge-sort these vectors, we do
+computations only on equality (we have to inspect each non zero
+elements $M_0$ and $M_1$, which is $\leq O(\frac{N}{K})$. If you like
+to break codes yourself, see how the Sparse Sparse Matrix
+multiplication using Coordinate Block Structure (COO) is, please go
+play with \cite{PaoloG2020}. We have a parallel sorting and a parallel
+matrix multiplication.
+
+Now, the intuitive part, assume we want to achieve a fixed sparsity
+(i.e., density) of 50\% for a square matrix of size $N$ and we choose
+the block size $k \times k$. The number of blocks per dimension and
+thus the overhead for sparsity and sorting, is basically
+$\frac{1}{2}\frac{N}{k}$. Larger the $k$ smaller the overhead.  The
+relative performance of the $k^3$ multiplication is better as $k$ get
+larger because spatial and temporal locality and optimized code for a
+constant/parameterized $k$.
+
+\doublefigure{0.99}{1x1.png}{8x8.png}{Block 1x1 and 8x8
+  performance}{fig:block} In Figure \ref{fig:block}, we present two
+scatter plots: on the abscissa number of effective multiplication and
+addition, on the ordinate the performance in GFLOPS, when the sparsity
+dense block is 1x1 and 8x8. Given the same problem, we may use more
+threads and thus the Jenga of points.  We can see that given he same
+number of effective operations, the block permits better performance
+and exploits better performance for each precisions: see a 2{$\times$}
+performance for single precision computation versus double
+precision. This is a sparse computation and thus the poor
+peformance (in GFLOPS) is actually expected (the peak performance in
+this architecture is about 500+GFLOPS).
+
+
+
+
+\section{Block Sparsity: Training and Quantization}
+\label{sec:training}
+
+In Convolutional Neural Networks, the two main operations are
+convolutions/correlations and fully connected layers (matrix
+multiplication). The block sparsity we are seeking to deploy is not
+naturally recurring and it has to be made. We must train the network
+so that we can zero blocks of data.
+
+First, let us clarify block sparsity for convolution weights, then we
+clarify our training process. A convolution has a weight tensor in
+four dimension: $\Vc{W} \in \R^{c_{out}\times h \times k \times
+  c_{in}}$. If you can visualize the $h$ and $k$ dimension going into
+the paper: We can simplify the weight as $\dot{\Vc{W}} \in \R^{c_{out}
+  \times c_{in}}$ and block sparsity can be simply described by a mask
+$\Gamma\dot{\Vc{W}}$. Although, we speak of a $8\times 8$ of non
+zeros, this is practice a $8\times h\times k\times 8$ block. For the
+matrix multiply $h=k=1$ and there is no difference from the previous
+section discussion.
+
+We provide a repository using Keras \cite{chollet2015keras} where we
+implements the contents of this section: Any one can reproduce and
+break \cite{PaoloK2020}. We target convolutions only and without
+quantization. The idea of the framework is simple: we take any model
+and we create a copy where we enhance the convolution with a
+(non-trainable) $\Gamma$. A convolution will have three parameters
+(saving the model into a different format).  The forward computation
+is modified so that the weights used for convolution are
+$\Gamma\Vc{W}$. We assume the backward computation (i.e., gradient) is
+done automatically from the forward definition. There is no need to
+change the bias. For example, we take Resnet50 from the keras
+application repository, we start with a $\Gamma=1$, and we trained one
+epoch using imagenet repository \cite{deng2009imagenet}.  The goal is
+to choose $\Gamma$ so that we achieve the required sparsity and to
+have the minimum loss in accuracy. A little notation first:
+
+We start from an optimized network and assume a loss function ${\bf
+  \ell}(x,w)$.  In a close interval of the optimal solution $\Vc{w}_0$
+we have:
+\begin{equation}
+  \label{eq:loss}
+  {\bf \ell}(x,\Vc{w}_0 +\Triangle{\Vc{w})} = {\bf \ell}(x,\Vc{w}_0) +
+  \nabla{\bf \ell}*\Triangle{\Vc{w}} + (\Triangle{\Vc{w}})^t *H*
+  (\Triangle{\Vc{w}}) + \epsilon
+\end{equation}
+Where the gradient of the loss function is about zero and defined as
+\begin{equation}
+  \nabla{\bf \ell}* \Triangle{\Vc{w}} = \sum_{w_i} \frac{\partial\ell}{\partial w_i} \Triangle{w_i} \rightarrow 0
+\end{equation}
+The second component is the Hessian, it is symmetric and either
+definite positive (or negative) as a function of the loss.
+\begin{equation}
+  (\Triangle{\Vc{w}})^t *H*(\Triangle{\Vc{w}}) = \sum_{w_i} \Triangle{w_i}
+  \sum_{w_j} \frac{\partial\ell}{\partial w_i\partial w_j} \Triangle{w_j}
+\end{equation}
+We start from $\Vc{w}_0$, the current optimal weight, and we must
+choose how to reduce to zeros the weight and which ones.
+
+\subsection{$\Gamma$ chosen once and full training ahead}
+
+Take a convolution with $\Gamma = 1$ and weights $\Vc{W}$. For each
+$gamma_i$, this will be representative of a block $\Vc{W}_i \in \R^{8
+  \times h \times w \times 8} \sim \R^{8\times 8}$. We can choose the
+$\Vc{W}_i$ using a measure of importance:
+\begin{itemize}
+  \item $L_2 = \sqrt{\sum_k w_k^2}$ with $w_k$ elements of $\Vc{W}_i$
+  \item $L_1 = \sum_k |w_k|$ with 
+  \item Variance $\sigma^2 = \frac{1}{64}\sum_k (w_k -\mu)^2$ with
+    $\mu = \frac{1}{64}\sum w_k $ or $\frac{1}{N}\sum w_k$ (the whole
+    tensor). In signal processing $\sigma^2$ is the power of the
+    signal.
+\end{itemize}
+We can the sort them (ascending) and for example choose the first 50\%
+to set to zero. Then start re-training. We do this for the whole
+network or for one convolution at a time. 
+
+\subsection{$\Gamma$ chosen in steps  and small fine tuning}
+
+Let say that for every convolution, $n_i \sum gamma_i$, which is the
+number of blocks. We would like to reduce this number to
+$\frac{n_i}{2}$. For each epoch (say every two training epochs), we
+consider the current unset mask elements $\sum \gamma_i = k <
+\frac{n_i}{2}$. We compute our importance measure for all in ascending
+order. This time, we zero the first $min(\frac{5}{100}n_i, 1)$. We
+keep this process until we reach 50\% sparsity. At each iteration one
+block will be set to zero.
+
+\subsection{$\Gamma$ trainable and as optimization problem}
+
+We think it is worth mentioning: If we want to make $\Gamma$ part of
+the optimization process as trainable variable we could introduce into
+as a penalty function the loss ${\bf \ell}(x,w) + \lambda(w)$.
+
+First let us introduce an approximation for the $\max(x)$, so when in
+this section you will read max, this is a log sum exponetial
+\begin{equation}
+  \max(\Vc{x}) = LSE(\Vc{x},\alpha) = \frac{1}{\alpha}\log \sum e^{x_i*\alpha} 
+\end{equation}
+With $T$ we represent the number of non zero block in $\Gamma$
+\begin{flalign}
+  \lambda=  &  -(\max(\Gamma)- \min(\Gamma))  &&\\\nonumber
+  & +\beta*L2(\Gamma-T) + \iota*L1(\Gamma)  &&
+\end{flalign}
+\begin{flalign}
+  \lambda=  & \max(-\Gamma,0) + \max(\Gamma -1, 0)  -(\max(\Gamma)- \min(\Gamma)) &&\\\nonumber
+            & + \beta*L2(\Gamma-T) + \iota*L1(\Gamma) &&
+\end{flalign}
+\begin{flalign}
+  \lambda=  & \max(-\Gamma,0) + \max(\Gamma -1, 0)  -\frac{\min(\Gamma)}{\max(\Gamma)} &&\\\nonumber
+            &+ \beta*L2(\Gamma-T) + \iota*L1(\Gamma)   
+\end{flalign}
+
+We try to exploit this functionality, in Keras the penalty function
+can be added quite easily and per convolution (if you like) and it is
+available in the code reference. We could not use it successfully.
+
+\section{Compiler and Code generation}
+\label{sec:compiler}
+
+\section{Results}
+\label{sec:experiments}
+
+
+\section{Conclusions}
+
+%%%%%%%%% -- BIB STYLE AND FILE -- %%%%%%%%
+\bibliographystyle{IEEEtran} \bibliography{ref}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\appendix{Review and Response}
+%\input{review.tex}
+\end{document}
