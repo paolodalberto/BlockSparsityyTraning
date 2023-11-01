@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2023.6.11)  29 OCT 2023 17:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2023.6.11)  1 NOV 2023 12:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -306,45 +306,48 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 ]
-Underfull \hbox (badness 1460) in paragraph at lines 183--194
+Underfull \hbox (badness 1460) in paragraph at lines 184--195
 \OT1/ptm/m/n/10 gen-er-ate all the ex-plicit com-mu-ni-ca-tions be-tween DDR,
  []
 
 <1x1.png, id=28, 607.26875pt x 341.275pt>
 File: 1x1.png Graphic file (type png)
 <use 1x1.png>
-Package pdftex.def Info: 1x1.png  used on input line 249.
+Package pdftex.def Info: 1x1.png  used on input line 250.
 (pdftex.def)             Requested size: 249.48138pt x 140.19965pt.
 <8x8.png, id=30, 607.26875pt x 341.275pt>
 File: 8x8.png Graphic file (type png)
 <use 8x8.png>
-Package pdftex.def Info: 8x8.png  used on input line 249.
+Package pdftex.def Info: 8x8.png  used on input line 250.
 (pdftex.def)             Requested size: 249.48138pt x 140.19965pt.
 [2 <./1x1.png> <./8x8.png>] [3]
-Underfull \hbox (badness 2865) in paragraph at lines 427--437
+Underfull \hbox (badness 2865) in paragraph at lines 488--498
 []\OT1/ptm/m/n/10 Within our Xil-inx/AMD ef-fort, we can take a Py-
  []
 
 <AIE.png, id=41, 819.06pt x 1059.96pt>
 File: AIE.png Graphic file (type png)
 <use AIE.png>
-Package pdftex.def Info: AIE.png  used on input line 459.
+Package pdftex.def Info: AIE.png  used on input line 520.
 (pdftex.def)             Requested size: 226.79846pt x 293.50352pt.
-[4 <./AIE.png>]
-<AIE4x4.png, id=46, 1650.165pt x 725.71124pt>
+[4]
+<AIE4x4.png, id=45, 1650.165pt x 725.71124pt>
 File: AIE4x4.png Graphic file (type png)
 <use AIE4x4.png>
-Package pdftex.def Info: AIE4x4.png  used on input line 560.
+Package pdftex.def Info: AIE4x4.png  used on input line 621.
 (pdftex.def)             Requested size: 490.19843pt x 215.57788pt.
-<AIE4x4sparse.png, id=47, 1650.165pt x 725.71124pt>
+<AIE4x4sparse.png, id=46, 1650.165pt x 725.71124pt>
 File: AIE4x4sparse.png Graphic file (type png)
 <use AIE4x4sparse.png>
-Package pdftex.def Info: AIE4x4sparse.png  used on input line 562.
+Package pdftex.def Info: AIE4x4sparse.png  used on input line 623.
 (pdftex.def)             Requested size: 490.19843pt x 215.57788pt.
- (./scieee.bbl
+ (./scieee.bbl [5 <./AIE.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 31--33
 []\OT1/ptm/m/n/8 P. D'Alberto, ``Block spar-sity and train-ing,''
  []
+
+
+Underfull \vbox (badness 3049) has occurred while \output is active []
 
 )
 
@@ -358,40 +361,40 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[5] [6 <./AIE4x4.png> <./AIE4x4sparse.png>] (./scieee.aux) ) 
+[6 <./AIE4x4.png> <./AIE4x4sparse.png>] (./scieee.aux) ) 
 Here is how much of TeX's memory you used:
- 4015 strings out of 481239
- 56198 string characters out of 5920377
- 309923 words of memory out of 5000000
- 19229 multiletter control sequences out of 15000+600000
- 573323 words of font info for 109 fonts, out of 8000000 for 9000
+ 4032 strings out of 481239
+ 56369 string characters out of 5920377
+ 311961 words of memory out of 5000000
+ 19240 multiletter control sequences out of 15000+600000
+ 576899 words of font info for 118 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 30i,12n,37p,229b,242s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive
-/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
-msfonts/cmextra/cmex9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
-6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><
-/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/sh
-are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/t
-exlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib9.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
-7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.
-pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share
-/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf
--dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
-e1/urw/times/utmri8a.pfb>
-Output written on scieee.pdf (6 pages, 393941 bytes).
+ 30i,12n,37p,229b,263s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/tex
+mf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cmextra/cmex9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr
+/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/
+texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib9.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+msy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb
+></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
+rw/times/utmri8a.pfb>
+Output written on scieee.pdf (6 pages, 396219 bytes).
 PDF statistics:
  131 PDF objects out of 1000 (max. 8388607)
  88 compressed objects within 1 object stream
