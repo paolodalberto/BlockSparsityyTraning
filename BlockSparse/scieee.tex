@@ -152,7 +152,7 @@ to reduce redundancies and computations. In our context, sparsity is
 the zeroing of weights (convolution and fully connected): we start
 with dense model using full precision and we have to find a way to
 chose the binary matrix $\Gamma$ (which is also called a mask). For a
-matrix multiplication the mask $\Gamma \in \R^{n\times m}$. In a
+matrix multiplication the mask is $\Gamma \in \R^{n\times m}$. In a
 convolution, $n$ is the number of output channels (divided by 8) and
 $m$ is the number of input channels (as above) and each $\Vc{B}_i \in
 \R^{8\times h \times w \times 8}$ where $h$ and $w$ are the height and
@@ -166,7 +166,7 @@ determine the blocks more likely to be zeros (Norm) and then we train
 the model till convergence or accuracy achieved. We take the sparse
 model and we quantize to 8-bit integer computation by using Vitis-AI
 quantizer. The final model is a XIR quantize model (assuming addition
-accumulators are using 32bits). See Section \ref{sec:training}.
+accumulators of 32 bits). See Section \ref{sec:training}.
 
 For FPGA accelerator using AIE2, we have a custom compiler that takes
 the XIR model and an abstraction of a connected set of AIE2. See
@@ -278,9 +278,9 @@ four dimension: $\Vc{W} \in \R^{c_{out}\times h \times k \times
 the paper: We can simplify the weight as $\dot{\Vc{W}} \in \R^{c_{out}
   \times c_{in}}$ and block sparsity can be simply described by a mask
 $\Gamma\dot{\Vc{W}}$. Although, we speak of a $8\times 8$ of non
-zeros, this is practice a $8\times h\times k\times 8$ block. For the
-matrix multiply $h=k=1$ and there is no difference from the previous
-section discussion.
+zeros, this is in practice a $8\times h\times k\times 8$ block. For
+the matrix multiply $h=k=1$ and there is no difference from the
+previous discussions.
 
 
 
@@ -370,7 +370,9 @@ the optimization process as trainable variable we could introduce as a
 penalty function into the loss ${\bf \ell}(x,w) + \lambda(w)$.
 
 First let us introduce an approximation for the $\max(x)$, so when in
-this section you will read $\max, \min$, this is a log sum exponetial
+this section you will read $\max, \min$, this is a log
+sum exponetial,
+which is continuous, derivable everywhere, and convex:
 \begin{equation}
   \max(\Vc{x}) = LSE(\Vc{x},\alpha) = \frac{1}{\alpha}\log \sum e^{x_i*\alpha} 
 \end{equation}
@@ -379,6 +381,10 @@ With $T$ we represent the number of non zero block in $\Gamma$
   \lambda=  &  -(\max(\Gamma)- \min(\Gamma))  &&\\\nonumber
   & +\beta*L2(\Gamma-T) + \iota*L1(\Gamma)  &&
 \end{flalign}
+
+This is a simplified loss so that we minimize the valu of $\Gamma$ but
+also we try to maximize the difference of the elements.
+
 \begin{flalign}
   \lambda=  & \max(-\Gamma,0) + \max(\Gamma -1, 0)  -(\max(\Gamma)- \min(\Gamma)) &&\\\nonumber
             & + \beta*L2(\Gamma-T) + \iota*L1(\Gamma) &&
@@ -386,7 +392,8 @@ With $T$ we represent the number of non zero block in $\Gamma$
 
 This last penalty function represents our attempt to state the
 $\gamma_ i$ should be positive and in the interval $[0,1]$ and in a
-such a way that we maximize the distance between 0s and 1s.
+such a way that we maximize the distance of the elements between 0s
+and 1s.
 \begin{flalign}
   \lambda=  & \max(-\Gamma,0) + \max(\Gamma -1, 0)  -\frac{\min(\Gamma)}{\max(\Gamma)} &&\\\nonumber
             &+ \beta*L2(\Gamma-T) + \iota*L1(\Gamma)   
@@ -395,8 +402,8 @@ such a way that we maximize the distance between 0s and 1s.
 We can exploit this functionality in Keras: the penalty function can
 be added quite easily and per convolution (if you like) and it is
 available in the code reference. We could not use it successfully: we
-do not know if this is because the lack of the penalty, the optimizer,
-or the lost function.
+do not know if this is because the lack of the penalty it self, the
+optimizer, or the lost function, or just our own fault.
 
 \subsection{Hessian and Fisher Information }
 If we have $N$ parameters/weights, the Hessian $H \in R^{N\times N}$
@@ -425,7 +432,7 @@ network.
 
 The Fisher and $\nabla^2{\bf \ell}$ did not provide any main
 advantages. But this information is found very useful in quantization
-and optimization within the same field and application. We embrace the
+and optimizations within the same field and application. We embrace the
 community to help us to understand this better. 
 
 \subsection{PyTorch} 
@@ -487,40 +494,38 @@ and we shall use it for estimate the time advantages (i.e., Section
 \label{sec:compiler}
 Within our Xilinx/AMD effort, we can take a PyTorch/Keras, quantize it
 using Vitis AI, and create an intermediate representation by using
-what we call Xilinx Intermediate Representation XIR. This is basically
-a graph composed by operations that read and write tensors. A
-convolution has one quantized input: we use the layout format BHWC,
-the tensors are represented in INT8 with a position where the fraction
-starts (power of two scale). It computes a tensor using the same
-layout as the input and with a proper scale. The weights and bias are
-properties of the convolutions and they are not really considered
-inputs.
+what we call Xilinx Intermediate Representation (XIR). This is a graph
+of operations that read and write tensors. A convolution has one
+quantized input: we use the layout format BHWC, the tensors are
+represented in INT8 with a position where the fraction starts (power
+of two scale). It computes a tensor using the same layout as the input
+and with a proper scale. The weights and bias are properties of the
+convolutions, as such they can be tailored.
 
 For this project, we are at the third generation of a compiler for
-custom architectures (previously
+custom architectures (previously DPUV1 and DPUV3int8
 \cite{10.1145/3473334,abs-2110-04327}). The main common harwdware
 feature for this new architecture is the availability of two main
 memory levels: DDR and MemTile, and for such memory we import the
-philosophy of memory data layout and memory allocation.
+philosophy of memory data layout and memory allocation (of the
+previous compilers).
 
-All weights are statically prepared into DDR and they moved explicitly
-towards the inner levels by the compiler. Inputs and outputs have
+All weights are statically prepared into DDR and we move them
+explicitly towards the inner levels. Inputs and outputs have
 designated space DDR (to communicate externally with PCI connection or
 RAM). DDR can and it will be used for swap tensors in case the inner
 levels do not allow allocation.  The compiler can explore different
-schedules and the memory allocation to Mem-Tile is basically coloring
+schedules: the memory allocation to Mem-Tile is basically coloring
 algorithm plus some heuristics. In this architecture, we do not allow
-{\em streaming} of neither data or weights. In previous architecture
-we could because input, outputs, and weights used dedicated memory
-space. Here Activations and Weights share the same memory as we shall
-explain in the next section.
+{\em streaming} of neither data or weights (because they share space
+in Mem-Tile). In previous architecture, we could.
 
 \subsection{AIE Hardware abstraction}
 
 \singlefigure{0.90}{AIE.png}{4x4 AIE representation}{fig:aie}
 
 For this presentation, see Figure \ref{fig:aie}, we work with a mesh
-of 4x4 AIE cores connected by 4 horizontal and 4 vertical
+of 4x4 AIE2 cores connected by 4 horizontal and 4 vertical
 interconnections. Each core has 8 banks memories for a total
 64KB. About 6 banks are used and input/output/weight buffers and 2
 banks are used as temporary space for kernels. Each core can request
@@ -541,36 +546,48 @@ across mem-tiles although the distribution is different per tensor.
 The DDR is connected with two channels to write into each mem-tile and
 each mem-tile can use two channels to write into DDR. DDR and Mem-tile
 communications are parallel.  The abstraction can be extended to more
-complex connections (from $1\times 1$ to $8\times 2$ and more
-memtiles). But this is representative.
+complex connections (from $1\times 1$, $8\times 2$, to $8\times 8$ and
+more rows of memtiles designed for larger chips). But $4\times 4$ is
+representative for the AIE engines you will find in the next
+generation of CPU+FPGA chips.
 
 
 \subsection{Sub Volume, Data compression and Data Movement}
-There are a few assumptions we spell out here. The computation is
-split by column: each output tensor is split evenly by width, so each
-memtile will store different columns by width, each core will compute
-different output channels, and the computation streams computing the
-height of the tensor by using core input and output ping/pong. As
-often as possible, we store the weights in the core and we reuse them
-as much as possible (unless we need to stream the weight instead).
+There are a few assumptions. The computation is split by column: each
+output tensor is split evenly by width, so each memtile will store
+different columns by width, each core will compute different output
+channels, and the computation streams computing the height of the
+tensor by using core input and output ping/pong. As often as possible,
+we store the weights in the core and we reuse them as much as possible
+(unless we need to stream the weight instead). The set of cores is a
+cohort and symmetric computations are always selected. This means that
+we do not merge two operations like convolution and max-pool and give
+three columns to convolution and one column to max-pool. Other
+approach in the literature will do this more advanced methodology.
 
-Before we start the memory allocation, we have to investigate the size
-of the sub-volume computation at AIE core. If we have the input,
-output, weight in memtile, what is the largest computation we can do
-in the AIE. The minimum computation is at least one output channel and
-one row by height. If this is not possible, we try to reduce the size
-of the width (e.g., by using DDR spils) and we can manage to split the
-input channels (this will require to split the weights accordingly).
-
-Once we have the subvolume, we know if input and output tensor need
-width split or input channel split. This in general, means that the
-tensor cannot fit completely in Mem-tile and part of it will be moved.
+Before we start describing the memory allocation, we have to explain
+and compute the size of the sub-volume computation at AIE core.  That
+is, if we have the inputs, output, and weights in memtile, what is the
+largest computation we can do in the AIE? The minimum computation is
+at least one output channel and one row by height. If this is not
+possible, we try to reduce the size of the width (e.g., shaping the
+tensor in memtile by using DDR spils) and we can manage to split the
+input channels (this will require to split the weights accordingly and
+accumulate). We call W-Split the distribution of tensor by columns in
+the AIE mesh. We can CIN-split when we need to split by input channel.
+The split of the computation is also called tiling. Once we have the
+subvolume, we know if input and output tensor need W-split or
+CIN-split. This in general, means that the tensor cannot fit
+completely in Mem-tile and part of it will be moved. Or the
+computation will need to read from mem-tile the same inputs or weights
+multiple times.
 
 At this stage, the subvolume describes the smallest shape of the
 weights we need to manage. We compress the weight accordingly to such
 a subvolume so that any data movement will always be a multiple of the
 subvolume and can be a single load. Such a compress data will have the
-same properties whether is sparse or not.
+same properties whether is sparse or not. Of course, sparse data is
+smaller and we compute fewer operations.
 
 
 \subsection{Schedule and memory allocation}
@@ -582,13 +599,35 @@ tensors into DDR and then split/time the computation. If we can, we
 do, and we will evict the tensors no longer needed accordingly.
 
 At the end of this stage, every tensor will be associated to an
-address either in memtile or DDR (or both). If there are only DDR
-addresses, the compiler will take the basic computation and, by an
-heuristics, will split the computation (thus the output tensor) by
-width, output channel, height, and input channel (non necessarily in
-this order). Every computation will have the DDR to and from MemTile
-and its data movements for the first two levels of the memory
-hierarchy.
+address in memtile or DDR (or both). If there are only DDR addresses,
+the compiler will take the basic computation and, by an heuristics,
+will split the computation (thus the output tensor) by width, output
+channel, height, and input channel (non necessarily in this
+order). Every computation will have the DDR to and from MemTile and
+its data movements for the first two levels of the memory hierarchy.
+
+We use a implementation that takes a recursive and iterative approach
+in tiling \cite{abs-2110-04327}: For clarity, $\sum$ is a sum or
+reduction and $\dot{\sum}$ is a parallel loop and a W-split can be
+written as
+\begin{equation}
+  \Vc{Y} =  Conv(\Vc{X},\Vc{W}) = \dot{\sum}_{w=1}^k
+  Conv(\Vc{B}_w,\Vc{W})
+\end{equation}
+The split is pre-computed as function of the foot print, before and
+after each convolution there will be an explicit data movement. At
+this stage each input, output, and weights will have an address
+associated with each sub-computation. Then the code generation of each
+$Conv(\Vc{B}_w,\Vc{W})$ is independent and recursive and as needed
+there will be specific split of the computation accordingly. This
+could be simply described using loops but it is actually a tree (i.e,
+a root with $k$ children). If the convolution has strides and large
+kernel, each sub-convolution may have overlap data but defined
+addresses and data movement if necessary. For example, computing the
+output by rows and the weights are reused.
+\begin{equation}
+  \forall w, \;   Conv(\Vc{B}_w,\Vc{W}) \rightarrow  \dot{\sum}_{h=1}^\ell Conv(\Vc{B}_{w,h},\Vc{W})
+\end{equation}
 
 
 \subsection{Code Generation }
@@ -599,10 +638,52 @@ is completely determined by the subvolume computation we did
 previously. We can explicitly determine the data movements from
 mem-tile to core and back.
 
+A peculiar feature of the current system is the concept of {\em
+  iteration}. Using locks and chaining them (locks like in
+semaphores)
+
+We can create a single iteration instruction from the prospective of a
+single core (as a SIMD instruction) but driving all cores at once (ASM
+code) {\footnotesize
+\begin{verbatim}
+  LOAD Lock k_0 mem-tile add core add iter i
+  CONV iteration      i
+  SAVE Lock k_1 mem-tile add core add iter i
+\end{verbatim}
+}
+These three operations will be execute a number of iterations {\em i}
+and using a ping/pong they will load different slices of data and
+compute different slices of data. The key ingredient for this to work
+is the volumes of input and output tensors are all the same. 
+
+In our environment padding is common and we can manage by a custom
+load (from memtile to core) and this requires a custom load that will
+not be repeated
+{\footnotesize
+\begin{verbatim}
+  ## Head top padding
+  LOAD Lock k_0 mem-tile add_0 core add iter 1
+  CONV iteration 1
+  SAVE Lock k_1 mem-tile add_1 core add iter 1
+  ## Body iteration
+  LOAD Lock k_2 mem-tile add_2 core add iter i
+  CONV iteration i
+  SAVE Lock k_3 mem-tile add_3 core add iter i
+  ## tail
+  LOAD Lock k_4 mem-tile add_4 core add iter 1
+  CONV iteration 1
+  SAVE Lock k_5 mem-tile add_5 core add iter 1
+\end{verbatim}
+ }
+
+
+
+
 At this stage we have all the information: the code generation per
 layer is a two pass process: first, we generate code for the all
 load/store and then we combine them into chain having dependency so
-that to be logically correct and as fast as possible.
+that to be logically correct and as fast as possible. Take the code
+above and we introduce a chain information. 
 
 \subsection{Time Estimation}
 During and especially once we generated the code for all data
@@ -617,10 +698,14 @@ parallel execution.
 \label{sec:experiments}
 
 
-\Singlefigure{0.95}{AIE4x4.png}{Resnet50 for 4x4 AIE with
-  dense}{fig:estimate-dense}
-\Singlefigure{0.95}{AIE4x4sparse.png}{Resnet50 for 4x4 AIE 50\% sparse
-  weights}{fig:estimate-sparse}
+\Singlefigure{0.95}{AIE4x4.png}{Resnet50 for 4x4 AIE with dense
+  weights}{fig:estimate-dense}
+\Singlefigure{0.95}{AIE4x4sparse.png}{Resnet50 for 4x4 AIE with 50\%
+  sparse weights}{fig:estimate-sparse}
+\Singlefigure{0.95}{inceptionv3dense.png}{Inception V3 for 4x4 AIE
+  with dense weights}{fig:incv3-estimate-dense}
+\Singlefigure{0.95}{inceptionv3sparse.png}{Inception V3 for 4x4 AIE
+  with 50\% sparse weights}{fig:estimate-sparse}
 
 \section{Conclusions}
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2023.6.11)  1 NOV 2023 12:10
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2023.6.11)  4 NOV 2023 18:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -250,7 +250,11 @@ File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
 \l__kernel_color_stack_int=\count198
 \l__pdf_internal_box=\box49
 )
-(./scieee.aux)
+(./scieee.aux
+
+LaTeX Warning: Label `fig:estimate-sparse' multiply defined.
+
+)
 \openout1 = `scieee.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
@@ -321,33 +325,46 @@ File: 8x8.png Graphic file (type png)
 Package pdftex.def Info: 8x8.png  used on input line 250.
 (pdftex.def)             Requested size: 249.48138pt x 140.19965pt.
 [2 <./1x1.png> <./8x8.png>] [3]
-Underfull \hbox (badness 2865) in paragraph at lines 488--498
+Underfull \hbox (badness 2865) in paragraph at lines 495--504
 []\OT1/ptm/m/n/10 Within our Xil-inx/AMD ef-fort, we can take a Py-
  []
 
 <AIE.png, id=41, 819.06pt x 1059.96pt>
 File: AIE.png Graphic file (type png)
 <use AIE.png>
-Package pdftex.def Info: AIE.png  used on input line 520.
+Package pdftex.def Info: AIE.png  used on input line 525.
 (pdftex.def)             Requested size: 226.79846pt x 293.50352pt.
-[4]
-<AIE4x4.png, id=45, 1650.165pt x 725.71124pt>
+[4] [5 <./AIE.png>]
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 6
+48.
+ (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+)
+<AIE4x4.png, id=49, 1650.165pt x 725.71124pt>
 File: AIE4x4.png Graphic file (type png)
 <use AIE4x4.png>
-Package pdftex.def Info: AIE4x4.png  used on input line 621.
+Package pdftex.def Info: AIE4x4.png  used on input line 702.
 (pdftex.def)             Requested size: 490.19843pt x 215.57788pt.
-<AIE4x4sparse.png, id=46, 1650.165pt x 725.71124pt>
+<AIE4x4sparse.png, id=50, 1650.165pt x 725.71124pt>
 File: AIE4x4sparse.png Graphic file (type png)
 <use AIE4x4sparse.png>
-Package pdftex.def Info: AIE4x4sparse.png  used on input line 623.
+Package pdftex.def Info: AIE4x4sparse.png  used on input line 704.
 (pdftex.def)             Requested size: 490.19843pt x 215.57788pt.
- (./scieee.bbl [5 <./AIE.png>]
+<inceptionv3dense.png, id=51, 1462.46375pt x 752.8125pt>
+File: inceptionv3dense.png Graphic file (type png)
+<use inceptionv3dense.png>
+Package pdftex.def Info: inceptionv3dense.png  used on input line 706.
+(pdftex.def)             Requested size: 490.19843pt x 252.33446pt.
+<inceptionv3sparse.png, id=52, 1462.46375pt x 752.8125pt>
+File: inceptionv3sparse.png Graphic file (type png)
+<use inceptionv3sparse.png>
+Package pdftex.def Info: inceptionv3sparse.png  used on input line 708.
+(pdftex.def)             Requested size: 490.19843pt x 252.33446pt.
+
+(./scieee.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 31--33
 []\OT1/ptm/m/n/8 P. D'Alberto, ``Block spar-sity and train-ing,''
  []
-
-
-Underfull \vbox (badness 3049) has occurred while \output is active []
 
 )
 
@@ -361,43 +378,48 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[6 <./AIE4x4.png> <./AIE4x4sparse.png>] (./scieee.aux) ) 
+[6] [7 <./AIE4x4.png> <./AIE4x4sparse.png>] [8 <./Inceptionv3dense.png> <./ince
+ptionv3sparse.png>] (./scieee.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 4032 strings out of 481239
- 56369 string characters out of 5920377
- 311961 words of memory out of 5000000
- 19240 multiletter control sequences out of 15000+600000
- 576899 words of font info for 118 fonts, out of 8000000 for 9000
+ 4081 strings out of 481239
+ 57186 string characters out of 5920377
+ 312008 words of memory out of 5000000
+ 19282 multiletter control sequences out of 15000+600000
+ 577414 words of font info for 120 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  30i,12n,37p,229b,263s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/tex
-mf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/
-public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
-nts/cmextra/cmex9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib9.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
-msy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
-rw/times/utmri8a.pfb>
-Output written on scieee.pdf (6 pages, 396219 bytes).
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+b10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmi
+b9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier
+/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/urw/times/utmri8a.pfb>
+Output written on scieee.pdf (8 pages, 518906 bytes).
 PDF statistics:
- 131 PDF objects out of 1000 (max. 8388607)
- 88 compressed objects within 1 object stream
+ 147 PDF objects out of 1000 (max. 8388607)
+ 97 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 26 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 
