@@ -626,12 +626,12 @@ kernel, each sub-convolution may have overlap data but defined
 addresses and data movement if necessary. For example, computing the
 output by rows and the weights are reused.
 \begin{equation}
-  \forall w, \;   Conv(\Vc{B}_w,\Vc{W}) \rightarrow  \dot{\sum}_{h=1}^\ell Conv(\Vc{B}_{w,h},\Vc{W})
+  \forall w, \;   Conv(\Vc{B}_w,\Vc{W}) \rightarrow  \dot{\sum}_h Conv(\Vc{B}_{w,h},\Vc{W})
 \end{equation}
 
 
 \subsection{Code Generation }
-The compiler recursively create a list of operations smaller and
+The compiler recursively creates a list of operations smaller and
 smaller that can actually be executed Mem-Tile to Mem-Tile. In
 practice, there is a further decomposition using only AIE cores but it
 is completely determined by the subvolume computation we did
@@ -640,17 +640,18 @@ mem-tile to core and back.
 
 A peculiar feature of the current system is the concept of {\em
   iteration}. Using locks and chaining them (locks like in
-semaphores)
-
-We can create a single iteration instruction from the prospective of a
-single core (as a SIMD instruction) but driving all cores at once (ASM
-code) {\footnotesize
+semaphores): We can create a single iteration instruction from the
+prospective of a single core (as a SIMD instruction) but driving all
+cores at once (ASM-like code) {\footnotesize
 \begin{verbatim}
   LOAD Lock k_0 mem-tile add core add iter i
   CONV iteration      i
   SAVE Lock k_1 mem-tile add core add iter i
 \end{verbatim}
-}
+} There is an implicit lock (say \verb2k_x2) that is used for the pong
+and the system cycles in between locks (\verb2k_x2 and \verb2k_02)
+
+
 These three operations will be execute a number of iterations {\em i}
 and using a ping/pong they will load different slices of data and
 compute different slices of data. The key ingredient for this to work
@@ -666,9 +667,10 @@ not be repeated
   CONV iteration 1
   SAVE Lock k_1 mem-tile add_1 core add iter 1
   ## Body iteration
-  LOAD Lock k_2 mem-tile add_2 core add iter i
-  CONV iteration i
-  SAVE Lock k_3 mem-tile add_3 core add iter i
+  ## k_0 -> k_2 -> k_4 Lock Chain
+  LOAD Lock k_2 mem-tile add_2 core add iter 7
+  CONV iteration 7
+  SAVE Lock k_3 mem-tile add_3 core add iter 7
   ## tail
   LOAD Lock k_4 mem-tile add_4 core add iter 1
   CONV iteration 1
@@ -685,30 +687,145 @@ load/store and then we combine them into chain having dependency so
 that to be logically correct and as fast as possible. Take the code
 above and we introduce a chain information. 
 
+\singlefigure{0.95}{AIE4x4.png}{Resnet50 for 4x4 AIE with dense
+  weights}{fig:estimate-dense}
+
+
 \subsection{Time Estimation}
+At this stage, we need to explain how we can capture the execution
+time and visualize it as in Figure \ref{fig:estimate-dense}.
+
+\subsection{Time estimates for DDR to Mem-Tile}
+We have two communication types: activations and weights. Per
+mem-tile there are two dedicated channels.
+\begin{itemize}
+ \item if we share activations and weights in the same mem-tile (we
+   use the moniker WAWAWAWA), we can use one channel for activations
+   and one for weights. Thus the loads from DDR to MEM-tile (LOAD and
+   LOADW) are parallel with a bandwidth of 4GB/s. Writes from mem-tile
+   to DDR (WRITE) can use both channels (8GB/s). We shall expand this.
+
+ \item If activations and weights go to different mem-tiles (2 and 2),
+   each load is parallel and 8GB/s (we use the moniker WAAW). Writes
+   are identical.
+\end{itemize}
+Although, mem-tile are circular buffers to improve the memory
+allocation, the classic streaming is not really applicable for two
+main reasons: First, when we share weights they must stay still to be
+reused, if weights are not shared then in general inputs and outputs
+have different rates of consumption and thus eventually one will
+overwrite the other. Ping/pong techniques will decrease the space
+available but it will hide latency: at this time we try to increase
+the reuse.
+   
+\subsection{Time estimates for Mem-Tile to AIEs}
+
+The Memtile connections with AIE cores can be designed differently as
+a function of the purpose. We assume here a few channels with again
+4GB/s bandwidth. One memetile can broad cast inputs to columns of
+cores (and to the nearest neighbrs). These communications are for
+activations (LOADFM). One Memtile can broadcast to rows of cores (or
+the nearest neighbor), these are for weights (LOADWM). We assume that
+the column and row communications are parallel and each memtile core
+connection is parallel.
+
+Every communication with iteration 1 is synchronous and binding: that
+is sequential, the load, convolution, and store is one after the other
+and every core is independent.  For synchronization and for
+bookkeeping, we assume that AIE2 weights communication (from memtile)
+to core are synchronous and halting.
+
+Every communication with iteration larger than one, we assume that
+load, computation (COMP), and store (WRITEFM) are executed in parallel
+and the overall execution time is the maximum of the estimated time
+multiplied by the number of iterations.
+
+We estimate the execution time of a subvolume by the number of
+operations divided by the maximum number of operations per cycle which
+is in our scenario: $4\times 8 \times 8 = 256 $ operations per cycle
+and 1GHz frequency.
+
+We do not account the wait and synchronization necessary to reprogram
+the fabric.
+
 During and especially once we generated the code for all data
 movements, data volumes and destinations, the trigger of the
 computation, and the sub volume per computation we can estimate quite
 accurately the execution time for each operations and account their
 parallel execution.
 
+\subsection{Convolution example}
+\doublefigure{0.999}{singledenseconv.png}{singlesparseconv.png}{Resnet
+  single convolution with padding and sparsity for 4x4 AIE
+}{fig:singleconvestimate} Here and in Figure
+\ref{fig:singleconvestimate}, we give a full convolution example with
+and without sparsity and with padding. In this way we can explain how
+the time are really estimated and also how the hardware works in
+principle.
 
+It is clear from the Figure that there are three computations
+(COMP). We load the weight and activations once in memtiles. There are
+actually one load per memtile for a total of 4 load per activations
+and for loads for weights. Because each load is to a different
+memtile, they are parallel.  The activation and weights communications
+are using two different channels and then are in parallel with 4GB/s
+bandwidth.
+
+There is a single load of the weights from mem-tiles to each
+core. This is done once and it is blocking (LOADWM). There is a
+computation using padding (top-padding) and you can see the sequential
+execution of load to cores (LOADFM), computation (COMP), and write to
+memtile (WRITEFM). This computation has iteration 1. There there are 9
+iterations instructions: You can see the computation, load and write
+in parallel. This is obviously a simplifcation; there will be a little
+load poking out at the beginning and a writing poking out at the end.
+Then we conclude with the final computation with padding at the bottom
+of the computation.
+
+In this particular scenario, the computation dominates the execution
+time and compression is basically cut by half: from 200 $\mu s$ to
+130. There are convolutions in Resnet that realize exactly $2\times$
+performance but also there are convolution that are dominated by the
+read or by the writing, and where sparsity help only in space saving.
 
 \section{Results}
 \label{sec:experiments}
+In this section, we present the performance of sparsity applied to all
+the convolutions (but the first one) for Resnet 50 Figure
+\ref{fig:estimate-dense} and \ref{fig:estimate-sparse}, and Inception
+V3 Figure \ref{fig:incv3-estimate-dense}.
+
+When we generate the code for each instruction, we compute the
+execution time. So if we inspect the assembly code we will find time
+information in the context whether or not each instruction contribute
+directly. For data movement to and from DDR and mem-tile, we reduce
+the contribution (sum directly) for the other information we create a
+time series and we create eventually a json file we use for
+visualization and then a javascript we can visualize the time series
+using a browser.
+
+Even if the images are small, we can see that 50\% sparsity achieves
+about 30\% improvement in performance. The main reason is that the
+mem-tile is still too small and we cannot keep all tensors in it and
+we need to spill into DDR.
 
 
-\Singlefigure{0.95}{AIE4x4.png}{Resnet50 for 4x4 AIE with dense
-  weights}{fig:estimate-dense}
-\Singlefigure{0.95}{AIE4x4sparse.png}{Resnet50 for 4x4 AIE with 50\%
+\Singlefigure{0.80}{AIE4x4sparse.png}{Resnet50 for 4x4 AIE with 50\%
   sparse weights}{fig:estimate-sparse}
-\Singlefigure{0.95}{inceptionv3dense.png}{Inception V3 for 4x4 AIE
-  with dense weights}{fig:incv3-estimate-dense}
-\Singlefigure{0.95}{inceptionv3sparse.png}{Inception V3 for 4x4 AIE
-  with 50\% sparse weights}{fig:estimate-sparse}
+
+
+
+
+
+\Doublefigure{0.90}{inceptionv3dense.png}{inceptionv3sparse.png}{Inception V3 for 4x4 AIE
+  with dense weights and sparse }{fig:incv3-estimate-dense}
+
+
 
 \section{Conclusions}
-
+This is a multifaceted problem and we present a complete solution from
+training techniques, compilers, code generatio, HW definition, and
+time estimations.
 
 
 %%%%%%%%% -- BIB STYLE AND FILE -- %%%%%%%%
