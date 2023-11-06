@@ -637,6 +637,8 @@ output by rows and the weights are reused.
   \forall w, \;   Conv(\Vc{X}_w,\Vc{W}) \rightarrow  \dot{\sum}_h Conv(\Vc{X}_{w,h},\Vc{W})
 \end{equation}
 
+\SSinglefigure{2.0}{singledenseconv.png}{Resnet single convolution
+  with padding for 4x4 AIE }{fig:singleconvestimate}
 
 \subsection{Code Generation }
 The compiler recursively creates a list of operations smaller and
@@ -665,8 +667,6 @@ and using a ping/pong they will load different slices of data and
 compute different slices of data. The key ingredient for this to work
 is the volumes of input and output tensors are all the same. 
 
-\singlefigure{0.999}{singledenseconv.png}{Resnet single convolution
-  with padding for 4x4 AIE }{fig:singleconvestimate}
 
 In our environment padding is common and we can manage by a custom
 load (from memtile to core) and this requires a custom load that will
@@ -694,7 +694,9 @@ code for the all load/store and then we combine them into chain having
 dependency so that to be logically correct and as fast as
 possible. Take the code above and we introduce a chain information.
 
-\singlefigure{0.95}{AIE4x4.png}{Resnet50 for 4x4 AIE with dense
+
+\newpage 
+\SSinglefigure{2.0}{AIE4x4.png}{Resnet50 for 4x4 AIE with dense
   weights}{fig:estimate-dense}
 
 
@@ -750,7 +752,12 @@ multiplied by the number of iterations.
 We estimate the execution time of a subvolume by the number of
 operations divided by the maximum number of operations per cycle which
 is in our scenario: $4\times 8 \times 8 = 256 $ operations per cycle
-and 1GHz frequency.
+and 1GHz frequency. This is obviously a very optimistic validation and
+not only for convolutions (asking for a ratio of 1 in efficiency) but
+also for operations like average pools and element wise additions. The
+execution time is a feature of the analysis but for us the estimate of
+the communications is more compelling and we can easily mute the
+computation contribution.
 
 We do not account the wait and synchronization necessary to reprogram
 the fabric.
@@ -797,6 +804,9 @@ exactly $2\times$ performance but also there are convolution that are
 dominated by the read or by the writing, and where sparsity help only
 in space saving.
 
+\SSinglefigure{2.0}{AIE4x4sparse.png}{Resnet50 for 4x4 AIE with 50\%
+  sparse weights}{fig:estimate-sparse}
+
 \section{Results}
 \label{sec:experiments}
 In this section, we present the performance of sparsity applied to all
@@ -808,23 +818,35 @@ When we generate the code for each instruction, we compute the
 execution time. So if we inspect the assembly code we will find time
 information in the context whether or not each instruction contribute
 directly. For data movement to and from DDR and mem-tile, we reduce
-the contribution (sum directly) for the other information we create a
-time series and we create eventually a json file we use for
-visualization and then a javascript we can visualize the time series
-using a browser.
+the contribution (sum directly). There is no streaming or
+communication overlapping, thus the sum.
+
+For mem-tile to and from core communications and core computations, we
+create a time series. We explain in the previous section how we
+account for the execution time for instruction with and without
+iterations. All of this will be an attribute of the layer (node in the
+graph computation).  To create a complete time estimate, we just need
+to take the schedule of the computation and the graph, visit each node
+accordingly to the schedule, write a {\em json} file describing the
+time series, then by {\em javascript} we can visualize the time series
+using a browser. The Figure in this paper are generated directly.
+
 
 Even if the images are small, we can see that 50\% sparsity achieves
-about 30\% improvement in performance. The main reason is that the
+about 30\% improvement in performance for both Resnet and Inception
+V3. Why not 2$\times$ performance gains? The main reason is that the
 mem-tile is still too small and we cannot keep all tensors in it and
-we need to spill into DDR.
+we need to spill into DDR, for which weight sparsity does not help. 
 
 
-\Singlefigure{0.80}{AIE4x4sparse.png}{Resnet50 for 4x4 AIE with 50\%
-  sparse weights}{fig:estimate-sparse}
+
+Should I test the performance for $4\times 8$ or $4\time 6$ ? to find
+out the size of the memtile for which the there is no spills for a
+comparison ?
 
 
-\Doublefigure{0.90}{inceptionv3dense.png}{inceptionv3sparse.png}{Inception V3 for 4x4 AIE
-  with dense weights and sparse }{fig:incv3-estimate-dense}
+\DDoublefigure{0.95}{inceptionv3dense.png}{inceptionv3sparse.png}{Inception V3 for 4x4 AIE
+  with dense (left)  weights and sparse (right) }{fig:incv3-estimate-dense}
 
 
 
