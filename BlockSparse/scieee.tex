@@ -19,19 +19,19 @@
 \title{Weight Block Sparsity: Training, Compilers, and Accelerators  }
 
 \author{
+  \IEEEauthorblockN{ Paolo D'Alberto}
+  \and
   \IEEEauthorblockN{Taehee Jeong}  
   \and
   \IEEEauthorblockN{Akshay Jain}  
-  %\and
-  %\IEEEauthorblockN{Shreyas Manjunath}  
-  %\and
-  %\IEEEauthorblockN{Mrinal Sarmah}  
-  %\and
-  %\IEEEauthorblockN{Samuel Hsu}
-  %\and
-  %\IEEEauthorblockN{Nitesh Pipralia}
   \and
-  \IEEEauthorblockN{ Paolo D'Alberto}
+  \IEEEauthorblockN{Shreyas Manjunath}  
+  \and
+  \IEEEauthorblockN{Mrinal Sarmah}  
+  \and
+  \IEEEauthorblockN{Samuel Hsu}
+  \and
+  \IEEEauthorblockN{Nitesh Pipralia}
 }
 
 %\renewcommand{\shortauthors}{D'Alberto, et al.}
@@ -600,33 +600,41 @@ do, and we will evict the tensors no longer needed accordingly.
 
 At the end of this stage, every tensor will be associated to an
 address in memtile or DDR (or both). If there are only DDR addresses,
-the compiler will take the basic computation and, by an heuristics,
-will split the computation (thus the output tensor) by width, output
+the compiler will take the basic computation and, by heuristics, will
+split the computation (thus the output tensor) by width, output
 channel, height, and input channel (non necessarily in this
 order). Every computation will have the DDR to and from MemTile and
-its data movements for the first two levels of the memory hierarchy.
+its data movements for the first two levels of the memory
+hierarchy. The heuristics have a simple objective: find the largest
+problem fitting the memory level, with the assumption that the output
+tensor will be build by row and streaming using ping/pong double
+buffering (considering padding, strides and kernels sizes).
 
 We use a implementation that takes a recursive and iterative approach
 in tiling \cite{abs-2110-04327}: For clarity, $\sum$ is a sum or
 reduction and $\dot{\sum}$ is a parallel loop and a W-split can be
 written as
 \begin{equation}
-  \Vc{Y} =  Conv(\Vc{X},\Vc{W}) = \dot{\sum}_{w=1}^k
-  Conv(\Vc{B}_w,\Vc{W})
+  \Vc{Y} =  Conv(\Vc{X},\Vc{W}) = \dot{\sum}_w
+  Conv(\Vc{X}_w,\Vc{W})
 \end{equation}
 The split is pre-computed as function of the foot print, before and
 after each convolution there will be an explicit data movement. At
 this stage each input, output, and weights will have an address
-associated with each sub-computation. Then the code generation of each
-$Conv(\Vc{B}_w,\Vc{W})$ is independent and recursive and as needed
-there will be specific split of the computation accordingly. This
+associated with each sub-computation. Consider a subcomputation as
+data movement, computation, and data movement, and data movements are
+optional or decorators.  Then the code generation of each
+$Conv(\Vc{X}_w,\Vc{W})$ is independent and, recursively and as needed,
+there will be specific splits of the computation accordingly. This
 could be simply described using loops but it is actually a tree (i.e,
-a root with $k$ children). If the convolution has strides and large
-kernel, each sub-convolution may have overlap data but defined
+a root with $k$ children). Sub convolutions so determined may have
+different memory requirements, we try as much as possible to obtain as
+symmetric computation as possible. If the convolution has strides and
+large kernel, each sub-convolution may have overlap data but defined
 addresses and data movement if necessary. For example, computing the
 output by rows and the weights are reused.
 \begin{equation}
-  \forall w, \;   Conv(\Vc{B}_w,\Vc{W}) \rightarrow  \dot{\sum}_h Conv(\Vc{B}_{w,h},\Vc{W})
+  \forall w, \;   Conv(\Vc{X}_w,\Vc{W}) \rightarrow  \dot{\sum}_h Conv(\Vc{X}_{w,h},\Vc{W})
 \end{equation}
 
 
@@ -634,8 +642,8 @@ output by rows and the weights are reused.
 The compiler recursively creates a list of operations smaller and
 smaller that can actually be executed Mem-Tile to Mem-Tile. In
 practice, there is a further decomposition using only AIE cores but it
-is completely determined by the subvolume computation we did
-previously. We can explicitly determine the data movements from
+is completely determined by the subvolume computation as we explained
+previously. Then, we can explicitly determine the data movements from
 mem-tile to core and back.
 
 A peculiar feature of the current system is the concept of {\em
@@ -657,6 +665,9 @@ and using a ping/pong they will load different slices of data and
 compute different slices of data. The key ingredient for this to work
 is the volumes of input and output tensors are all the same. 
 
+\singlefigure{0.999}{singledenseconv.png}{Resnet single convolution
+  with padding for 4x4 AIE }{fig:singleconvestimate}
+
 In our environment padding is common and we can manage by a custom
 load (from memtile to core) and this requires a custom load that will
 not be repeated
@@ -668,24 +679,20 @@ not be repeated
   SAVE Lock k_1 mem-tile add_1 core add iter 1
   ## Body iteration
   ## k_0 -> k_2 -> k_4 Lock Chain
-  LOAD Lock k_2 mem-tile add_2 core add iter 7
+  LOAD Lock k_2 mem-tile add_2 core add iter 9
   CONV iteration 7
-  SAVE Lock k_3 mem-tile add_3 core add iter 7
+  SAVE Lock k_3 mem-tile add_3 core add iter 9
   ## tail
   LOAD Lock k_4 mem-tile add_4 core add iter 1
   CONV iteration 1
   SAVE Lock k_5 mem-tile add_5 core add iter 1
 \end{verbatim}
- }
-
-
-
-
-At this stage we have all the information: the code generation per
-layer is a two pass process: first, we generate code for the all
-load/store and then we combine them into chain having dependency so
-that to be logically correct and as fast as possible. Take the code
-above and we introduce a chain information. 
+ } See Figure \ref{fig:singleconvestimate} for how this code will play
+out in practice. At this stage we have all the information and the
+code generation per layer is a two pass process: first, we generate
+code for the all load/store and then we combine them into chain having
+dependency so that to be logically correct and as fast as
+possible. Take the code above and we introduce a chain information.
 
 \singlefigure{0.95}{AIE4x4.png}{Resnet50 for 4x4 AIE with dense
   weights}{fig:estimate-dense}
@@ -723,7 +730,7 @@ the reuse.
 The Memtile connections with AIE cores can be designed differently as
 a function of the purpose. We assume here a few channels with again
 4GB/s bandwidth. One memetile can broad cast inputs to columns of
-cores (and to the nearest neighbrs). These communications are for
+cores (and to the nearest neighbors). These communications are for
 activations (LOADFM). One Memtile can broadcast to rows of cores (or
 the nearest neighbor), these are for weights (LOADWM). We assume that
 the column and row communications are parallel and each memtile core
@@ -755,38 +762,40 @@ accurately the execution time for each operations and account their
 parallel execution.
 
 \subsection{Convolution example}
-\doublefigure{0.999}{singledenseconv.png}{singlesparseconv.png}{Resnet
-  single convolution with padding and sparsity for 4x4 AIE
-}{fig:singleconvestimate} Here and in Figure
-\ref{fig:singleconvestimate}, we give a full convolution example with
+\singlefigure{0.999}{singlesparseconv.png}{Resnet single convolution
+  with padding and sparsity for 4x4 AIE }{fig:singleconvestimate2}
+Here and in Figure \ref{fig:singleconvestimate} and
+\ref{fig:singleconvestimate2}, we give a full convolution example with
 and without sparsity and with padding. In this way we can explain how
-the time are really estimated and also how the hardware works in
+the time is really estimated and also how the hardware works in
 principle.
 
-It is clear from the Figure that there are three computations
+It is clear from the Figures above that there are three computations
 (COMP). We load the weight and activations once in memtiles. There are
-actually one load per memtile for a total of 4 load per activations
-and for loads for weights. Because each load is to a different
+actually one load per memtile for a total of 4 loads per activations
+and 4 loads for weights. Because each load is to a different
 memtile, they are parallel.  The activation and weights communications
 are using two different channels and then are in parallel with 4GB/s
 bandwidth.
 
 There is a single load of the weights from mem-tiles to each
-core. This is done once and it is blocking (LOADWM). There is a
+core. This is done once and it is blocking (LOADWM) but it can be as
+easily made non blocking and parallel to the activations. There is a
 computation using padding (top-padding) and you can see the sequential
 execution of load to cores (LOADFM), computation (COMP), and write to
-memtile (WRITEFM). This computation has iteration 1. There there are 9
-iterations instructions: You can see the computation, load and write
-in parallel. This is obviously a simplifcation; there will be a little
-load poking out at the beginning and a writing poking out at the end.
-Then we conclude with the final computation with padding at the bottom
-of the computation.
+memtile (WRITEFM). This computation has iteration 1. There are 9
+iterations for three instructions: we can see the load, the
+computation, and write in parallel. This is obviously a simplification;
+there will be a little load poking out at the beginning and a writing
+poking out at the end.  Then we conclude with the final computation
+with padding at the bottom of the computation.
 
 In this particular scenario, the computation dominates the execution
-time and compression is basically cut by half: from 200 $\mu s$ to
-130. There are convolutions in Resnet that realize exactly $2\times$
-performance but also there are convolution that are dominated by the
-read or by the writing, and where sparsity help only in space saving.
+time and compression basically cut the execution time by half: from
+200 $\mu s$ to 130. There are convolutions in Resnet that realize
+exactly $2\times$ performance but also there are convolution that are
+dominated by the read or by the writing, and where sparsity help only
+in space saving.
 
 \section{Results}
 \label{sec:experiments}
@@ -812,9 +821,6 @@ we need to spill into DDR.
 
 \Singlefigure{0.80}{AIE4x4sparse.png}{Resnet50 for 4x4 AIE with 50\%
   sparse weights}{fig:estimate-sparse}
-
-
-
 
 
 \Doublefigure{0.90}{inceptionv3dense.png}{inceptionv3sparse.png}{Inception V3 for 4x4 AIE
