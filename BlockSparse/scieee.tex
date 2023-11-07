@@ -852,10 +852,65 @@ different sizes.
 
 
 
-\section{Conclusions}
+\section{Conclusions and Context}
 This is a multifaceted problem and we present a complete solution from
-training techniques, compilers, code generatio, HW definition, and
+training techniques, compilers, code generation, HW definition, and
 time estimations.
+
+This could be seen as a quantization and sparsification problem: How
+to reduce the footprint of a CNN network. There are post training
+techniques that are targeting quantization and unstructured sparsity
+\cite{frantar2023gptq} and all the reference within and its
+citations. For the type of sparsity we are aiming at, we need to be
+more aggressive and training for it (as starting point
+\cite{abs-2102-11289}) but our sparsity is not really a property of the
+model, it is a sparsity that the software can describe and the
+hardware can take advantage without having any hardware support.
+
+The difficulty of generate code for complex architectures can be
+described and solved in different ways. There are recent attempts of
+introducing SW/HW solution for spatial processors like ours
+\cite{Huang2021CoSASB,Russo2023MemoryAwareDA,Cai2023InterlayerSS}. The
+main difference:
+\begin{itemize}
+   \item We use software developed for FPGA custom IPs because we can
+     reuse the 2-level of memory hierarchy abstraction.
+   \item We use heuristics to explore scheduling.
+   \item We use heuristics to memory allocation.
+     \begin{itemize}
+     \item There is a memory allocation so temporal locality is
+       exploited and different (layer) schedules can be investigated.
+     \item All passes know all tensor shapes at compile time (no run
+       time support).
+     \end{itemize}
+   \item We write {\em all} the data movements and the code can and is
+     used by a AIE2 compiler (binary compiler if you like) to create
+     executable codes.
+     \begin{itemize}
+     \item Code generated for $1\times 1$ have been simulated, run and
+       validate in HW.
+     \item we assume at this time that core to core communication by
+       columns (larger kernel and stride require overlapping column
+       data) or communication by row (reduction of partial sums) are
+       inherently taken care by the kernel computation
+     \item Kernel computation (the basic computation in the AIE2) has
+       effects on the shapes and layout of the operands, the HW
+       architect instruct the compiler about the tensor requirements. 
+     \item The compiler does not generate fully correct addresses but
+       all the tensor shapes are valid and correct for any $K\times K$.
+     \end{itemize}
+   \item No full or partial simulation is needed, and now time
+     estimates can be used to quantify scheduling and HW
+     configurations choices: yes there is further arbitrary connection
+     and hardware configurations that can be changed and the effect
+     can be only validate by writing code for it..
+\end{itemize}
+     
+     
+
+
+
+
 
 
 %%%%%%%%% -- BIB STYLE AND FILE -- %%%%%%%%
