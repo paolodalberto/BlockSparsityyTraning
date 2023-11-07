@@ -19,7 +19,7 @@
 \title{Weight Block Sparsity: Training, Compilers, and Accelerators  }
 
 \author{
-  \IEEEauthorblockN{ Paolo D'Alberto}
+  \IEEEauthorblockN{Paolo D'\!Alberto}
   \and
   \IEEEauthorblockN{Taehee Jeong}  
   \and
@@ -56,7 +56,7 @@ take a Resnet50, we can reduce the weight by half with little accuracy
 loss, We can achieve speeds similar to an hypothetical Resnet25. We
 shall present performance estimates by accurate and complete code
 generation for a small and efficient set of AIE2 (Xilinx Versal
-FPGAs). We show application for general CPU, GPUS.
+FPGAs). We show block sparsity could be applied to  CPU and  GPUS.
 
 \end{abstract}
 
@@ -157,7 +157,8 @@ convolution, $n$ is the number of output channels (divided by 8) and
 $m$ is the number of input channels (as above) and each $\Vc{B}_i \in
 \R^{8\times h \times w \times 8}$ where $h$ and $w$ are the height and
 width of the convolution kernel. Imagine $\Vc{B}$ having a dimension
-going into the paper of size $k \times w$.
+going into the paper of size $h \times w$; that is, the height and
+width of the kernel.
 
 We explore training techniques (PyTorch, Keras is available in
 github): the most successful so far is the simplest: we take a
@@ -248,16 +249,16 @@ constant/parameterized $k$.
 
 \doublefigure{0.99}{1x1.png}{8x8.png}{Block 1x1 and 8x8
   performance}{fig:block} In Figure \ref{fig:block}, we present two
-scatter plots: on the abscissa number of effective multiplication and
-addition, on the ordinate the performance in GFLOPS, when the sparsity
-dense block is 1x1 and 8x8. Given the same problem, we may use more
-threads and thus the Jenga of points.  We can see that given he same
-number of effective operations, the block permits better performance
-and exploits better performance for each precisions: see a 2{$\times$}
-performance for single precision computation versus double
-precision. This is a sparse computation and thus the poor
-peformance (in GFLOPS) is actually expected (the peak performance in
-this architecture is about 500+GFLOPS).
+scatter plots: on the abscissa number of effective multiplications and
+additions, on the ordinate the performance in GFLOPS, when the sparse
+matrix with dense block is 1x1 and 8x8. Given the same problem, we
+may use more threads and thus the Jenga of points.  We can see that
+given he same number of effective operations, the block permits better
+performance and exploits better performance for each precisions: see a
+2{$\times$} performance for single precision computation versus double
+precision. This is a sparse computation and thus the poor peformance
+(in GFLOPS) is actually expected (the peak performance in this
+architecture is about 500+GFLOPS).
 
 
 
@@ -402,7 +403,7 @@ and 1s.
 We can exploit this functionality in Keras: the penalty function can
 be added quite easily and per convolution (if you like) and it is
 available in the code reference. We could not use it successfully: we
-do not know if this is because the lack of the penalty it self, the
+do not know if this is because the lack of the penalty itself, the
 optimizer, or the lost function, or just our own fault.
 
 \subsection{Hessian and Fisher Information }
@@ -527,7 +528,7 @@ in Mem-Tile). In previous architecture, we could.
 For this presentation, see Figure \ref{fig:aie}, we work with a mesh
 of 4x4 AIE2 cores connected by 4 horizontal and 4 vertical
 interconnections. Each core has 8 banks memories for a total
-64KB. About 6 banks are used and input/output/weight buffers and 2
+64KB. About 6 banks are used as input/output/weight buffers and 2
 banks are used as temporary space for kernels. Each core can request
 and send data to its direct neighbors (if aware of connection and
 control).
@@ -574,7 +575,10 @@ possible, we try to reduce the size of the width (e.g., shaping the
 tensor in memtile by using DDR spils) and we can manage to split the
 input channels (this will require to split the weights accordingly and
 accumulate). We call W-Split the distribution of tensor by columns in
-the AIE mesh. We can CIN-split when we need to split by input channel.
+the AIE mesh. We can COUT-split, this will require the partial
+transfer of weights (but we can stream by height).  We can CIN-split
+when we need to split by input channel, this is the last resort
+because it is also the most expensive (accumulation of the outputs).
 The split of the computation is also called tiling. Once we have the
 subvolume, we know if input and output tensor need W-split or
 CIN-split. This in general, means that the tensor cannot fit
