@@ -696,7 +696,7 @@ possible. Take the code above and we introduce a chain information.
 
 
 \newpage 
-\SSinglefigure{2.0}{AIE4x4.png}{Resnet50 for 4x4 AIE with dense
+\SSinglefigure{2.0}{R4x4-4sharesdense.png}{Resnet50 for 4x4 AIE with dense
   weights}{fig:estimate-dense}
 
 
@@ -804,7 +804,7 @@ exactly $2\times$ performance but also there are convolution that are
 dominated by the read or by the writing, and where sparsity help only
 in space saving.
 
-\SSinglefigure{2.0}{AIE4x4sparse.png}{Resnet50 for 4x4 AIE with 50\%
+\SSinglefigure{2.0}{R4x4-4sharedsparse.png}{Resnet50 for 4x4 AIE with 50\%
   sparse weights}{fig:estimate-sparse}
 
 \section{Results}
@@ -813,6 +813,9 @@ In this section, we present the performance of sparsity applied to all
 the convolutions (but the first one) for Resnet 50 Figure
 \ref{fig:estimate-dense} and \ref{fig:estimate-sparse}, and Inception
 V3 Figure \ref{fig:incv3-estimate-dense}.
+
+\DDoublefigure{0.95}{Iv36x6-6shareddense.png}{Iv36x6-6sharedsparse.png}{Inception V3 for 6x6 AIE
+  with dense (left)  weights and sparse (right) }{fig:incv3-estimate-dense}
 
 When we generate the code for each instruction, we compute the
 execution time. So if we inspect the assembly code we will find time
@@ -831,22 +834,21 @@ accordingly to the schedule, write a {\em json} file describing the
 time series, then by {\em javascript} we can visualize the time series
 using a browser. The Figure in this paper are generated directly.
 
+For a $4\times 4$ AIE set up, Resnet 50 fits in memtile from the
+beginning to the last operation (beside the first convolution and this
+is by costruction). The estimates advantage by sparsity is almost
+completely achieved.  See Figure \ref{fig:estimate-dense} and
+\ref{fig:estimate-sparse}.
 
-Even if the images are small, we can see that 50\% sparsity achieves
-about 30\% improvement in performance for both Resnet and Inception
-V3. Why not 2$\times$ performance gains? The main reason is that the
-mem-tile is still too small and we cannot keep all tensors in it and
-we need to spill into DDR, for which weight sparsity does not help. 
+For the estimate of Inception V3, we use a $6\times 6$ AIE set up.
+This allows to have a limited spill into DDR and thus the sparsity
+delivery once again an overall 2$\times$ speed up. See Figure
+\ref{fig:incv3-estimate-dense}. Inception V3 is mostly convolutions of
+different sizes.
 
 
 
-Should I test the performance for $4\times 8$ or $4\time 6$ ? to find
-out the size of the memtile for which the there is no spills for a
-comparison ?
 
-
-\DDoublefigure{0.95}{inceptionv3dense.png}{inceptionv3sparse.png}{Inception V3 for 4x4 AIE
-  with dense (left)  weights and sparse (right) }{fig:incv3-estimate-dense}
 
 
 

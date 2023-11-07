@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2023.6.11)  6 NOV 2023 11:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2023.6.11)  6 NOV 2023 21:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -346,40 +346,52 @@ LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 6
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 ) [6 <./singledenseconv.png>]
-<AIE4x4.png, id=55, 1650.165pt x 725.71124pt>
-File: AIE4x4.png Graphic file (type png)
-<use AIE4x4.png>
-Package pdftex.def Info: AIE4x4.png  used on input line 700.
-(pdftex.def)             Requested size: 504.0pt x 221.64612pt.
+<R4x4-4sharesdense.png, id=55, 1462.46375pt x 752.8125pt>
+File: R4x4-4sharesdense.png Graphic file (type png)
+<use R4x4-4sharesdense.png>
+Package pdftex.def Info: R4x4-4sharesdense.png  used on input line 700.
+(pdftex.def)             Requested size: 504.0pt x 259.43341pt.
+
+Overfull \hbox (7.43341pt too wide) in paragraph at lines 700--700
+ [][] 
+ []
+
 <singlesparseconv.png, id=56, 1462.46375pt x 752.8125pt>
 File: singlesparseconv.png Graphic file (type png)
 <use singlesparseconv.png>
 Package pdftex.def Info: singlesparseconv.png  used on input line 773.
 (pdftex.def)             Requested size: 251.74622pt x 129.5846pt.
- [7 <./AIE4x4.png>]
-<AIE4x4sparse.png, id=62, 1650.165pt x 725.71124pt>
-File: AIE4x4sparse.png Graphic file (type png)
-<use AIE4x4sparse.png>
-Package pdftex.def Info: AIE4x4sparse.png  used on input line 808.
-(pdftex.def)             Requested size: 504.0pt x 221.64612pt.
- [8 <./singlesparseconv.png> <./AIE4x4sparse.png>]
-<inceptionv3dense.png, id=68, 1462.46375pt x 752.8125pt>
-File: inceptionv3dense.png Graphic file (type png)
-<use inceptionv3dense.png>
-Package pdftex.def Info: inceptionv3dense.png  used on input line 849.
+[7 <./R4x4-4sharesdense.png>]
+<R4x4-4sharedsparse.png, id=62, 1462.46375pt x 752.8125pt>
+File: R4x4-4sharedsparse.png Graphic file (type png)
+<use R4x4-4sharedsparse.png>
+Package pdftex.def Info: R4x4-4sharedsparse.png  used on input line 808.
+(pdftex.def)             Requested size: 504.0pt x 259.43341pt.
+
+Overfull \hbox (7.43341pt too wide) in paragraph at lines 808--808
+ [][] 
+ []
+
+<Iv36x6-6shareddense.png, id=63, 1462.46375pt x 752.8125pt>
+File: Iv36x6-6shareddense.png Graphic file (type png)
+<use Iv36x6-6shareddense.png>
+Package pdftex.def Info: Iv36x6-6shareddense.png  used on input line 818.
 (pdftex.def)             Requested size: 490.19843pt x 252.33446pt.
-<inceptionv3sparse.png, id=69, 1462.46375pt x 752.8125pt>
-File: inceptionv3sparse.png Graphic file (type png)
-<use inceptionv3sparse.png>
-Package pdftex.def Info: inceptionv3sparse.png  used on input line 849.
+<Iv36x6-6sharedsparse.png, id=64, 1462.46375pt x 752.8125pt>
+File: Iv36x6-6sharedsparse.png Graphic file (type png)
+<use Iv36x6-6sharedsparse.png>
+Package pdftex.def Info: Iv36x6-6sharedsparse.png  used on input line 818.
 (pdftex.def)             Requested size: 490.19843pt x 252.33446pt.
+[8 <./singlesparseconv.png> <./R4x4-4sharedsparse.png>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
 
 (./scieee.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 31--33
 []\OT1/ptm/m/n/8 P. D'Alberto, ``Block spar-sity and train-ing,''
  []
 
-)
+[9 <./Iv36x6-6shareddense.png> <./Iv36x6-6sharedsparse.png>])
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -391,43 +403,46 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[9
+[10
 
-] [10 <./Inceptionv3dense.png> <./inceptionv3sparse.png>] (./scieee.aux) ) 
+] (./scieee.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
  4099 strings out of 481239
- 57553 string characters out of 5920377
+ 57691 string characters out of 5920377
  312136 words of memory out of 5000000
  19297 multiletter control sequences out of 15000+600000
  577929 words of font info for 122 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  30i,12n,37p,229b,263s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr
-/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/
-type1/public/amsfonts/cmextra/cmex9.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
-9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb
-></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib9.pfb>
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/s
-hare/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/tex
-live/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
-blic/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/s
-ymbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a
-.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
-pe1/urw/times/utmri8a.pfb>
-Output written on scieee.pdf (10 pages, 594286 bytes).
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+b10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmi
+b9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
+sfonts/symbols/msam10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier
+/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texli
+ve/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/urw/times/utmri8a.pfb>
+Output written on scieee.pdf (10 pages, 611846 bytes).
 PDF statistics:
  158 PDF objects out of 1000 (max. 8388607)
  101 compressed objects within 2 object streams
