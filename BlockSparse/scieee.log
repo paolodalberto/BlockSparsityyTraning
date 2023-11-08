@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2023.6.11)  7 NOV 2023 11:57
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2023.6.11)  8 NOV 2023 12:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -250,7 +250,38 @@ File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
 \l__kernel_color_stack_int=\count198
 \l__pdf_internal_box=\box49
 )
-(./scieee.aux)
+(./scieee.aux
+
+LaTeX Warning: Label `fig:incv3-' multiply defined.
+
+
+LaTeX Warning: Label `fig:incv3-' multiply defined.
+
+
+LaTeX Warning: Label `fig:incv3-' multiply defined.
+
+
+LaTeX Warning: Label `fig:incv3-' multiply defined.
+
+
+LaTeX Warning: Label `fig:incv3-' multiply defined.
+
+
+LaTeX Warning: Label `fig:incv3-' multiply defined.
+
+
+LaTeX Warning: Label `fig:incv3-' multiply defined.
+
+
+LaTeX Warning: Label `fig:incv3-' multiply defined.
+
+
+LaTeX Warning: Label `fig:incv3-' multiply defined.
+
+
+LaTeX Warning: Label `fig:incv3-' multiply defined.
+
+)
 \openout1 = `scieee.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
@@ -385,12 +416,144 @@ File: Iv36x6-6sharedsparse.png Graphic file (type png)
 <use Iv36x6-6sharedsparse.png>
 Package pdftex.def Info: Iv36x6-6sharedsparse.png  used on input line 822.
 (pdftex.def)             Requested size: 490.19843pt x 252.33446pt.
-[8 <./singlesparseconv.png>] [9 <./R4x4-4sharedsparse.png>] (./scieee.bbl
+[8 <./singlesparseconv.png>] [9 <./R4x4-4sharedsparse.png>]
+<IncV3-2x2-2share-dense.png, id=73, 2307.62125pt x 718.685pt>
+File: IncV3-2x2-2share-dense.png Graphic file (type png)
+<use IncV3-2x2-2share-dense.png>
+Package pdftex.def Info: IncV3-2x2-2share-dense.png  used on input line 917.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+<IncV3-2x2-2share-sparse.png, id=74, 2307.62125pt x 718.685pt>
+File: IncV3-2x2-2share-sparse.png Graphic file (type png)
+<use IncV3-2x2-2share-sparse.png>
+Package pdftex.def Info: IncV3-2x2-2share-sparse.png  used on input line 917.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+
+
+LaTeX Warning: Float too large for page by 22.13354pt on input line 917.
+
+<IncV3-3x3-3share-dense.png, id=75, 2307.62125pt x 718.685pt>
+File: IncV3-3x3-3share-dense.png Graphic file (type png)
+<use IncV3-3x3-3share-dense.png>
+Package pdftex.def Info: IncV3-3x3-3share-dense.png  used on input line 918.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+<IncV3-3x3-3share-sparse.png, id=76, 2307.62125pt x 718.685pt>
+File: IncV3-3x3-3share-sparse.png Graphic file (type png)
+<use IncV3-3x3-3share-sparse.png>
+Package pdftex.def Info: IncV3-3x3-3share-sparse.png  used on input line 918.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+
+LaTeX Warning: Float too large for page by 22.13354pt on input line 918.
+
+<IncV3-4x4-4share-dense.png, id=77, 2307.62125pt x 718.685pt>
+File: IncV3-4x4-4share-dense.png Graphic file (type png)
+<use IncV3-4x4-4share-dense.png>
+Package pdftex.def Info: IncV3-4x4-4share-dense.png  used on input line 919.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+<IncV3-4x4-4share-sparse.png, id=78, 2307.62125pt x 718.685pt>
+File: IncV3-4x4-4share-sparse.png Graphic file (type png)
+<use IncV3-4x4-4share-sparse.png>
+Package pdftex.def Info: IncV3-4x4-4share-sparse.png  used on input line 919.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+
+LaTeX Warning: Float too large for page by 22.13354pt on input line 919.
+
+<IncV3-5x5-5share-dense.png, id=79, 2307.62125pt x 718.685pt>
+File: IncV3-5x5-5share-dense.png Graphic file (type png)
+<use IncV3-5x5-5share-dense.png>
+Package pdftex.def Info: IncV3-5x5-5share-dense.png  used on input line 920.
+(pdftex.def)             Requested size: 504.0pt x 156.95973pt.
+<IncV3-6x6-6share-dense.png, id=80, 2307.62125pt x 718.685pt>
+File: IncV3-6x6-6share-dense.png Graphic file (type png)
+<use IncV3-6x6-6share-dense.png>
+Package pdftex.def Info: IncV3-6x6-6share-dense.png  used on input line 921.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+<IncV3-6x6-6share-sparse.png, id=81, 2307.62125pt x 718.685pt>
+File: IncV3-6x6-6share-sparse.png Graphic file (type png)
+<use IncV3-6x6-6share-sparse.png>
+Package pdftex.def Info: IncV3-6x6-6share-sparse.png  used on input line 921.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+
+LaTeX Warning: Float too large for page by 22.13354pt on input line 921.
+
+<IncV3-8x8-8share-dense.png, id=82, 2307.62125pt x 718.685pt>
+File: IncV3-8x8-8share-dense.png Graphic file (type png)
+<use IncV3-8x8-8share-dense.png>
+Package pdftex.def Info: IncV3-8x8-8share-dense.png  used on input line 922.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+<IncV3-8x8-8share-sparse.png, id=83, 2307.62125pt x 718.685pt>
+File: IncV3-8x8-8share-sparse.png Graphic file (type png)
+<use IncV3-8x8-8share-sparse.png>
+Package pdftex.def Info: IncV3-8x8-8share-sparse.png  used on input line 922.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+
+LaTeX Warning: Float too large for page by 22.13354pt on input line 922.
+
+<Res2x2-2share-dense.png, id=84, 2307.62125pt x 718.685pt>
+File: Res2x2-2share-dense.png Graphic file (type png)
+<use Res2x2-2share-dense.png>
+Package pdftex.def Info: Res2x2-2share-dense.png  used on input line 924.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+<Res2x2-2share-sparse.png, id=85, 2307.62125pt x 718.685pt>
+File: Res2x2-2share-sparse.png Graphic file (type png)
+<use Res2x2-2share-sparse.png>
+Package pdftex.def Info: Res2x2-2share-sparse.png  used on input line 924.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+
+LaTeX Warning: Float too large for page by 22.13354pt on input line 924.
+
+<Res3x3-3share-dense.png, id=86, 2307.62125pt x 718.685pt>
+File: Res3x3-3share-dense.png Graphic file (type png)
+<use Res3x3-3share-dense.png>
+Package pdftex.def Info: Res3x3-3share-dense.png  used on input line 925.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+<Res3x3-3share-sparse.png, id=87, 2307.62125pt x 718.685pt>
+File: Res3x3-3share-sparse.png Graphic file (type png)
+<use Res3x3-3share-sparse.png>
+Package pdftex.def Info: Res3x3-3share-sparse.png  used on input line 925.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+
+LaTeX Warning: Float too large for page by 22.13354pt on input line 925.
+
+<Res4x4-4share-dense.png, id=88, 2307.62125pt x 718.685pt>
+File: Res4x4-4share-dense.png Graphic file (type png)
+<use Res4x4-4share-dense.png>
+Package pdftex.def Info: Res4x4-4share-dense.png  used on input line 926.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+<Res4x4-4share-sparse.png, id=89, 2307.62125pt x 718.685pt>
+File: Res4x4-4share-sparse.png Graphic file (type png)
+<use Res4x4-4share-sparse.png>
+Package pdftex.def Info: Res4x4-4share-sparse.png  used on input line 926.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+
+LaTeX Warning: Float too large for page by 22.13354pt on input line 926.
+
+<Res5x5-5share-sparse.png, id=90, 2307.62125pt x 718.685pt>
+File: Res5x5-5share-sparse.png Graphic file (type png)
+<use Res5x5-5share-sparse.png>
+Package pdftex.def Info: Res5x5-5share-sparse.png  used on input line 927.
+(pdftex.def)             Requested size: 504.0pt x 156.95973pt.
+<Res6x6-6share-dense.png, id=91, 2307.62125pt x 718.685pt>
+File: Res6x6-6share-dense.png Graphic file (type png)
+<use Res6x6-6share-dense.png>
+Package pdftex.def Info: Res6x6-6share-dense.png  used on input line 928.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+<Res6x6-6share-sparse.png, id=92, 2307.62125pt x 718.685pt>
+File: Res6x6-6share-sparse.png Graphic file (type png)
+<use Res6x6-6share-sparse.png>
+Package pdftex.def Info: Res6x6-6share-sparse.png  used on input line 928.
+(pdftex.def)             Requested size: 670.80157pt x 208.91776pt.
+
+LaTeX Warning: Float too large for page by 22.13354pt on input line 928.
+
+(./scieee.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 31--33
 []\OT1/ptm/m/n/8 P. D'Alberto, ``Block spar-sity and train-ing,''
  []
 
-[10 <./Iv36x6-6shareddense.png> <./Iv36x6-6sharedsparse.png>])
+[10 <./Iv36x6-6shareddense.png> <./Iv36x6-6sharedsparse.png>] [11 <./IncV3-2x2-
+2share-dense.png> <./IncV3-2x2-2share-sparse.png>] [12 <./IncV3-3x3-3share-dens
+e.png> <./IncV3-3x3-3share-sparse.png>] [13 <./IncV3-4x4-4share-dense.png> <./I
+ncV3-4x4-4share-sparse.png>])
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -402,18 +565,23 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[11
+[14 <./IncV3-5x5-5share-dense.png>] [15 <./IncV3-6x6-6share-dense.png> <./IncV3
+-6x6-6share-sparse.png>] [16 <./IncV3-8x8-8share-dense.png> <./IncV3-8x8-8share
+-sparse.png>] [17 <./Res2x2-2share-dense.png> <./Res2x2-2share-sparse.png>]
+[18 <./Res3x3-3share-dense.png> <./Res3x3-3share-sparse.png>] [19 <./Res4x4-4sh
+are-dense.png> <./Res4x4-4share-sparse.png>] [20
 
-] (./scieee.aux)
+ <./Res5x5-5share-sparse.png>]
+[21 <./Res6x6-6share-dense.png> <./Res6x6-6share-sparse.png>] (./scieee.aux)
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 4105 strings out of 481239
- 57792 string characters out of 5920377
- 312155 words of memory out of 5000000
- 19302 multiletter control sequences out of 15000+600000
+ 4226 strings out of 481239
+ 61202 string characters out of 5920377
+ 312205 words of memory out of 5000000
+ 19403 multiletter control sequences out of 15000+600000
  579036 words of font info for 123 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  30i,12n,37p,229b,263s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -441,10 +609,10 @@ fonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier
 sr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texli
 ve/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on scieee.pdf (11 pages, 616419 bytes).
+Output written on scieee.pdf (21 pages, 1390080 bytes).
 PDF statistics:
- 161 PDF objects out of 1000 (max. 8388607)
- 103 compressed objects within 2 object streams
+ 233 PDF objects out of 1000 (max. 8388607)
+ 125 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 46 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 146 words of extra memory for PDF output out of 10000 (max. 10000000)
 
