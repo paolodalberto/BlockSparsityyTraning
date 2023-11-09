@@ -847,7 +847,7 @@ the convolutions (but the first one) for Resnet 50 Figure
 V3 Figure \ref{fig:incv3-estimate-dense}.
 
 \DDoublefigure{0.95}{Iv36x6-6shareddense.png}{Iv36x6-6sharedsparse.png}{Inception V3 for 6x6 AIE
-  with dense (left)  weights and sparse (right) }{fig:incv3-estimate-dense}
+  with dense (left/top)  weights and sparse (right/bottom) }{fig:incv3-estimate-dense}
 
 When we generate the code for each instruction, we compute the
 execution time. So if we inspect the assembly code we will find time
@@ -984,9 +984,10 @@ show that the system has some flexibility describing the HW and you
 can appreciate how the small $2\times 2$ AIE2 system still can provide
 a performance punch and a 4x4 will have enough mem-tile so that to
 minimize most of the DDR spills, making ideal for data centers and PC
-alike. A $4\times 4$ cohort will have 4 units in a $8\times 8$ with 2
-memtiles per columns. This a board should have about 4*10 images
-computed in parallel on a VCK board. 
+alike. A $4\times 4$ cohort can be replicated up to 40 times (think as
+a batch of 40) and we can do better when the weight are shared into a
+single memtiles for each 40 copies and separated from activations
+(there is such design).
 
 We will see if AIE2 cores and meshes will find deployment in
 \begin{itemize}
@@ -1004,35 +1005,35 @@ We will see if AIE2 cores and meshes will find deployment in
 \end{itemize}
 
 \DDoublefigure{1.3}{IncV3-2x2-2share-dense.png}{IncV3-2x2-2share-sparse.png}{Inception
-  for 2x2 AIE with dense (left) weights and sparse (right)
+  for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)
 }{fig:incv3-1}
 \DDoublefigure{1.3}{IncV3-3x3-3share-dense.png}{IncV3-3x3-3share-sparse.png}{Inception
-  for 3x3 AIE with dense (left) weights and sparse (right)
+  for 3x3 AIE with dense (left/top) weights and sparse (right/bottom)
 }{fig:incv3-2}
 \DDoublefigure{1.3}{IncV3-4x4-4share-dense.png}{IncV3-4x4-4share-sparse.png}{Inception
-  for 4x4 AIE with dense (left) weights and sparse (right)
+  for 4x4 AIE with dense (left/top) weights and sparse (right/bottom)
 }{fig:incv3-3}
 \SSinglefigure{2.6}{IncV3-5x5-5share-dense.png}{Inception for 5x5 AIE
   with dense weights and FAILED for sparse weights }{fig:incv3-4}
 \DDoublefigure{1.3}{IncV3-6x6-6share-dense.png}{IncV3-6x6-6share-sparse.png}{Inception
-  for 6x6 AIE with dense (left) weights and sparse (right)
+  for 6x6 AIE with dense (left/top) weights and sparse (right/bottom)
 }{fig:incv3-5}
 \DDoublefigure{1.3}{IncV3-8x8-8share-dense.png}{IncV3-8x8-8share-sparse.png}{Inception
-  for 8x8 AIE with dense (left) weights and sparse (right)
+  for 8x8 AIE with dense (left/top) weights and sparse (right/bottom)
 }{fig:incv3-6}
 \DDoublefigure{1.3}{Res2x2-2share-dense.png}{Res2x2-2share-sparse.png}{Resnet
-  for 2x2 AIE with dense (left) weights and sparse (right)
+  for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)
 }{fig:incv3-7}
 \DDoublefigure{1.3}{Res3x3-3share-dense.png}{Res3x3-3share-sparse.png}{Resnet
-  for 3x3 AIE with dense (left) weights and sparse (right)
+  for 3x3 AIE with dense (left/top) weights and sparse (right/bottom)
 }{fig:incv3-8}
 \DDoublefigure{1.3}{Res4x4-4share-dense.png}{Res4x4-4share-sparse.png}{Resnet
-  for 4x4 AIE with dense (left) weights and sparse (right)
+  for 4x4 AIE with dense (left/top) weights and sparse (right/bottom)
 }{fig:incv3-9}
 \SSinglefigure{2.6}{Res5x5-5share-sparse.png}{Resnet for 5x5 AIE with
   sparse weights and FAILED for dense weights}{fig:incv3-10}
 \DDoublefigure{1.3}{Res6x6-6share-dense.png}{Res6x6-6share-sparse.png}{Resnet
-  for 6x6 AIE with dense (left) weights and sparse (right)
+  for 6x6 AIE with dense (left/top) weights and sparse (right/bottom)
 }{fig:incv3-11}
 
 
