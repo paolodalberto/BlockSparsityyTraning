@@ -167,7 +167,7 @@ pre-trained model, we compute a $\Gamma$ per layer using a function to
 determine the blocks more likely to be zeros (Norm) and then we train
 the model till convergence or accuracy achieved. We take the sparse
 model and we quantize to 8-bit integer computation by using Vitis-AI
-quantizer. The final model is a XIR quantize model (assuming addition
+quantizer. The final model is a Xilinx IR quantized model (assuming addition
 accumulators of 32 bits). See Section \ref{sec:training}.
 
 For FPGA accelerator using AIE2, we have a custom compiler that takes
@@ -243,23 +243,23 @@ Now, the intuitive part, assume we want to achieve a fixed sparsity
 (i.e., density) of 50\% for a square matrix of size $N$ and we choose
 the block size $k \times k$. The number of blocks per dimension and
 thus the overhead for sparsity and sorting, is basically
-$\frac{1}{2}\frac{N}{k}$. Larger the $k$ smaller the overhead.  The
-relative performance of the $k^3$ multiplication is better as $k$ get
-larger because spatial and temporal locality and optimized code for a
-constant/parameterized $k$.
+$\frac{1}{2}\frac{N}{k}$. The larger $k$ is, the smaller the overhead
+will be.  The relative performance of the $k^3$ multiplication is
+better as $k$ get larger because spatial and temporal locality and
+optimized code for a constant/parameterized $k$.
 
 \doublefigure{0.99}{1x1.png}{8x8.png}{Block 1x1 and 8x8
   performance}{fig:block} In Figure \ref{fig:block}, we present two
 scatter plots: on the abscissa number of effective multiplications and
 additions, on the ordinate the performance in GFLOPS, when the sparse
-matrix with dense block is 1x1 and 8x8. Given the same problem, we
-may use more threads and thus the Jenga of points.  We can see that
-given he same number of effective operations, the block permits better
-performance and exploits better performance for each precisions: see a
-2{$\times$} performance for single precision computation versus double
-precision. This is a sparse computation and thus the poor peformance
-(in GFLOPS) is actually expected (the peak performance in this
-architecture is about 500+GFLOPS).
+matrix with dense block is 1x1 and 8x8. Given the same problem, we may
+use more threads and thus the Jenga of points.  We can see that given
+he same number of effective operations, the block permits better
+performance and exploits better performance for each precision: that
+is, see a 2{$\times$} performance for single precision computation
+versus double precision. Notice, this is a sparse computation and thus
+the poor peformance (in GFLOPS) is actually expected (the peak
+performance in this architecture is about 500+GFLOPS).
 
 
 
@@ -328,7 +328,7 @@ We start from $\Vc{w}_0$, the current optimal weight, and we must
 choose how to reduce to zeros the weight and which ones.
 
 In practice, using the code available in \cite{PaoloK2020}, we started
-with a accuracy of 75\% top-1 and we ended up with a 68\% without
+with an accuracy of 75\% top-1 and we ended up with a 68\% without
 accounting for quantization. The investigation using PyTorch
 \cite{pytorch_paper}, sparsity and quantization achieves only 3\%
 top-1 accuracy drop (instead of 6+), making the training for sparsity
@@ -343,8 +343,8 @@ $\gamma_i$, this will be representative of a block $\Vc{W}_i \in \R^{8
   \times h \times w \times 8} \sim \R^{8\times 8}$. We can choose the
 $\Vc{W}_i$ using a measure of importance:
 \begin{itemize}
-  \item $L_2 = \sqrt{\sum_k w_k^2}$ with $w_k$ elements of $\Vc{W}_i$
-  \item $L_1 = \sum_k |w_k|$ with 
+  \item $L_2 = \sqrt{\sum_k w_k^2}$ with $w_k$ elements of $\Vc{W}_i$,
+  \item $L_1 = \sum_k |w_k|$,
   \item Variance $\sigma^2 = \frac{1}{64}\sum_k (w_k -\mu)^2$ with
     $\mu = \frac{1}{64}\sum w_k $ or $\frac{1}{N}\sum w_k$ (the whole
     tensor). In signal processing $\sigma^2$ is the power of the
@@ -362,7 +362,7 @@ number of blocks. We would like to reduce this number to
 $\frac{n_i}{2}$. For each epoch (say every two training epochs), we
 consider the current non-set-yet mask elements $\sum \gamma_i = k <
 \frac{n_i}{2}$. We compute our importance measure for all in ascending
-order. This time, we zero the first $\min(\frac{5}{100}n_i, 1)$. We
+order. This time, we zero the first $\min(\frac{5}{100}k, 1)$. We
 keep this process until we reach 50\% sparsity. At each iteration at
 least one block will be set to zero.
 
@@ -385,7 +385,7 @@ With $T$ we represent the number of non zero block in $\Gamma$
   & +\beta*L2(\Gamma-T) + \iota*L1(\Gamma)  &&
 \end{flalign}
 
-This is a simplified loss so that we minimize the valu of $\Gamma$ but
+This is a simplified loss so that we minimize the value of $\Gamma$ but
 also we try to maximize the difference of the elements.
 
 \begin{flalign}
@@ -577,8 +577,8 @@ core and we reuse them as much as possible (unless we need to stream
 the weight instead). The set of cores is a cohort and symmetric
 computations are always selected. This means that we do not merge two
 operations like convolution and max-pool and give three columns to
-convolution and one column to max-pool. Other approach in the
-literature will do this more advanced methodology.
+convolution and one column to max-pool. Other approaches in the
+literature do this more advanced methodologies.
 
 Before we start describing the memory allocation, we have to explain
 and compute the size of the sub-volume computation at AIE core.  That
@@ -613,7 +613,7 @@ This is a two level memory hierarchy. During the scheduling of each
 layer, we evaluate what can fit in mem tile. Here, activation and
 weight tensors share the space. It means that an input tensor is
 distributed among the memtiles identified by one starting address and
-a final address and weights are distributed similarly with a start and
+a final address and weights are distributed similarly with a start and a final
 address. At each step the memory allocation will check if we can
 allocate a tensor in memtile. If we cannot, we evict all tensors into
 DDR and then split/time the computation. If we can, we do, and we will
@@ -631,7 +631,7 @@ problem fitting the memory level, with the assumption that the output
 tensor will be build by row and streaming using ping/pong double
 buffering (considering padding, strides and kernels sizes).
 
-We use a implementation that takes a recursive and iterative approach
+We use an implementation that takes a recursive and iterative approach
 in tiling \cite{abs-2110-04327}: For clarity, $\sum$ is a sum or
 reduction and $\dot{\sum}$ is a parallel loop and a W-split can be
 written as
@@ -680,12 +680,12 @@ to create a sequence of time series. We shall explain further in the
 next sections. Thus, should be easier to appreciate the compiler work
 and its time estimation effort.
 
-A important feature of the current system is the concept of {\bf
+An important feature of the current system is the concept of {\bf
   iteration}: Using locks and chaining them (locks like in
 semaphores): We can write a single instruction from the prospective of
 a single core (as a SIMD instruction) but driving all cores at once
 (ASM-like code) for multiple iterations:
-
+\newpage
 {\footnotesize
 \begin{verbatim}
   LOADFM Lock k_0 mem-tile add core add iter i
@@ -937,13 +937,14 @@ main difference:
      \begin{itemize}
      \item Code generated for $1\times 1$ have been simulated, run and
        validate in HW.
-     \item we assume at this time that core to core communication by
-       columns (larger kernel and stride require overlapping column
-       data) or communication by row (reduction of partial sums) are
-       inherently taken care by the kernel computation
+     \item We assume that core to core communication by columns
+       (larger kernel and stride require overlapping column data) or
+       communication by row (reduction of partial sums) are inherently
+       taken care by the kernel computation (in practice they are
+       not).
      \item Kernel computation (the basic computation in the AIE2) has
        effects on the shapes and layout of the operands, the HW
-       architect instruct the compiler about the tensor requirements. 
+       architects instruct the compiler about the tensor requirements.
      \item The compiler does not generate fully correct addresses but
        all the tensor shapes are valid and correct for most $K\times
        K$ of reasonable size $K\leq 8$.
