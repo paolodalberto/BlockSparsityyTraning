@@ -109,7 +109,14 @@ numpages = {29},
 keywords = {low latency, high efficiency, AI inference, custom architectures, and optimizations}
 }
 
-
+@misc{ahmad2019dense,
+      title={How Can We Be So Dense? The Benefits of Using Highly Sparse Representations}, 
+      author={Subutai Ahmad and Luiz Scheinkman},
+      year={2019},
+      eprint={1903.11257},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
 @article{abs-2110-04327,
   author       = {Paolo D'Alberto and
                   Jiangsha Ma and
@@ -129,6 +136,61 @@ keywords = {low latency, high efficiency, AI inference, custom architectures, an
   bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 
+@inproceedings{TensorflowP,
+author = {Jia, Yangqing and Shelhamer, Evan and Donahue, Jeff and Karayev, Sergey and Long, Jonathan and Girshick, Ross and Guadarrama, Sergio and Darrell, Trevor},
+title = {Caffe: Convolutional Architecture for Fast Feature Embedding},
+year = {2014},
+isbn = {9781450330633},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2647868.2654889},
+doi = {10.1145/2647868.2654889},
+abstract = {Caffe provides multimedia scientists and practitioners with a clean and modifiable framework for state-of-the-art deep learning algorithms and a collection of reference models. The framework is a BSD-licensed C++ library with Python and MATLAB bindings for training and deploying general-purpose convolutional neural networks and other deep models efficiently on commodity architectures. Caffe fits industry and internet-scale media needs by CUDA GPU computation, processing over 40 million images a day on a single K40 or Titan GPU (approx 2 ms per image). By separating model representation from actual implementation, Caffe allows experimentation and seamless switching among platforms for ease of development and deployment from prototyping machines to cloud environments.Caffe is maintained and developed by the Berkeley Vision and Learning Center (BVLC) with the help of an active community of contributors on GitHub. It powers ongoing research projects, large-scale industrial applications, and startup prototypes in vision, speech, and multimedia.},
+booktitle = {Proceedings of the 22nd ACM International Conference on Multimedia},
+pages = {675–678},
+numpages = {4},
+keywords = {parallel computation, open source, computer vision, neural networks, machine learning},
+location = {Orlando, Florida, USA},
+series = {MM '14}
+}
+
+
+@inproceedings{Caffe,
+author = {Jia, Yangqing and Shelhamer, Evan and Donahue, Jeff and Karayev, Sergey and Long, Jonathan and Girshick, Ross and Guadarrama, Sergio and Darrell, Trevor},
+title = {Caffe: Convolutional Architecture for Fast Feature Embedding},
+year = {2014},
+isbn = {9781450330633},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2647868.2654889},
+doi = {10.1145/2647868.2654889},
+abstract = {Caffe provides multimedia scientists and practitioners with a clean and modifiable framework for state-of-the-art deep learning algorithms and a collection of reference models. The framework is a BSD-licensed C++ library with Python and MATLAB bindings for training and deploying general-purpose convolutional neural networks and other deep models efficiently on commodity architectures. Caffe fits industry and internet-scale media needs by CUDA GPU computation, processing over 40 million images a day on a single K40 or Titan GPU (approx 2 ms per image). By separating model representation from actual implementation, Caffe allows experimentation and seamless switching among platforms for ease of development and deployment from prototyping machines to cloud environments.Caffe is maintained and developed by the Berkeley Vision and Learning Center (BVLC) with the help of an active community of contributors on GitHub. It powers ongoing research projects, large-scale industrial applications, and startup prototypes in vision, speech, and multimedia.},
+booktitle = {Proceedings of the 22nd ACM International Conference on Multimedia},
+pages = {675–678},
+numpages = {4},
+keywords = {parallel computation, open source, computer vision, neural networks, machine learning},
+location = {Orlando, Florida, USA},
+series = {MM '14}
+}
+
+@misc{rocSPARSE,
+  author = {AMD},
+  title = {rocSPARSE},
+  year = {2020},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {https://rocsparse.readthedocs.io/en/master/}},
+  commit = {}
+}
+@misc{cuSPARSE,
+  author = {NVIDIA},
+  title = {cuSPARSE},
+  year = {2020},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {https://developer.nvidia.com/cusparse}},
+  commit = {}
+}
 @misc{Paolo2007,
   author = {Paolo D'Alberto},
   title = {FastMMW: Fast Matrix Multiplicaiton by Winograd},
@@ -1158,7 +1220,8 @@ url={https://docs.tvm.ai/api/python/relay/nn.html},
   year={2009},
   volume={},
   number={},
-  pages={53-60},}
+  pages={53-60},
+  }
   
   @ARTICLE{8594633,
   author={A. {Shawahna} and S. M. {Sait} and A. {El-Maleh}},

@@ -21,6 +21,12 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{rocSPARSE}
+AMD, ``rocsparse,'' https://rocsparse.readthedocs.io/en/master/, 2020.
+
+\bibitem{cuSPARSE}
+NVIDIA, ``cusparse,'' https://developer.nvidia.com/cusparse, 2020.
+
 \bibitem{PaoloG2020}
 P.~D'Alberto, https://github.com/paolodalberto/SparseFastMM/, 2013.
 
@@ -36,6 +42,20 @@ J.~Deng, W.~Dong, R.~Socher, L.-J. Li, K.~Li, and L.~Fei-Fei, ``Imagenet: A
   large-scale hierarchical image database,'' in \emph{2009 IEEE conference on
   computer vision and pattern recognition}.\hskip 1em plus 0.5em minus
   0.4em\relax Ieee, 2009, pp. 248--255.
+
+\bibitem{pytorch_paper}
+\BIBentryALTinterwordspacing
+A.~Paszke, S.~Gross, F.~Massa, A.~Lerer, J.~Bradbury, G.~Chanan, T.~Killeen,
+  Z.~Lin, N.~Gimelshein, L.~Antiga, A.~Desmaison, A.~Kopf, E.~Yang, Z.~DeVito,
+  M.~Raison, A.~Tejani, S.~Chilamkurthy, B.~Steiner, L.~Fang, J.~Bai, and
+  S.~Chintala, ``Pytorch: An imperative style, high-performance deep learning
+  library,'' in \emph{Advances in Neural Information Processing Systems 32},
+  H.~Wallach, H.~Larochelle, A.~Beygelzimer, F.~d\textquotesingle
+  Alch\'{e}-Buc, E.~Fox, and R.~Garnett, Eds.\hskip 1em plus 0.5em minus
+  0.4em\relax Curran Associates, Inc., 2019, pp. 8026--8037. [Online].
+  Available:
+  \url{http://papers.nips.cc/paper/9015-pytorch-an-imperative-style-high-performance-deep-learning-library.pdf}
+\BIBentrySTDinterwordspacing
 
 \bibitem{yao2020adahessian}
 Z.~Yao, A.~Gholami, S.~Shen, K.~Keutzer, and M.~W. Mahoney, ``Adahessian: An
@@ -53,6 +73,21 @@ S.~Yu, Z.~Yao, A.~Gholami, Z.~Dong, M.~W. Mahoney, and K.~Keutzer,
 \bibitem{zandonati2022fit}
 B.~Zandonati, A.~A. Pol, M.~Pierini, O.~Sirkin, and T.~Kopetz, ``Fit: A metric
   for model sensitivity,'' 2022.
+
+\bibitem{Caffe}
+\BIBentryALTinterwordspacing
+Y.~Jia, E.~Shelhamer, J.~Donahue, S.~Karayev, J.~Long, R.~Girshick,
+  S.~Guadarrama, and T.~Darrell, ``Caffe: Convolutional architecture for fast
+  feature embedding,'' in \emph{Proceedings of the 22nd ACM International
+  Conference on Multimedia}, ser. MM '14.\hskip 1em plus 0.5em minus
+  0.4em\relax New York, NY, USA: Association for Computing Machinery, 2014, p.
+  675–678. [Online]. Available: \url{https://doi.org/10.1145/2647868.2654889}
+\BIBentrySTDinterwordspacing
+
+\bibitem{tensorflow}
+\BIBentryALTinterwordspacing
+{TensorFlow}. [Online]. Available: \url{https://www.tensorflow.org/}
+\BIBentrySTDinterwordspacing
 
 \bibitem{10.1145/3473334}
 \BIBentryALTinterwordspacing
@@ -81,6 +116,10 @@ B.~Hawks, J.~M. Duarte, N.~J. Fraser, A.~Pappalardo, N.~Tran, and Y.~Umuroglu,
   network inference,'' \emph{CoRR}, vol. abs/2102.11289, 2021. [Online].
   Available: \url{https://arxiv.org/abs/2102.11289}
 \BIBentrySTDinterwordspacing
+
+\bibitem{ahmad2019dense}
+S.~Ahmad and L.~Scheinkman, ``How can we be so dense? the benefits of using
+  highly sparse representations,'' 2019.
 
 \bibitem{Huang2021CoSASB}
 \BIBentryALTinterwordspacing

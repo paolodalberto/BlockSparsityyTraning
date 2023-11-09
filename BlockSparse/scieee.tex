@@ -133,15 +133,16 @@ for CPU and GPUs using this data format (where only one operand is
 sparse).
 
 In the CBR format, the $\gamma_i$ are not present and only non zeros
-elements are stored. In other architectures, we can choose to store
-all non zero blocks in row format and keep a matrix $\Gamma$ of zeros
-and ones (or columns). The $\Gamma$ is a bit matrix (here) but it can
-be represented as a short integer matrix representing the non-zero
-block column and in general two orders of magnitude ($8\times 8 \times
-4$) smaller than the sparse or original $\Vc{B}$ matrix. It is
-possible the problem has inherent block sparsity. In general, we are
-working with {\em man made} block sparsity: indeed for us, the
-granularity of the dense block is a property of the hardware.
+elements are stored \cite{rocSPARSE,cuSPARSE}. In other architectures, we can
+choose to store all non zero blocks in row format and keep a matrix
+$\Gamma$ of zeros and ones (or columns). The $\Gamma$ is a bit matrix
+(here) but it can be represented as a short integer matrix
+representing the non-zero block column and in general two orders of
+magnitude ($8\times 8 \times 4$) smaller than the sparse or original
+$\Vc{B}$ matrix. It is possible the problem has inherent block
+sparsity. In general, we are working with {\em man made} block
+sparsity: indeed for us, the granularity of the dense block is a
+property of the hardware.
 
 In classification, the model weight size determines one important
 aspect of the model complexity: the number of operations per single
@@ -328,9 +329,10 @@ choose how to reduce to zeros the weight and which ones.
 
 In practice, using the code available in \cite{PaoloK2020}, we started
 with a accuracy of 75\% top-1 and we ended up with a 68\% without
-accounting for quantization. The investigation using PyTorch, sparsity
-and quantization achieves only 3\% top-1 accuracy drop (instead of
-6+), making the training for sparsity quite worth while (Section \ref{sec:pytorch}).
+accounting for quantization. The investigation using PyTorch
+\cite{pytorch_paper}, sparsity and quantization achieves only 3\%
+top-1 accuracy drop (instead of 6+), making the training for sparsity
+quite worth while (Section \ref{sec:pytorch}).
 
 
 
@@ -491,25 +493,30 @@ and we shall use it for estimate the time advantages (i.e., Section
 \ref{sec:experiments}).
 
 
-\section{Compiler and Code generation AIE}
+\section{The Compiler and its Code generation for AIE}
 \label{sec:compiler}
-Within our Xilinx/AMD effort, we can take a PyTorch/Keras, quantize it
-using Vitis AI, and create an intermediate representation by using
-what we call Xilinx Intermediate Representation (XIR). This is a graph
-of operations that read and write tensors. A convolution has one
-quantized input: we use the layout format BHWC, the tensors are
-represented in INT8 with a position where the fraction starts (power
-of two scale). It computes a tensor using the same layout as the input
-and with a proper scale. The weights and bias are properties of the
-convolutions, as such they can be tailored.
+Within our Xilinx/AMD effort, we can take a PyTorch/Keras model,
+quantize it using Vitis AI, and create an intermediate representation
+that we call Xilinx Intermediate Representation (XIR). This is a graph
+where each node is an operation that reads tensors and writes one tensor. A
+convolution has one quantized input: we use the tensor layout format
+BHWC, the tensors are represented in INT8 with a position where the
+fraction starts (power of two scale). It computes a tensor using the
+same layout as the input and with a proper scale. The weights and bias
+are properties of the convolutions, as such they can be tailored; the
+layout of the weight tensor is $COUT\times h \times w \times CIN$,
+which is similar to the caffe layout \cite{Caffe} (different from
+\cite{tensorflow}).
 
 For this project, we are at the third generation of a compiler for
 custom architectures (previously DPUV1 and DPUV3int8
-\cite{10.1145/3473334,abs-2110-04327}). The main common harwdware
+\cite{10.1145/3473334,abs-2110-04327}). The main common hardware
 feature for this new architecture is the availability of two main
 memory levels: DDR and MemTile, and for such memory we import the
 philosophy of memory data layout and memory allocation (of the
-previous compilers).
+previous compilers). The main difference is the ability to represent a
+parameterized block sparsity (block size and overall sparsity ratios)
+and the capability to split these tensors when we split the computation.
 
 All weights are statically prepared into DDR and we move them
 explicitly towards the inner levels. Inputs and outputs have
@@ -527,22 +534,28 @@ in Mem-Tile). In previous architecture, we could.
 
 For this presentation, see Figure \ref{fig:aie}, we work with a mesh
 of 4x4 AIE2 cores connected by 4 horizontal and 4 vertical
-interconnections. Each core has 8 banks memories for a total
-64KB. About 6 banks are used as input/output/weight buffers and 2
-banks are used as temporary space for kernels. Each core can request
-and send data to its direct neighbors (if aware of connection and
-control).
+interconnections (we shall presents estimates for square 2x2,
+.. $i\times i$ .. 8x8 and rectangular shapes are in the works). Each
+core has 8 banks memories for a total 64KB. About 6 banks are used as
+input/output/weight buffers and 2 banks are used as temporary space
+for kernels. Each core can request and send data to its direct
+neighbors (if aware of connection and control). Double buffering as
+ping/pong is commonly used for inputs and outputs.
 
 There are four mem-tiles: each 512KB and each can either be connected
 to one columns and its direct neighbor column, or it can be connected
-to a row and its neighbor. The total amount of space is 2MB.
+to a row and its neighbor. The total amount of space is 2MB. Memtile
+is a circular buffer to exploit more flexible allocation, implicitly a
+$2 \times 2$ architecture will have one memtile per column and a total
+of two.
 
 A Memtile can broad-cast data per column or per row. We can dedicate a
-memtile for weights, one for activations, or we can share. To maximize
-the computation parallelism, the core will write data per column into
-memtile: there are different designs that can be used. We shall
-explore the case where Inputs/Outputs/Weights are evenly distributed
-across mem-tiles although the distribution is different per tensor.
+memtile for weights, one for activations, or we can share. We shall
+show mostly shared configurations. To maximize the computation
+parallelism, every core will write data per column into memtile: there
+are different designs that can be used. We shall explore the case
+where Inputs/Outputs/Weights are evenly distributed across mem-tiles
+although the distribution is different per tensor.
 
 The DDR is connected with two channels to write into each mem-tile and
 each mem-tile can use two channels to write into DDR. DDR and Mem-tile
@@ -554,17 +567,18 @@ generation of CPU+FPGA chips.
 
 
 \subsection{Sub Volume, Data compression and Data Movement}
-There are a few assumptions. The computation is split by column: each
-output tensor is split evenly by width, so each memtile will store
-different columns by width, each core will compute different output
-channels, and the computation streams computing the height of the
-tensor by using core input and output ping/pong. As often as possible,
-we store the weights in the core and we reuse them as much as possible
-(unless we need to stream the weight instead). The set of cores is a
-cohort and symmetric computations are always selected. This means that
-we do not merge two operations like convolution and max-pool and give
-three columns to convolution and one column to max-pool. Other
-approach in the literature will do this more advanced methodology.
+There are a few assumptions we would like to spell them out. The
+computation is split by column: each output tensor is split evenly by
+width, so each memtile will store different columns by width, each
+core will compute different output channels, and the computation
+streams computing the height of the tensor by using core input and
+output ping/pong. As often as possible, we store the weights in the
+core and we reuse them as much as possible (unless we need to stream
+the weight instead). The set of cores is a cohort and symmetric
+computations are always selected. This means that we do not merge two
+operations like convolution and max-pool and give three columns to
+convolution and one column to max-pool. Other approach in the
+literature will do this more advanced methodology.
 
 Before we start describing the memory allocation, we have to explain
 and compute the size of the sub-volume computation at AIE core.  That
@@ -596,11 +610,14 @@ smaller and we compute fewer operations.
 
 \subsection{Schedule and memory allocation}
 This is a two level memory hierarchy. During the scheduling of each
-layer, we evaluate what can fit in mem tile. Here, Activations and
-weights share the space. At each step the memory allocation will check
-if we can allocate a tensor in memtile. If we cannot, we evict all
-tensors into DDR and then split/time the computation. If we can, we
-do, and we will evict the tensors no longer needed accordingly.
+layer, we evaluate what can fit in mem tile. Here, activation and
+weight tensors share the space. It means that an input tensor is
+distributed among the memtiles identified by one starting address and
+a final address and weights are distributed similarly with a start and
+address. At each step the memory allocation will check if we can
+allocate a tensor in memtile. If we cannot, we evict all tensors into
+DDR and then split/time the computation. If we can, we do, and we will
+evict the tensors no longer needed accordingly.
 
 At the end of this stage, every tensor will be associated to an
 address in memtile or DDR (or both). If there are only DDR addresses,
@@ -632,17 +649,21 @@ $Conv(\Vc{X}_w,\Vc{W})$ is independent and, recursively and as needed,
 there will be specific splits of the computation accordingly. This
 could be simply described using loops but it is actually a tree (i.e,
 a root with $k$ children). Sub convolutions so determined may have
-different memory requirements, we try as much as possible to obtain as
-symmetric computation as possible. If the convolution has strides and
-large kernel, each sub-convolution may have overlap data but defined
+different memory requirements, we try as much as possible to obtain
+symmetric computations (some columns will have to compute slightly
+larger than needed tensors). If the convolution has strides and large
+kernel, each sub-convolution may have overlap data but defined
 addresses and data movement if necessary. For example, computing the
 output by rows and the weights are reused.
 \begin{equation}
   \forall w, \;   Conv(\Vc{X}_w,\Vc{W}) \rightarrow  \dot{\sum}_h Conv(\Vc{X}_{w,h},\Vc{W})
 \end{equation}
 
-\SSinglefigure{2.0}{singledenseconv.png}{Resnet single convolution
-  with padding for 4x4 AIE }{fig:singleconvestimate}
+
+
+\SSinglefigure{2.0}{R4x4-4sharesdense.png}{Resnet50 for 4x4 AIE with dense
+  weights}{fig:estimate-dense}
+
 
 \subsection{Code Generation }
 The compiler recursively creates a list of operations smaller and
@@ -650,59 +671,64 @@ smaller that can actually be executed Mem-Tile to Mem-Tile. In
 practice, there is a further decomposition using only AIE cores but it
 is completely determined by the subvolume computation as we explained
 previously. Then, we can explicitly determine the data movements from
-mem-tile to core and back.
+mem-tile to core and back. Here, we shall show how we produce the
+execution time estimates as in Figure \ref{fig:estimate-dense}.  Do
+not adjust the paper or do, on the vertical line there is time in
+seconds and it evolves by going up (if you flip, it goes from left to
+right); on the horizontal line, there are the instructions separated
+to create a sequence of time series. We shall explain further in the
+next sections. Thus, should be easier to appreciate the compiler work
+and its time estimation effort.
 
-A peculiar feature of the current system is the concept of {\em
-  iteration}. Using locks and chaining them (locks like in
-semaphores): We can create a single iteration instruction from the
-prospective of a single core (as a SIMD instruction) but driving all
-cores at once (ASM-like code) {\footnotesize
+A important feature of the current system is the concept of {\bf
+  iteration}: Using locks and chaining them (locks like in
+semaphores): We can write a single instruction from the prospective of
+a single core (as a SIMD instruction) but driving all cores at once
+(ASM-like code) for multiple iterations:
+
+{\footnotesize
 \begin{verbatim}
-  LOAD Lock k_0 mem-tile add core add iter i
+  LOADFM Lock k_0 mem-tile add core add iter i
   CONV iteration      i
-  SAVE Lock k_1 mem-tile add core add iter i
+  WRITEFM Lock k_1 mem-tile add core add iter i
 \end{verbatim}
-} There is an implicit lock (say \verb2k_x2) that is used for the pong
-and the system cycles in between locks (\verb2k_x2 and \verb2k_02)
+}
 
-
+There is an implicit lock (say \verb2k_x2) that is used for the pong
+and the system cycles in between locks (\verb2k_x2 and \verb2k_02).
 These three operations will be execute a number of iterations {\em i}
 and using a ping/pong they will load different slices of data and
 compute different slices of data. The key ingredient for this to work
-is the volumes of input and output tensors are all the same. 
-
-
-In our environment padding is common and we can manage by a custom
-load (from memtile to core) and this requires a custom load that will
-not be repeated
-{\footnotesize
+is the volumes of input and output tensors are all the same.  In our
+environment padding is common and we can manage by a custom load (from
+memtile to core) and this requires a custom load that will not be
+repeated {\footnotesize
 \begin{verbatim}
-  ## Head top padding
-  LOAD Lock k_0 mem-tile add_0 core add iter 1
+  ## Head top padding < 50 us First comp block
+  LOADFM Lock k_0 mem-tile add_0 core add iter 1
   CONV iteration 1
-  SAVE Lock k_1 mem-tile add_1 core add iter 1
-  ## Body iteration
+  WRITEFM Lock k_1 mem-tile add_1 core add iter 1
+  ## Body iteration > 50 us < 150 us
   ## k_0 -> k_2 -> k_4 Lock Chain
-  LOAD Lock k_2 mem-tile add_2 core add iter 9
+  LOADFM Lock k_2 mem-tile add_2 core add iter 9
   CONV iteration 7
-  SAVE Lock k_3 mem-tile add_3 core add iter 9
-  ## tail
-  LOAD Lock k_4 mem-tile add_4 core add iter 1
+  WRITEFM Lock k_3 mem-tile add_3 core add iter 9
+  ## tail  > 150 us Last computation block
+  LOADFM Lock k_4 mem-tile add_4 core add iter 1
   CONV iteration 1
-  SAVE Lock k_5 mem-tile add_5 core add iter 1
+  WRITEFM Lock k_5 mem-tile add_5 core add iter 1
 \end{verbatim}
  } See Figure \ref{fig:singleconvestimate} for how this code will play
-out in practice. At this stage we have all the information and the
-code generation per layer is a two pass process: first, we generate
-code for the all load/store and then we combine them into chain having
-dependency so that to be logically correct and as fast as
+out in practice. At this stage we have all the information we
+need. Per layer, the code generation is a two pass process: first, we
+generate code for the all load/store and then we combine them into
+chain having dependency so that to be logically correct and as fast as
 possible. Take the code above and we introduce a chain information.
-
-
-\newpage 
-\SSinglefigure{2.0}{R4x4-4sharesdense.png}{Resnet50 for 4x4 AIE with dense
-  weights}{fig:estimate-dense}
-
+\SSinglefigure{1.8}{singledenseconv.png}{Resnet single convolution
+  with padding for 4x4: legend AIE: LOAD Activation DDR to Mem, LOADW
+  weights DDR to Mem, LOADFM Activation Mem to AIE2 cores, LOADWM
+  weights Mem to AIE2, WRITE Mem to DDR, WRITEFM AIE2 to Mem, COMP
+  Computation }{fig:singleconvestimate}
 
 \subsection{Time Estimation}
 At this stage, we need to explain how we can capture the execution
@@ -712,35 +738,35 @@ time and visualize it as in Figure \ref{fig:estimate-dense}.
 We have two communication types: activations and weights. Per
 mem-tile there are two dedicated channels.
 \begin{itemize}
- \item if we share activations and weights in the same mem-tile (we
-   use the moniker WAWAWAWA), we can use one channel for activations
-   and one for weights. Thus the loads from DDR to MEM-tile (LOAD and
-   LOADW) are parallel with a bandwidth of 4GB/s. Writes from mem-tile
-   to DDR (WRITE) can use both channels (8GB/s). We shall expand this.
+ \item if we share activations and weights in the same mem-tile, we
+   can use one channel for activations and one for weights. Thus the
+   loads from DDR to MEM-tile (LOAD and LOADW) are parallel with a
+   bandwidth of 4GB/s. Writes from mem-tile to DDR (WRITE) can use
+   both channels (8GB/s). We shall expand this.
 
  \item If activations and weights go to different mem-tiles (2 and 2),
-   each load is parallel and 8GB/s (we use the moniker WAAW). Writes
+   each load is parallel and 8GB/s. Writes
    are identical.
 \end{itemize}
 Although, mem-tile are circular buffers to improve the memory
 allocation, the classic streaming is not really applicable for two
-main reasons: First, when we share weights they must stay still to be
-reused, if weights are not shared then in general inputs and outputs
-have different rates of consumption and thus eventually one will
-overwrite the other. Ping/pong techniques will decrease the space
+main reasons: First, when we share weights and they must stay still to
+be reused, if weights are not shared then in general inputs and
+outputs have different rates of consumption and thus eventually one
+will overwrite the other. Ping/pong techniques will decrease the space
 available but it will hide latency: at this time we try to increase
 the reuse.
    
 \subsection{Time estimates for Mem-Tile to AIEs}
 
-The Memtile connections with AIE cores can be designed differently as
-a function of the purpose. We assume here a few channels with again
-4GB/s bandwidth. One memetile can broad cast inputs to columns of
-cores (and to the nearest neighbors). These communications are for
-activations (LOADFM). One Memtile can broadcast to rows of cores (or
-the nearest neighbor), these are for weights (LOADWM). We assume that
-the column and row communications are parallel and each memtile core
-connection is parallel.
+The Memtile connections with AIE cores can be designed differently. We
+assume here a few channels with again 4GB/s bandwidth. One memetile
+can broad cast inputs to columns of cores (and to the nearest
+neighbors). These communications are for activations (LOADFM). One
+Memtile can broadcast to rows of cores (or the nearest neighbor),
+these are for weights (LOADWM). We assume that the column and row
+communications are parallel and each memtile core connection is
+parallel.
 
 Every communication with iteration 1 is synchronous and binding: that
 is sequential, the load, convolution, and store is one after the other
@@ -764,7 +790,7 @@ the communications is more compelling and we can easily mute the
 computation contribution.
 
 We do not account the wait and synchronization necessary to reprogram
-the fabric.
+the fabric. These are very expensive running on a few milliseconds.
 
 During and especially once we generated the code for all data
 movements, data volumes and destinations, the trigger of the
@@ -796,15 +822,17 @@ computation using padding (top-padding) and you can see the sequential
 execution of load to cores (LOADFM), computation (COMP), and write to
 memtile (WRITEFM). This computation has iteration 1. There are 9
 iterations for three instructions: we can see the load, the
-computation, and write in parallel. This is obviously a simplification;
-there will be a little load poking out at the beginning and a writing
-poking out at the end.  Then we conclude with the final computation
-with padding at the bottom of the computation.
+computation, and write in parallel. See for the dense convolution in
+Figure \ref{fig:singleconvestimate} in the time interval between $20\mu\!s$
+and $180\mu\!s$.  This is obviously a simplification; there will be
+a little load poking out at the beginning and a writing poking out at
+the end.  Then we conclude with the final computation with padding at
+the bottom of the computation.
 
 In this particular scenario, the computation dominates the execution
 time and compression basically cut the execution time by half: from
 200 $\mu s$ to 130. There are convolutions in Resnet that realize
-exactly $2\times$ performance but also there are convolution that are
+exactly $2\times$ performance but also there are convolutions that are
 dominated by the read or by the writing, and where sparsity help only
 in space saving.
 
@@ -836,7 +864,7 @@ graph computation).  To create a complete time estimate, we just need
 to take the schedule of the computation and the graph, visit each node
 accordingly to the schedule, write a {\em json} file describing the
 time series, then by {\em javascript} we can visualize the time series
-using a browser. The Figure in this paper are generated directly.
+using a browser. The Figures in this paper are generated directly.
 
 For a $4\times 4$ AIE set up, Resnet 50 fits in memtile from the
 beginning to the last operation (beside the first convolution and this
@@ -871,6 +899,22 @@ more aggressive and training for it (as starting point
 model, it is a sparsity that the software can describe and the
 hardware can take advantage without having any hardware support.
 
+This work in particular stemmed from a collaboration between Xilinx
+and Numenta and the idea set forward by the authors in
+\cite{ahmad2019dense}. Sparsity at the beginning was proposed for
+weights with blocks $4\times 4$and for activations (a ReLU zeros a lot
+and there have been prototypes programming logic was added to AIE1
+fabric to support top-k run time activation). We must thanks Vamsi
+Nalluri for the AIE1 prototype and the original contribution to the
+AIE2. With the new AIE2 and logic, the run time support and top-k was
+dropped. The compiler could and can do average estimate of tensor
+contents but we do not have run time support for dynamic and
+unstructured sparsity. New support are coming like the 2 over 4 (4
+over 8) sparsity but it is not clear how it will affect the activation
+encoding and total accuracy. In principle, we could use 2 by 4 zero
+encoding for the non zero blocks to further reduce space and
+computations.
+
 The difficulty of generate code for complex architectures can be
 described and solved in different ways. There are recent attempts of
 introducing SW/HW solution for spatial processors like ours
@@ -901,31 +945,45 @@ main difference:
        effects on the shapes and layout of the operands, the HW
        architect instruct the compiler about the tensor requirements. 
      \item The compiler does not generate fully correct addresses but
-       all the tensor shapes are valid and correct for any $K\times K$.
+       all the tensor shapes are valid and correct for most $K\times
+       K$ of reasonable size $K\leq 8$.
      \end{itemize}
    \item No full or partial simulation is needed, and now time
      estimates can be used to quantify scheduling and HW
      configurations choices: yes there is further arbitrary connection
      and hardware configurations that can be changed and the effect
-     can be only validate by writing code for it..
+     can be only validate by writing code for it \dots
 \end{itemize}
      
      
 \section{appendix}
+We present the collection of execution times as images:
+\begin{itemize}
+  \item Figure \ref{fig:incv3-1} Inception V3 2x2 dense and sparse
+  \item Figure \ref{fig:incv3-2} Inception V3 3x3 dense and sparse
+  \item Figure \ref{fig:incv3-3} Inception V3 4x4 dense and sparse
+  \item Figure \ref{fig:incv3-4} Inception V3 5x5 dense and sparse FAILs
+  \item Figure \ref{fig:incv3-5} Inception V3 6x6 dense and sparse 
+  \item Figure \ref{fig:incv3-6} Inception V3 8x8 dense and sparse
+  \item Figure \ref{fig:incv3-7} Resnet 50 2x2 dense and sparse   
+  \item Figure \ref{fig:incv3-8} Resnet 50 3x3 dense and sparse   
+  \item Figure \ref{fig:incv3-9} Resnet 50 4x4 dense and sparse   
+  \item Figure \ref{fig:incv3-10} Resnet 50 5x5 dense FAILs and sparse   
+  \item Figure \ref{fig:incv3-11} Resnet 50 6x6 dense and sparse   
+\end{itemize}
 
+\DDoublefigure{1.3}{IncV3-2x2-2share-dense.png}{IncV3-2x2-2share-sparse.png}{Inception for 2x2 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-1}
+\DDoublefigure{1.3}{IncV3-3x3-3share-dense.png}{IncV3-3x3-3share-sparse.png}{Inception for 3x3 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-2}
+\DDoublefigure{1.3}{IncV3-4x4-4share-dense.png}{IncV3-4x4-4share-sparse.png}{Inception for 4x4 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-3}
+\SSinglefigure{2}{IncV3-5x5-5share-dense.png}{Inception for 5x5 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-4}
+\DDoublefigure{1.3}{IncV3-6x6-6share-dense.png}{IncV3-6x6-6share-sparse.png}{Inception for 6x6 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-5}
+\DDoublefigure{1.3}{IncV3-8x8-8share-dense.png}{IncV3-8x8-8share-sparse.png}{Inception for 8x8 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-6}
 
-\DDoublefigure{1.3}{IncV3-2x2-2share-dense.png}{IncV3-2x2-2share-sparse.png}{Inception for 2x2 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
-\DDoublefigure{1.3}{IncV3-3x3-3share-dense.png}{IncV3-3x3-3share-sparse.png}{Inception for 3x3 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
-\DDoublefigure{1.3}{IncV3-4x4-4share-dense.png}{IncV3-4x4-4share-sparse.png}{Inception for 4x4 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
-\SSinglefigure{2}{IncV3-5x5-5share-dense.png}{Inception for 5x5 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
-\DDoublefigure{1.3}{IncV3-6x6-6share-dense.png}{IncV3-6x6-6share-sparse.png}{Inception for 6x6 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
-\DDoublefigure{1.3}{IncV3-8x8-8share-dense.png}{IncV3-8x8-8share-sparse.png}{Inception for 8x8 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
-
-\DDoublefigure{1.3}{Res2x2-2share-dense.png}{Res2x2-2share-sparse.png}{Resnet for 2x2 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
-\DDoublefigure{1.3}{Res3x3-3share-dense.png}{Res3x3-3share-sparse.png}{Resnet for 3x3 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
-\DDoublefigure{1.3}{Res4x4-4share-dense.png}{Res4x4-4share-sparse.png}{Resnet for 4x46 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
-\SSinglefigure{2}{Res5x5-5share-sparse.png}{Resnet for 5x5 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
-\DDoublefigure{1.3}{Res6x6-6share-dense.png}{Res6x6-6share-sparse.png}{Resnet for 6x6 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-}
+\DDoublefigure{1.3}{Res2x2-2share-dense.png}{Res2x2-2share-sparse.png}{Resnet for 2x2 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-7}
+\DDoublefigure{1.3}{Res3x3-3share-dense.png}{Res3x3-3share-sparse.png}{Resnet for 3x3 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-8}
+\DDoublefigure{1.3}{Res4x4-4share-dense.png}{Res4x4-4share-sparse.png}{Resnet for 4x46 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-9}
+\SSinglefigure{2}{Res5x5-5share-sparse.png}{Resnet for 5x5 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-10}
+\DDoublefigure{1.3}{Res6x6-6share-dense.png}{Res6x6-6share-sparse.png}{Resnet for 6x6 AIE  with dense (left)  weights and sparse (right) }{fig:incv3-11}
 
 
 
