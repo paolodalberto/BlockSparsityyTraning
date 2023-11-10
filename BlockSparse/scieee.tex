@@ -38,14 +38,12 @@
 \maketitle
 
 \begin{abstract}
-Inference is a synonymous for performance. The inference time is 
-how long it takes for a forward propagation of a neural network.  
-% for example, more and faster classifications per seconds.
- As faster and tailor-made
-chip-lets are deployed in the field, Larger and larger models are
-domineering the public's attention: quantization and sparsification
-are used to fit these large models into more reasonable sized
-ones. Quantization reduces the foot print per model weight and
+Inference is a synonymous of performance. The inference time is how
+long it takes for a forward propagation of a neural network.  As
+faster and tailor-made chip-lets are deployed in the field, larger and
+larger models are domineering the public's attention: quantization and
+sparsification are used to fit these large models into more reasonable
+sized ones. Quantization reduces the foot print per model weight and
 sparsification trims superfluous ones.  We present the main ideas
 about a vertical system where convolution and matrix multiplication
 weights can be trained to exploit an 8x8 block sparsity, compilers
@@ -215,7 +213,7 @@ More precisely, consider non-zero blocks of size $k\times k$ so that
   \Vc{C}_{i*N+j} = \sum_k ( \gamma_{i*N+k} \Vc{A}_{i*N+k} ) (\omega_{k*N+j} \Vc{B}_{k*N+j})
 \end{equation}
 Thanks to the sparsity and if we store only non-zeros, then
-$gamma_{i*N+k}$ is at the very least contiguous but $\omega_{k*N+j}$
+$\gamma_{i*N+k}$ is at the very least contiguous but $\omega_{k*N+j}$
 and the right operand accesses are far from being neither simple not
 contiguous.
 \begin{equation}
@@ -230,16 +228,16 @@ $K$ non-zeros, $K\log_2(K)$.
 \end{equation}
 There will be a meaningful product to compute if and only if
 $\gamma_{i*N+k} =1$, $\dot{\omega}_{j*N+k} =1$, and
-$i*N+k=j*N+k$. Without any extra information, this is simply merge
-sort. If we take $\gamma_{i*N+k} = i*N+k$ when the relative block is
-non zero, nothing otherwise, create a vector, and do the same for
-$\dot{\omega}_{j*N+k}$, then we merge-sort these vectors, we do
-computations only on equality: we have to inspect each non zero
-elements $M_0$ and $M_1$, which is $\leq O(\frac{N}{K})$. If you like
-to break codes yourself, see how the Sparse Sparse Matrix
-multiplication using Coordinate Block Structure (COO) is, please go
-play with \cite{PaoloG2020}. We have a parallel sorting and a parallel
-matrix multiplication.
+$k_\gamma=k_\omega$. Without any extra information, this is simply
+merge sort. If we take $\gamma_{i*N+k} = (i*N,k_\gamma)$ when the
+relative block is non zero, nothing otherwise, create a vector, and do
+the same for $\dot{\omega}_{j*N+k}$, then we merge-sort these vectors,
+we do computations only on equality $k_\gamma = k_\omega$: we have to
+inspect each non zero elements $M_0$ and $M_1$, which is $\leq
+O(\frac{N}{K})$. If you like to break codes yourself, see how the
+Sparse Sparse Matrix multiplication using Coordinate Block Structure
+(COO) is, please go play with \cite{PaoloG2020}. We have a parallel
+sorting and a parallel matrix multiplication.
 
 Now, the intuitive part, assume we want to achieve a fixed sparsity
 (i.e., density) of 50\% for a square matrix of size $N$ and we choose
@@ -258,7 +256,7 @@ matrix with dense block is 1x1 and 8x8. Given the same problem, we may
 use more threads and thus the Jenga of points.  We can see that given
 he same number of effective operations, the block permits better
 performance and exploits better performance for each precision: that
-is, see a 2{$\times$} performance for single precision computation
+is, see up to 2{$\times$} performance for single precision computation
 versus double precision. Notice, this is a sparse computation and thus
 the poor peformance (in GFLOPS) is actually expected (the peak
 performance in this architecture is about 500+GFLOPS).
@@ -362,7 +360,7 @@ used in Section \ref{sec:pytorch}
 Let say that for every convolution, $n_i =\sum \gamma_i$, which is the
 number of blocks. We would like to reduce this number to
 $\frac{n_i}{2}$. For each epoch (say every two training epochs), we
-consider the current non-set-yet mask elements $\sum \gamma_i = k <
+consider the current non-set-yet mask elements $\sum (1-\gamma_i) = k <
 \frac{n_i}{2}$. We compute our importance measure for all in ascending
 order. This time, we zero the first $\min(\frac{5}{100}k, 1)$. We
 keep this process until we reach 50\% sparsity. At each iteration at
@@ -522,13 +520,13 @@ and the capability to split these tensors when we split the computation.
 
 All weights are statically prepared into DDR and we move them
 explicitly towards the inner levels. Inputs and outputs have
-designated space DDR (to communicate externally with PCI connection or
+designated space in DDR (to communicate externally with PCI connection or
 RAM). DDR can and it will be used for swap tensors in case the inner
 levels do not allow allocation.  The compiler can explore different
 schedules: the memory allocation to Mem-Tile is basically coloring
-algorithm plus some heuristics. In this architecture, we do not allow
+algorithms and some heuristics. In this architecture, we do not allow
 {\em streaming} of neither data or weights (because they share space
-in Mem-Tile). In previous architecture, we could.
+in Mem-Tile). In a  previous architecture, we could.
 
 \subsection{AIE Hardware abstraction}
 
@@ -549,7 +547,7 @@ to one columns and its direct neighbor column, or it can be connected
 to a row and its neighbor. The total amount of space is 2MB. Memtile
 is a circular buffer to exploit more flexible allocation, implicitly a
 $2 \times 2$ architecture will have one memtile per column and a total
-of two.
+of two (1MB).
 
 A Memtile can broad-cast data per column or per row. We can dedicate a
 memtile for weights, one for activations, or we can share. We shall
@@ -726,7 +724,7 @@ need. Per layer, the code generation is a two pass process: first, we
 generate code for the all load/store and then we combine them into
 chain having dependency so that to be logically correct and as fast as
 possible. Take the code above and we introduce a chain information.
-\SSinglefigure{1.8}{singledenseconv.png}{Resnet single convolution
+\SSinglefigure{1.5}{singledenseconv.png}{Resnet single convolution
   with padding for 4x4: legend AIE: LOAD Activation DDR to Mem, LOADW
   weights DDR to Mem, LOADFM Activation Mem to AIE2 cores, LOADWM
   weights Mem to AIE2, WRITE Mem to DDR, WRITEFM AIE2 to Mem, COMP
@@ -834,7 +832,7 @@ the bottom of the computation.
 In this particular scenario, the computation dominates the execution
 time and compression basically cut the execution time by half: from
 200 $\mu s$ to 130. There are convolutions in Resnet that realize
-exactly $2\times$ performance but also there are convolutions that are
+up to $2\times$ performance but also there are convolutions that are
 dominated by the read or by the writing, and where sparsity help only
 in space saving.
 
