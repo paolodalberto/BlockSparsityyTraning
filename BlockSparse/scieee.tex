@@ -39,40 +39,38 @@
 
 \begin{abstract}
 Inference is a synonymous of performance. The inference time is how
-long it takes for a forward propagation of a neural network.  As
-faster and tailor-made chip-lets are deployed in the field, larger and
-larger models are domineering the public's attention: quantization and
+long it takes a forward propagation of a neural network.  As faster
+and tailor-made chip-lets are deployed in the field, larger and larger
+models are domineering the public's attention: quantization and
 sparsification are used to fit these large models into more reasonable
 sized ones. Quantization reduces the foot print per model weight and
 sparsification trims superfluous ones.  We present the main ideas
 about a vertical system where convolution and matrix multiplication
 weights can be trained to exploit an 8x8 block sparsity, compilers
-recognize such a sparsity for data compaction and computation
-splitting into threads and cores.
+recognize such a sparsity for both data compaction and computation
+splitting into threads.
 
-Blocks present spatial locality that a vector operation can make full
-use and temporal locality for good reuse and cost amortization. If we
-take a Resnet50, we can reduce the weight by half with little accuracy
-loss, We can achieve speeds similar to an hypothetical Resnet25. We
-shall present performance estimates by accurate and complete code
-generation for a small and efficient set of AIE2 (Xilinx Versal
-FPGAs). We show block sparsity could be applied to  CPU and  GPUS.
-
+Such blocks fully takes advantage of: spatial locality that a vector
+operation can use and temporal locality for good reuse and
+cost amortization. If we take a Resnet50, we can reduce the weight by
+half with little accuracy loss. We can achieve speeds similar to an
+hypothetical Resnet25. We shall present performance estimates by
+accurate and complete code generation for a small and efficient set of
+AIE2 (Xilinx Versal FPGAs).
 \end{abstract}
 
 
 \begin{IEEEkeywords}
-Sparsity, Performance, FPGA, Tools
+Sparsity, AI, Performance, FPGA, and Tools
 \end{IEEEkeywords}
 
 \section{Introduction}
 \label{sec:introduction}
 
 We shall start by what we mean for block sparsity and for a vertical
-solution. This will provide a clear introduction to the subject. Block
-sparsity is an intuitive concept but it is also a little misunderstood
-because we all have a different mental picture of it. Take a matrix
-multiplication as in Equation \ref{eq:mat}
+solution. Block sparsity is an intuitive concept but it is also a
+little misunderstood. Take a matrix multiplication as in Equation
+\ref{eq:mat}
 \begin{equation}
   \label{eq:mat}
   \begin{pmatrix}
@@ -95,15 +93,15 @@ This is simply the computation
   \Vc{C}_2 = \Vc{A}_{3} \Vc{B}_{2}; \;
   \Vc{C}_3 = \Vc{A}_{2} \Vc{B}_{1}
 \end{equation}}
-and in general with proper $\gamma_i$
+and in general with proper $\gamma_i$ (i.e., a mask):
 \begin{equation}
   \Vc{C}_i = \sum_{k=0}^1 \Vc{A}_{2i+ k} \big(\gamma_{2*k+i} \Vc{B}_{2*k+i}\big)
 \end{equation}
 
 
 Where the matrix $\Vc{B}$ is a constant and diagonal and each
-submatrices $\Vc{B_2}$ and $\Vc{B}_1$ can split further down and show
-zero blocks of even smaller sizes. In this work, we chose the basic
+submatrice $\Vc{B_2}$ and $\Vc{B}_1$ can split further down and may
+have even smaller size zero blocks. In this work, we chose the basic
 block of being of size $\Vc{B}_i = 8\times 8$. It is arbitrary but it
 is a great starting point for architectures based on AMD AIE2
 products.  For example,
@@ -846,7 +844,7 @@ the convolutions (but the first one) for Resnet 50 Figure
 \ref{fig:estimate-dense} and \ref{fig:estimate-sparse}, and Inception
 V3 Figure \ref{fig:incv3-estimate-dense}.
 
-\DDoublefigure{0.95}{Iv36x6-6shareddense.png}{Iv36x6-6sharedsparse.png}{Inception V3 for 6x6 AIE
+\DDoublefigure{0.80}{Iv36x6-6shareddense.png}{Iv36x6-6sharedsparse.png}{Inception V3 for 6x6 AIE
   with dense (left/top)  weights and sparse (right/bottom) }{fig:incv3-estimate-dense}
 
 When we generate the code for each instruction, we compute the
@@ -982,7 +980,7 @@ its entirety as much as we made public some already.
 
 
 
-\begin{table}
+\begin{table}[htb]
   \caption{Execution Time estimates}
   \label{tab_perf}
 \begin{center} 
@@ -1001,32 +999,29 @@ its entirety as much as we made public some already.
   4x4   &   &  1.740967e-02 & 1.012540e-02 \\ \hline
   5x5   &   &  9.690552e-03 & failed       \\ \hline
   6x6   &   &  1.063962e-02 & 6.439692e-03 \\ \hline
-  7x7   &   &  8.727651e-03 & Failed       \\ \hline
+  7x7   &   &  8.727651e-03 & failed       \\ \hline
   8x8   &   &  9.093276e-03 & 5.666152e-03 \\ \hline \hline
   2x2   & VGG16  & 4.476212e-02  & 2.608593e-02 \\ \hline
   3x3   &   & failed        & 1.002015e-02 \\ \hline
   4x4   &   &  1.371000e-02 & 8.852128e-03 \\ \hline
   5x5   &   &  failed       & 4.336479e-03 \\ \hline
-  6x6   &   &  Failed       & 5.770197e-03 \\ \hline
+  6x6   &   &  failed       & 5.770197e-03 \\ \hline
   7x7   &   &  7.455440e-03 & 5.288551e-03 \\ \hline
   8x8   &   &  9.203393e-03 & 6.502333e-03 \\ \hline \hline
           
 \end{tabular}
 \end{center}
-
-
 \end{table}
-We present the collection of execution times as images, this is to
-show that the system has some flexibility describing the HW and you
-can appreciate how the small $2\times 2$ AIE2 system still can provide
-a performance punch and a 4x4 will have enough mem-tile so that to
-minimize most of the DDR spills, making ideal for data centers and PC
-alike. A $4\times 4$ cohort can be replicated up to 40 times (think as
-a batch of 40) and we can do better when the weight are shared into a
-single memtiles for each 40 copies and separated from activations
-(there is such design).
 
-We will see if AIE2 cores and meshes will find deployment in
+In Table \ref{tab_perf}, we present the estimates of the total
+execution time for three networks and seven configurations. We report
+also the case where the compiler failes to generate code and thus
+estiamtes. A $4\times 4$ cohort can be replicated up to 40 times
+(think as a batch of 40) and we can do better when the weight are
+shared into a single memtiles for each 40 copies and separated from
+activations (there is such design).
+
+Here We present the collection of execution times as images: 
 \begin{itemize}
   \item Figure \ref{fig:incv3-1} Inception V3 2x2 dense and sparse
   \item Figure \ref{fig:incv3-2} Inception V3 3x3 dense and sparse
@@ -1043,7 +1038,7 @@ We will see if AIE2 cores and meshes will find deployment in
   \item Figure \ref{fig:incv3-13} VGG16  4x4 dense and sparse   
   \item Figure \ref{fig:incv3-14} VGG16  8x8 dense and sparse   
 \end{itemize}
-
+\newpage 
 \DDoublefigure{1.3}{IncV3-2x2-2share-dense.png}{IncV3-2x2-2share-sparse.png}{Inception
   for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)
 }{fig:incv3-1}
