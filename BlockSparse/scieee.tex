@@ -979,6 +979,43 @@ its entirety as much as we made public some already.
      
      
 \section{appendix}
+
+
+
+\begin{table}
+  \caption{Execution Time estimates}
+  \label{tab_perf}
+\begin{center} 
+\begin{tabular}{|l|l|l|l|l|}
+  \hline
+  AIE2 & Model  & Dense sec      & Sparse sec      \\ \hline\hline
+  2x2   & Resnet & 2.492347e-02  & 1.582626e-02 \\ \hline
+  3x3   &  & 1.269543e-02  & 8.661490e-03 \\ \hline
+  4x4   &  &  1.077318e-02 & 7.064918e-03 \\ \hline
+  5x5   &  &  failed       & 4.303485e-03 \\ \hline
+  6x6   &  &  5.712521e-03 & 4.490127e-03 \\ \hline
+  7x7   &  &  4.205991e-03 & 3.212234e-03 \\ \hline
+  8x8   &  &  6.376768e-03 & 4.602027e-03 \\ \hline \hline
+  2x2   & IncV3  & 4.283837e-02  & 2.440544e-02 \\ \hline
+  3x3   &   & 2.386600e-02  & 1.422390e-02 \\ \hline
+  4x4   &   &  1.740967e-02 & 1.012540e-02 \\ \hline
+  5x5   &   &  9.690552e-03 & failed       \\ \hline
+  6x6   &   &  1.063962e-02 & 6.439692e-03 \\ \hline
+  7x7   &   &  8.727651e-03 & Failed       \\ \hline
+  8x8   &   &  9.093276e-03 & 5.666152e-03 \\ \hline \hline
+  2x2   & VGG16  & 4.476212e-02  & 2.608593e-02 \\ \hline
+  3x3   &   & failed        & 1.002015e-02 \\ \hline
+  4x4   &   &  1.371000e-02 & 8.852128e-03 \\ \hline
+  5x5   &   &  failed       & 4.336479e-03 \\ \hline
+  6x6   &   &  Failed       & 5.770197e-03 \\ \hline
+  7x7   &   &  7.455440e-03 & 5.288551e-03 \\ \hline
+  8x8   &   &  9.203393e-03 & 6.502333e-03 \\ \hline \hline
+          
+\end{tabular}
+\end{center}
+
+
+\end{table}
 We present the collection of execution times as images, this is to
 show that the system has some flexibility describing the HW and you
 can appreciate how the small $2\times 2$ AIE2 system still can provide

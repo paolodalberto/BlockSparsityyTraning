@@ -1,0 +1,123 @@
+var dom     = document.getElementById("container");
+var myChart = echarts.init(dom);
+var instrs  = ['LOAD','LOADW','LOADFM','LOADWM', 'WRITE','WRITEFM', 'COMP']
+
+function renderItem(params, api) {
+    var instr   = api.value(0);
+    var start   = api.coord([api.value(1), instr]);
+    var end     = api.coord([api.value(2), instr]);
+    var height  = api.size([0, 1])[1] * 0.6;
+    var rect    = echarts.graphic.clipRectByRect({
+        x:      start[0],
+        y:      start[1] - height / 2,
+        width:  end[0] - start[0],
+        height: height
+    }, {
+        x:      params.coordSys.x,
+        y:      params.coordSys.y,
+        width:  params.coordSys.width,
+        height: params.coordSys.height
+    });
+    return rect && {
+        type: 'rect',
+        shape: rect,
+        style: api.style()
+    };
+}
+
+option = {
+    title: {
+        text: 'AIE Madness Profile',
+        subtext: 'By Qian & Paolo',
+        left: 'center'
+    },
+    tooltip: {
+        formatter: function (params) {
+            return params.marker + params.value[6] + '<br/>' +
+                'start: ' + params.value[1] + ' us' + '<br/>' +
+                'end: ' + params.value[2] + ' us' + '<br/>' +
+                'duration: ' + params.value[3] + ' us' + '<br/>' +
+                'ops: ' + params.value[4] + '<br/>' +
+                'eff: ' + params.value[5] + '<br/>' + 
+                'input: ' + params.value[7] + '<br/>' + 
+                'output: ' + params.value[8];
+        }
+    },
+    xAxis: {
+        scale: true,
+        axisLabel: {
+            formatter: function (val) {
+                return Math.max(0, val) + ' us';
+            }
+        }
+    },
+    yAxis: {
+        data:  instrs
+    },
+    grid: {
+        y:      100,
+        height: 500
+    },
+    dataZoom: [{
+        type:           'slider',
+        filterMode:     'weakFilter',
+        showDataShadow: false,
+        top:            630,
+        height:         20,
+        borderColor:    'transparent',
+        backgroundColor:'#e2e2e2'
+    }, {
+        type:       'inside',
+        filterMode: 'weakFilter'
+    }],
+    toolbox: {
+        show : true,
+        orient: 'horizontal',
+        x: 'center',
+        y: 50,
+        color : ['#1e90ff','#22bb22','#4b0082','#d2691e'],
+        backgroundColor: 'rgba(0,0,0,0)',
+        borderColor: '#ccc',
+        borderWidth: 0,
+        padding: 5,
+        showTitle: true,
+        itemSize: 20,
+        feature : {
+            dataZoom : {
+                show : true,
+                yAxisIndex: 'none',
+                title : {
+                    dataZoom : 'DataZoom',
+                    dataZoomReset : 'Reset'
+                }
+            },
+            restore : {
+                show : true,
+                title : 'Restore',
+                color : 'black'
+            },
+            saveAsImage : {
+                show : true,
+                title : 'Save',
+                type : 'jpeg',
+                lang : ['english']
+            }
+        }
+    },
+    series: [{
+        type:       'custom',
+        renderItem: renderItem,
+        itemStyle:  {normal: {opacity: 0.8}},
+        encode:     {x:[1, 2], y:0},
+        data:       dprof()
+    }]
+};;
+
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+    myChart.dispatchAction({
+        type: "takeGlobalCursor",
+        key: 'dataZoomSelect',
+        dataZoomSelectActive: true
+    });
+}

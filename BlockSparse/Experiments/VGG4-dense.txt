@@ -1,0 +1,998 @@
+Name:Sparse Engine #1 arrays
+(Shared) DDR    : Name DDR Size 34359738368 Pairing [[0]] 
+   Banks [
+	Name  0 Layout 5 Unit 8-bits Rows 67108864 Column 64 dict_keys([(0, 34359738368)]) [None, None, None, None, None, None] 
+   ]
+ - array temp
+
+Per Core Ping (and Pong):
+MiscCoreBuffer : 11264-bit InputCoreBuffer : 131072-bit OutputCoreBuffer : 131072-bit WeightCoreBuffer : 131072-bit 
+ [(0,0)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(0,1)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(0,2)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(0,3)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16']
+ [(1,0)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(1,1)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(1,2)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(1,3)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16']
+ [(2,0)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(2,1)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(2,2)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(2,3)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16']
+ [(3,0)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(3,1)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(3,2)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(3,3)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16']
+
+(Combined) WEIGHTS: Name ParameterBuffer Size 16777216 Pairing [[0]] 
+   Banks [
+Row:
+	Name  0 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  1 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  2 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  3 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+   ]
+(Combined) ACT    : Name FeatureMapBuffer Size 16777216 Pairing [[0]] 
+   Banks [
+Row:
+	Name  0 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  1 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  2 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  3 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+   ]
+proto /wrk/xsjhdnobkup5/taeheej/vitis-ai-staging/quant/quantize_result/VGG_int.xmodel
+caffe None
+ ############################################# 
+ ######  Hyper Graph Construction 
+ ############################################# 
+ ############################################# 
+ ######  Hyper Graph Construction
+ ############################################# 
+ ############################################# 
+ ######  Architecture Summary
+ ############################################# 
+Name:Sparse Engine #1 arrays
+(Shared) DDR    : Name DDR Size 34359738368 Pairing [[0]] 
+   Banks [
+	Name  0 Layout 5 Unit 8-bits Rows 67108864 Column 64 dict_keys([(0, 34359738368)]) [None, None, None, None, None, None] 
+   ]
+ - array temp
+
+Per Core Ping (and Pong):
+MiscCoreBuffer : 11264-bit InputCoreBuffer : 131072-bit OutputCoreBuffer : 131072-bit WeightCoreBuffer : 131072-bit 
+ [(0,0)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(0,1)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(0,2)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(0,3)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16']
+ [(1,0)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(1,1)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(1,2)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(1,3)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16']
+ [(2,0)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(2,1)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(2,2)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(2,3)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16']
+ [(3,0)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(3,1)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(3,2)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16'] [(3,3)  ['-KB-1'] ['-KB-8', '-KB-8'] ['-KB-8', '-KB-8'] ['-KB-16']
+
+(Combined) WEIGHTS: Name ParameterBuffer Size 16777216 Pairing [[0]] 
+   Banks [
+Row:
+	Name  0 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  1 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  2 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  3 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+   ]
+(Combined) ACT    : Name FeatureMapBuffer Size 16777216 Pairing [[0]] 
+   Banks [
+Row:
+	Name  0 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  1 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  2 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+	Name  3 Layout 4 Unit 8-bits Rows 4096 Column 128 dict_keys([(0, 4194304)]) 
+   ]
+Floyd & Warshall
+BFS
+ ############################################# 
+ ######  Parameters Assimilation: # 34 
+ ############################################# 
+  0 data       VGG__input_0 Ops 0 Shape [1, 224, 224, 3]  IN [] OUT ['VGG__input_0_fix']
+  1 fix        VGG__input_0_fix Ops 0 Shape [1, 224, 224, 3]  IN ['VGG__input_0'] OUT ['VGG__VGG_Sequential_features__Conv2d_0__input_3']
+  2 conv2d     VGG__VGG_Sequential_features__Conv2d_0__input_3 Ops 0 Shape [1, 224, 224, 64]  IN ['VGG__input_0_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_1__input_5']
+  3 relu       VGG__VGG_Sequential_features__ReLU_1__input_5 Ops 0 Shape [1, 224, 224, 64]  IN ['VGG__VGG_Sequential_features__Conv2d_0__input_3'] OUT ['VGG__VGG_Sequential_features__ReLU_1__input_5_fix']
+  4 fix        VGG__VGG_Sequential_features__ReLU_1__input_5_fix Ops 0 Shape [1, 224, 224, 64]  IN ['VGG__VGG_Sequential_features__ReLU_1__input_5'] OUT ['VGG__VGG_Sequential_features__Conv2d_2__input_7']
+  5 conv2d     VGG__VGG_Sequential_features__Conv2d_2__input_7 Ops 0 Shape [1, 224, 224, 64]  IN ['VGG__VGG_Sequential_features__ReLU_1__input_5_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_3__1238']
+  6 relu       VGG__VGG_Sequential_features__ReLU_3__1238 Ops 0 Shape [1, 224, 224, 64]  IN ['VGG__VGG_Sequential_features__Conv2d_2__input_7'] OUT ['VGG__VGG_Sequential_features__ReLU_3__1238_fix']
+  7 fix        VGG__VGG_Sequential_features__ReLU_3__1238_fix Ops 0 Shape [1, 224, 224, 64]  IN ['VGG__VGG_Sequential_features__ReLU_3__1238'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_4__input_9']
+  8 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_4__input_9 Ops 0 Shape [1, 112, 112, 64]  IN ['VGG__VGG_Sequential_features__ReLU_3__1238_fix'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_4__input_9_fix']
+  9 fix        VGG__VGG_Sequential_features__MaxPool2d_4__input_9_fix Ops 0 Shape [1, 112, 112, 64]  IN ['VGG__VGG_Sequential_features__MaxPool2d_4__input_9'] OUT ['VGG__VGG_Sequential_features__Conv2d_5__input_11']
+ 10 conv2d     VGG__VGG_Sequential_features__Conv2d_5__input_11 Ops 0 Shape [1, 112, 112, 128]  IN ['VGG__VGG_Sequential_features__MaxPool2d_4__input_9_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_6__input_13']
+ 11 relu       VGG__VGG_Sequential_features__ReLU_6__input_13 Ops 0 Shape [1, 112, 112, 128]  IN ['VGG__VGG_Sequential_features__Conv2d_5__input_11'] OUT ['VGG__VGG_Sequential_features__ReLU_6__input_13_fix']
+ 12 fix        VGG__VGG_Sequential_features__ReLU_6__input_13_fix Ops 0 Shape [1, 112, 112, 128]  IN ['VGG__VGG_Sequential_features__ReLU_6__input_13'] OUT ['VGG__VGG_Sequential_features__Conv2d_7__input_15']
+ 13 conv2d     VGG__VGG_Sequential_features__Conv2d_7__input_15 Ops 0 Shape [1, 112, 112, 128]  IN ['VGG__VGG_Sequential_features__ReLU_6__input_13_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_8__1292']
+ 14 relu       VGG__VGG_Sequential_features__ReLU_8__1292 Ops 0 Shape [1, 112, 112, 128]  IN ['VGG__VGG_Sequential_features__Conv2d_7__input_15'] OUT ['VGG__VGG_Sequential_features__ReLU_8__1292_fix']
+ 15 fix        VGG__VGG_Sequential_features__ReLU_8__1292_fix Ops 0 Shape [1, 112, 112, 128]  IN ['VGG__VGG_Sequential_features__ReLU_8__1292'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_9__input_17']
+ 16 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_9__input_17 Ops 0 Shape [1, 56, 56, 128]  IN ['VGG__VGG_Sequential_features__ReLU_8__1292_fix'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_9__input_17_fix']
+ 17 fix        VGG__VGG_Sequential_features__MaxPool2d_9__input_17_fix Ops 0 Shape [1, 56, 56, 128]  IN ['VGG__VGG_Sequential_features__MaxPool2d_9__input_17'] OUT ['VGG__VGG_Sequential_features__Conv2d_10__input_19']
+ 18 conv2d     VGG__VGG_Sequential_features__Conv2d_10__input_19 Ops 0 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__MaxPool2d_9__input_17_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_11__input_21']
+ 19 relu       VGG__VGG_Sequential_features__ReLU_11__input_21 Ops 0 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__Conv2d_10__input_19'] OUT ['VGG__VGG_Sequential_features__ReLU_11__input_21_fix']
+ 20 fix        VGG__VGG_Sequential_features__ReLU_11__input_21_fix Ops 0 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__ReLU_11__input_21'] OUT ['VGG__VGG_Sequential_features__Conv2d_12__input_23']
+ 21 conv2d     VGG__VGG_Sequential_features__Conv2d_12__input_23 Ops 0 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__ReLU_11__input_21_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_13__input_25']
+ 22 relu       VGG__VGG_Sequential_features__ReLU_13__input_25 Ops 0 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__Conv2d_12__input_23'] OUT ['VGG__VGG_Sequential_features__ReLU_13__input_25_fix']
+ 23 fix        VGG__VGG_Sequential_features__ReLU_13__input_25_fix Ops 0 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__ReLU_13__input_25'] OUT ['VGG__VGG_Sequential_features__Conv2d_14__input_27']
+ 24 conv2d     VGG__VGG_Sequential_features__Conv2d_14__input_27 Ops 0 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__ReLU_13__input_25_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_15__1366']
+ 25 relu       VGG__VGG_Sequential_features__ReLU_15__1366 Ops 0 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__Conv2d_14__input_27'] OUT ['VGG__VGG_Sequential_features__ReLU_15__1366_fix']
+ 26 fix        VGG__VGG_Sequential_features__ReLU_15__1366_fix Ops 0 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__ReLU_15__1366'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_16__input_29']
+ 27 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_16__input_29 Ops 0 Shape [1, 28, 28, 256]  IN ['VGG__VGG_Sequential_features__ReLU_15__1366_fix'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_16__input_29_fix']
+ 28 fix        VGG__VGG_Sequential_features__MaxPool2d_16__input_29_fix Ops 0 Shape [1, 28, 28, 256]  IN ['VGG__VGG_Sequential_features__MaxPool2d_16__input_29'] OUT ['VGG__VGG_Sequential_features__Conv2d_17__input_31']
+ 29 conv2d     VGG__VGG_Sequential_features__Conv2d_17__input_31 Ops 0 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_16__input_29_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_18__input_33']
+ 30 relu       VGG__VGG_Sequential_features__ReLU_18__input_33 Ops 0 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_17__input_31'] OUT ['VGG__VGG_Sequential_features__ReLU_18__input_33_fix']
+ 31 fix        VGG__VGG_Sequential_features__ReLU_18__input_33_fix Ops 0 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__ReLU_18__input_33'] OUT ['VGG__VGG_Sequential_features__Conv2d_19__input_35']
+ 32 conv2d     VGG__VGG_Sequential_features__Conv2d_19__input_35 Ops 0 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__ReLU_18__input_33_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_20__input_37']
+ 33 relu       VGG__VGG_Sequential_features__ReLU_20__input_37 Ops 0 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_19__input_35'] OUT ['VGG__VGG_Sequential_features__ReLU_20__input_37_fix']
+ 34 fix        VGG__VGG_Sequential_features__ReLU_20__input_37_fix Ops 0 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__ReLU_20__input_37'] OUT ['VGG__VGG_Sequential_features__Conv2d_21__input_39']
+ 35 conv2d     VGG__VGG_Sequential_features__Conv2d_21__input_39 Ops 0 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__ReLU_20__input_37_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_22__1440']
+ 36 relu       VGG__VGG_Sequential_features__ReLU_22__1440 Ops 0 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_21__input_39'] OUT ['VGG__VGG_Sequential_features__ReLU_22__1440_fix']
+ 37 fix        VGG__VGG_Sequential_features__ReLU_22__1440_fix Ops 0 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__ReLU_22__1440'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_23__input_41']
+ 38 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_23__input_41 Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__ReLU_22__1440_fix'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_23__input_41_fix']
+ 39 fix        VGG__VGG_Sequential_features__MaxPool2d_23__input_41_fix Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_23__input_41'] OUT ['VGG__VGG_Sequential_features__Conv2d_24__input_43']
+ 40 conv2d     VGG__VGG_Sequential_features__Conv2d_24__input_43 Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_23__input_41_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_25__input_45']
+ 41 relu       VGG__VGG_Sequential_features__ReLU_25__input_45 Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_24__input_43'] OUT ['VGG__VGG_Sequential_features__ReLU_25__input_45_fix']
+ 42 fix        VGG__VGG_Sequential_features__ReLU_25__input_45_fix Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__ReLU_25__input_45'] OUT ['VGG__VGG_Sequential_features__Conv2d_26__input_47']
+ 43 conv2d     VGG__VGG_Sequential_features__Conv2d_26__input_47 Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__ReLU_25__input_45_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_27__input_49']
+ 44 relu       VGG__VGG_Sequential_features__ReLU_27__input_49 Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_26__input_47'] OUT ['VGG__VGG_Sequential_features__ReLU_27__input_49_fix']
+ 45 fix        VGG__VGG_Sequential_features__ReLU_27__input_49_fix Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__ReLU_27__input_49'] OUT ['VGG__VGG_Sequential_features__Conv2d_28__input_51']
+ 46 conv2d     VGG__VGG_Sequential_features__Conv2d_28__input_51 Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__ReLU_27__input_49_fix'] OUT ['VGG__VGG_Sequential_features__ReLU_29__1514']
+ 47 relu       VGG__VGG_Sequential_features__ReLU_29__1514 Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_28__input_51'] OUT ['VGG__VGG_Sequential_features__ReLU_29__1514_fix']
+ 48 fix        VGG__VGG_Sequential_features__ReLU_29__1514_fix Ops 0 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__ReLU_29__1514'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_30__input_53']
+ 49 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_30__input_53 Ops 0 Shape [1, 7, 7, 512]  IN ['VGG__VGG_Sequential_features__ReLU_29__1514_fix'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_30__input_53_fix']
+ 50 fix        VGG__VGG_Sequential_features__MaxPool2d_30__input_53_fix Ops 0 Shape [1, 7, 7, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_30__input_53'] OUT ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0']
+ 51 avgpool2d  VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 Ops 0 Shape [1, 7, 7, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_30__input_53_fix'] OUT ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544']
+ 52 mul        VGG__VGG_AdaptiveAvgPool2d_avgpool__1544 Ops 0 Shape [1, 7, 7, 512]  IN ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0'] OUT ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_fix']
+ 53 fix        VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_fix Ops 0 Shape [1, 7, 7, 512]  IN ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544'] OUT ['VGG__VGG_1547']
+ 54 reshape    VGG__VGG_1547 Ops 0 Shape [1, 25088]  IN ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_fix'] OUT ['VGG__VGG_Sequential_classifier__Linear_0__input_55']
+ 55 matmul     VGG__VGG_Sequential_classifier__Linear_0__input_55 Ops 0 Shape [1, 4096]  IN ['VGG__VGG_1547'] OUT ['VGG__VGG_Sequential_classifier__ReLU_1__input_57']
+ 56 relu       VGG__VGG_Sequential_classifier__ReLU_1__input_57 Ops 0 Shape [1, 4096]  IN ['VGG__VGG_Sequential_classifier__Linear_0__input_55'] OUT ['VGG__VGG_Sequential_classifier__ReLU_1__input_57_fix']
+ 57 fix        VGG__VGG_Sequential_classifier__ReLU_1__input_57_fix Ops 0 Shape [1, 4096]  IN ['VGG__VGG_Sequential_classifier__ReLU_1__input_57'] OUT ['VGG__VGG_Sequential_classifier__Linear_3__input_59']
+ 58 matmul     VGG__VGG_Sequential_classifier__Linear_3__input_59 Ops 0 Shape [1, 4096]  IN ['VGG__VGG_Sequential_classifier__ReLU_1__input_57_fix'] OUT ['VGG__VGG_Sequential_classifier__ReLU_4__input']
+ 59 relu       VGG__VGG_Sequential_classifier__ReLU_4__input Ops 0 Shape [1, 4096]  IN ['VGG__VGG_Sequential_classifier__Linear_3__input_59'] OUT ['VGG__VGG_Sequential_classifier__ReLU_4__input_fix']
+ 60 fix        VGG__VGG_Sequential_classifier__ReLU_4__input_fix Ops 0 Shape [1, 4096]  IN ['VGG__VGG_Sequential_classifier__ReLU_4__input'] OUT ['VGG__VGG_Sequential_classifier__Linear_6__1558']
+ 61 matmul     VGG__VGG_Sequential_classifier__Linear_6__1558 Ops 0 Shape [1, 1000]  IN ['VGG__VGG_Sequential_classifier__ReLU_4__input_fix'] OUT ['VGG__VGG_Sequential_classifier__Linear_6__1558_fix']
+ 62 fix        VGG__VGG_Sequential_classifier__Linear_6__1558_fix Ops 0 Shape [1, 1000]  IN ['VGG__VGG_Sequential_classifier__Linear_6__1558'] OUT []
+ ############################################# 
+ ######  Reshape must not have parameters 
+ ###### We remove Reshapes into vectors [4,1,1,x] -> [4,x] 
+ ############################################# 
+remove data VGG__VGG_1547
+ ############################################# 
+ ######  Assimilating Fix Neurons: # 23 
+ ############################################# 
+ ############################################# 
+ ######  Assimilating Relu: # 15 
+ ############################################# 
+ ############################################# 
+ ######  Assimilating Relu6: # 0 
+ ############################################# 
+ ############################################# 
+ ######  Assimilating LeakyRelu: # 0 
+ ############################################# 
+ ############################################# 
+ ######  BATCH NORM as 1x1 convolution (I Know) 
+ ############################################# 
+ ############################################# 
+ ######  I like VALID more than SAME
+ ############################################# 
+ ############################################# 
+ ######  I like VALID more than SAME: # 0 
+ ############################################# 
+ ############################################# 
+ ######  Fix info into activation Tensors
+ ############################################# 
+VGG__input_0
+VGG__VGG_Sequential_features__Conv2d_0__input_3
+VGG__VGG_Sequential_features__Conv2d_2__input_7
+VGG__VGG_Sequential_features__MaxPool2d_4__input_9
+VGG__VGG_Sequential_features__Conv2d_5__input_11
+VGG__VGG_Sequential_features__Conv2d_7__input_15
+VGG__VGG_Sequential_features__MaxPool2d_9__input_17
+VGG__VGG_Sequential_features__Conv2d_10__input_19
+VGG__VGG_Sequential_features__Conv2d_12__input_23
+VGG__VGG_Sequential_features__Conv2d_14__input_27
+VGG__VGG_Sequential_features__MaxPool2d_16__input_29
+VGG__VGG_Sequential_features__Conv2d_17__input_31
+VGG__VGG_Sequential_features__Conv2d_19__input_35
+VGG__VGG_Sequential_features__Conv2d_21__input_39
+VGG__VGG_Sequential_features__MaxPool2d_23__input_41
+VGG__VGG_Sequential_features__Conv2d_24__input_43
+VGG__VGG_Sequential_features__Conv2d_26__input_47
+VGG__VGG_Sequential_features__Conv2d_28__input_51
+VGG__VGG_Sequential_features__MaxPool2d_30__input_53
+VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0
+VGG__VGG_AdaptiveAvgPool2d_avgpool__1544
+VGG__VGG_1547
+VGG__VGG_Sequential_classifier__Linear_0__input_55
+VGG__VGG_Sequential_classifier__Linear_3__input_59
+VGG__VGG_Sequential_classifier__Linear_6__1558
+ ############################################# 
+ ######  Assimilating Padding:# 0 
+ ############################################# 
+Forward CUT Outputs dict_keys(['VGG__VGG_Sequential_classifier__Linear_6__1558'])
+True VGG__input_0
+True VGG__VGG_Sequential_features__Conv2d_0__input_3
+True VGG__VGG_Sequential_features__Conv2d_2__input_7
+True VGG__VGG_Sequential_features__MaxPool2d_4__input_9
+True VGG__VGG_Sequential_features__Conv2d_5__input_11
+True VGG__VGG_Sequential_features__Conv2d_7__input_15
+True VGG__VGG_Sequential_features__MaxPool2d_9__input_17
+True VGG__VGG_Sequential_features__Conv2d_10__input_19
+True VGG__VGG_Sequential_features__Conv2d_12__input_23
+True VGG__VGG_Sequential_features__Conv2d_14__input_27
+True VGG__VGG_Sequential_features__MaxPool2d_16__input_29
+True VGG__VGG_Sequential_features__Conv2d_17__input_31
+True VGG__VGG_Sequential_features__Conv2d_19__input_35
+True VGG__VGG_Sequential_features__Conv2d_21__input_39
+True VGG__VGG_Sequential_features__MaxPool2d_23__input_41
+True VGG__VGG_Sequential_features__Conv2d_24__input_43
+True VGG__VGG_Sequential_features__Conv2d_26__input_47
+True VGG__VGG_Sequential_features__Conv2d_28__input_51
+True VGG__VGG_Sequential_features__MaxPool2d_30__input_53
+True VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0
+True VGG__VGG_AdaptiveAvgPool2d_avgpool__1544
+Outputs dict_keys(['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544'])
+Floyd & Warshall
+BFS
+Floyd & Warshall
+BFS
+ ############################################# 
+ ######  CPU nodes Must Go
+ ############################################# 
+Inputs ['VGG__input_0']
+Outputs ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544']
+['conv2d', 'maxpool2d', 'add', 'resize', 'upsample', 'downsample', 'reshape', 'squeeze', 'mul', 'inner-product', 'matmul', 'avgpool2d', 'depthwise-conv2d', 'transposed-depthwise-conv2d', 'concat', 'identity', 'transposed-conv2d', 'transposed-upsa2d']
+FPGA True: data       VGG__input_0     
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_0__input_3  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_2__input_7  
+FPGA True: maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_4__input_9  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_5__input_11  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_7__input_15  
+FPGA True: maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_9__input_17  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_10__input_19  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_12__input_23  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_14__input_27  
+FPGA True: maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_16__input_29  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_17__input_31  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_19__input_35  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_21__input_39  
+FPGA True: maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_23__input_41  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_24__input_43  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_26__input_47  
+FPGA True: conv2d     VGG__VGG_Sequential_features__Conv2d_28__input_51  
+FPGA True: maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_30__input_53  
+FPGA True: avgpool2d  VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0  
+FPGA True: mul        VGG__VGG_AdaptiveAvgPool2d_avgpool__1544  
+Schedule boost
+0 data VGG__input_0 False 1
+1 conv2d VGG__VGG_Sequential_features__Conv2d_0__input_3 True 1
+2 conv2d VGG__VGG_Sequential_features__Conv2d_2__input_7 True 1
+3 maxpool2d VGG__VGG_Sequential_features__MaxPool2d_4__input_9 True 1
+4 conv2d VGG__VGG_Sequential_features__Conv2d_5__input_11 True 1
+5 conv2d VGG__VGG_Sequential_features__Conv2d_7__input_15 True 1
+6 maxpool2d VGG__VGG_Sequential_features__MaxPool2d_9__input_17 True 1
+7 conv2d VGG__VGG_Sequential_features__Conv2d_10__input_19 True 1
+8 conv2d VGG__VGG_Sequential_features__Conv2d_12__input_23 True 1
+9 conv2d VGG__VGG_Sequential_features__Conv2d_14__input_27 True 1
+10 maxpool2d VGG__VGG_Sequential_features__MaxPool2d_16__input_29 True 1
+11 conv2d VGG__VGG_Sequential_features__Conv2d_17__input_31 True 1
+12 conv2d VGG__VGG_Sequential_features__Conv2d_19__input_35 True 1
+13 conv2d VGG__VGG_Sequential_features__Conv2d_21__input_39 True 1
+14 maxpool2d VGG__VGG_Sequential_features__MaxPool2d_23__input_41 True 1
+15 conv2d VGG__VGG_Sequential_features__Conv2d_24__input_43 True 1
+16 conv2d VGG__VGG_Sequential_features__Conv2d_26__input_47 True 1
+17 conv2d VGG__VGG_Sequential_features__Conv2d_28__input_51 True 1
+18 maxpool2d VGG__VGG_Sequential_features__MaxPool2d_30__input_53 True 1
+19 avgpool2d VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 True 1
+20 mul VGG__VGG_AdaptiveAvgPool2d_avgpool__1544 True 1
+Outputs ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544']
+Inputs  ['VGG__input_0']
+Floyd & Warshall
+BFS
+ ############################################# 
+ ######  Final graph
+ ############################################# 
+  0 data       VGG__input_0 Ops 0 Shape [1, 224, 224, 3]  IN [] OUT ['VGG__VGG_Sequential_features__Conv2d_0__input_3']
+  1 conv2d     VGG__VGG_Sequential_features__Conv2d_0__input_3 Ops 86704128 Shape [1, 224, 224, 64]  IN ['VGG__input_0'] OUT ['VGG__VGG_Sequential_features__Conv2d_2__input_7']
+  2 conv2d     VGG__VGG_Sequential_features__Conv2d_2__input_7 Ops 1849688064 Shape [1, 224, 224, 64]  IN ['VGG__VGG_Sequential_features__Conv2d_0__input_3'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_4__input_9']
+  3 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_4__input_9 Ops 3211264 Shape [1, 112, 112, 64]  IN ['VGG__VGG_Sequential_features__Conv2d_2__input_7'] OUT ['VGG__VGG_Sequential_features__Conv2d_5__input_11']
+  4 conv2d     VGG__VGG_Sequential_features__Conv2d_5__input_11 Ops 924844032 Shape [1, 112, 112, 128]  IN ['VGG__VGG_Sequential_features__MaxPool2d_4__input_9'] OUT ['VGG__VGG_Sequential_features__Conv2d_7__input_15']
+  5 conv2d     VGG__VGG_Sequential_features__Conv2d_7__input_15 Ops 1849688064 Shape [1, 112, 112, 128]  IN ['VGG__VGG_Sequential_features__Conv2d_5__input_11'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_9__input_17']
+  6 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_9__input_17 Ops 1605632 Shape [1, 56, 56, 128]  IN ['VGG__VGG_Sequential_features__Conv2d_7__input_15'] OUT ['VGG__VGG_Sequential_features__Conv2d_10__input_19']
+  7 conv2d     VGG__VGG_Sequential_features__Conv2d_10__input_19 Ops 924844032 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__MaxPool2d_9__input_17'] OUT ['VGG__VGG_Sequential_features__Conv2d_12__input_23']
+  8 conv2d     VGG__VGG_Sequential_features__Conv2d_12__input_23 Ops 1849688064 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__Conv2d_10__input_19'] OUT ['VGG__VGG_Sequential_features__Conv2d_14__input_27']
+  9 conv2d     VGG__VGG_Sequential_features__Conv2d_14__input_27 Ops 1849688064 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__Conv2d_12__input_23'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_16__input_29']
+ 10 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_16__input_29 Ops 802816 Shape [1, 28, 28, 256]  IN ['VGG__VGG_Sequential_features__Conv2d_14__input_27'] OUT ['VGG__VGG_Sequential_features__Conv2d_17__input_31']
+ 11 conv2d     VGG__VGG_Sequential_features__Conv2d_17__input_31 Ops 924844032 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_16__input_29'] OUT ['VGG__VGG_Sequential_features__Conv2d_19__input_35']
+ 12 conv2d     VGG__VGG_Sequential_features__Conv2d_19__input_35 Ops 1849688064 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_17__input_31'] OUT ['VGG__VGG_Sequential_features__Conv2d_21__input_39']
+ 13 conv2d     VGG__VGG_Sequential_features__Conv2d_21__input_39 Ops 1849688064 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_19__input_35'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_23__input_41']
+ 14 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_23__input_41 Ops 401408 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_21__input_39'] OUT ['VGG__VGG_Sequential_features__Conv2d_24__input_43']
+ 15 conv2d     VGG__VGG_Sequential_features__Conv2d_24__input_43 Ops 462422016 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_23__input_41'] OUT ['VGG__VGG_Sequential_features__Conv2d_26__input_47']
+ 16 conv2d     VGG__VGG_Sequential_features__Conv2d_26__input_47 Ops 462422016 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_24__input_43'] OUT ['VGG__VGG_Sequential_features__Conv2d_28__input_51']
+ 17 conv2d     VGG__VGG_Sequential_features__Conv2d_28__input_51 Ops 462422016 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_26__input_47'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_30__input_53']
+ 18 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_30__input_53 Ops 100352 Shape [1, 7, 7, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_28__input_51'] OUT ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0']
+ 19 avgpool2d  VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 Ops 0 Shape [1, 7, 7, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_30__input_53'] OUT ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544']
+ 20 mul        VGG__VGG_AdaptiveAvgPool2d_avgpool__1544 Ops 0 Shape [1, 7, 7, 512]  IN ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0'] OUT []
+ ############################################# 
+ ######  Bilinear: NEAREST + AVGPOOL
+ ############################################# 
+ ############################################# 
+ ######  Inner Products -> Conv
+ ############################################# 
+ ############################################# 
+ ######  Scale -> Conv
+ ############################################# 
+ avgpool2d VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 *MULT  VGG__VGG_AdaptiveAvgPool2d_avgpool__1544 
+ ############################################# 
+ ######   Concat of concat, ELt + Concat, Any -> 2 concats
+ ############################################# 
+ ############################################# 
+ ######   Holes Treatments
+ ############################################# 
+ ############################################# 
+ ######  WEIGHT & BIAS into Tensors
+ ############################################# 
+ ############################################# 
+ ######  Dilated convolution
+ ############################################# 
+ ############################################# 
+ ######  Depth Wise as Group convolution
+ ############################################# 
+ ############################################# 
+ ######  Depth Wise as Full convolution
+ ############################################# 
+ ############################################# 
+ ######  DownSample + Conv -> Conv + stride
+ ############################################# 
+Floyd & Warshall
+BFS
+ ############################################# 
+ ######  topological schedule BFS
+ ############################################# 
+ ############################################# 
+ ######  topological DFS
+ ############################################# 
+DFS_t VGG__input_0
+ ############################################# 
+ ######  TFS
+ ############################################# 
+ ############################################# 
+ ######  INC
+ ############################################# 
+INC
+ ############################################# 
+ ######  Singleton
+ ############################################# 
+ ############################################# 
+ ######  AIE2 density
+ ############################################# 
+ ############################################# 
+ ######  AIE2 Sub Volume Computation
+ ############################################# 
+VGG__input_0 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__input_0 W:            None	I:            None	O:            None	D:1.000000	T:data
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_0__input_3 I TensorShapes(batch=1, height=224, width=224, channel=3) O TensorShapes(batch=1, height=224, width=224, channel=64)
+VGG__VGG_Sequential_features__Conv2d_0__input_3 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__Conv2d_0__input_3 W:   [16, 3, 3, 8]	I:   [1, 4, 58, 8]	O:  [1, 2, 56, 64]	D:0.333333	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_0__input_3_franky (4, 1, 1220) TensorShapes(batch=4, height=1, width=1220, channel=1)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_2__input_7 I TensorShapes(batch=1, height=224, width=224, channel=64) O TensorShapes(batch=1, height=224, width=224, channel=64)
+VGG__VGG_Sequential_features__Conv2d_2__input_7 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__Conv2d_2__input_7 W:  [16, 3, 3, 64]	I:  [1, 4, 56, 32]	O:  [1, 2, 56, 64]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_2__input_7_franky (4, 1, 9312) TensorShapes(batch=4, height=1, width=9312, channel=1)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__MaxPool2d_4__input_9 I TensorShapes(batch=1, height=224, width=224, channel=64) O TensorShapes(batch=1, height=112, width=112, channel=64)
+VGG__VGG_Sequential_features__MaxPool2d_4__input_9 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__MaxPool2d_4__input_9 W:            None	I:  [1, 4, 56, 64]	O:  [1, 2, 28, 64]	D:1.000000	T:maxpool2d
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_5__input_11 I TensorShapes(batch=1, height=112, width=112, channel=64) O TensorShapes(batch=1, height=112, width=112, channel=128)
+CIN [64, 32, 16, 8]
+COUT [32, 16, 8]
+VGG__VGG_Sequential_features__Conv2d_5__input_11 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_5__input_11 W:  [16, 3, 3, 64]	I:  [1, 4, 30, 64]	O: [1, 2, 28, 128]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_5__input_11_franky (8, 1, 9312) TensorShapes(batch=8, height=1, width=9312, channel=1)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_7__input_15 I TensorShapes(batch=1, height=112, width=112, channel=128) O TensorShapes(batch=1, height=112, width=112, channel=128)
+CIN [128, 64, 32, 16, 8]
+COUT [32, 16, 8]
+VGG__VGG_Sequential_features__Conv2d_7__input_15 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_7__input_15 W:  [8, 3, 3, 128]	I:  [1, 4, 28, 64]	O: [1, 2, 28, 128]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_7__input_15_franky (16, 1, 9280) TensorShapes(batch=16, height=1, width=9280, channel=1)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__MaxPool2d_9__input_17 I TensorShapes(batch=1, height=112, width=112, channel=128) O TensorShapes(batch=1, height=56, width=56, channel=128)
+VGG__VGG_Sequential_features__MaxPool2d_9__input_17 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__MaxPool2d_9__input_17 W:            None	I: [1, 4, 28, 128]	O: [1, 2, 14, 128]	D:1.000000	T:maxpool2d
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_10__input_19 I TensorShapes(batch=1, height=56, width=56, channel=128) O TensorShapes(batch=1, height=56, width=56, channel=256)
+CIN [128, 64, 32, 16, 8]
+COUT [64, 32, 16, 8]
+VGG__VGG_Sequential_features__Conv2d_10__input_19 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_10__input_19 W:  [8, 3, 3, 128]	I: [1, 4, 16, 128]	O: [1, 2, 14, 256]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_10__input_19_franky (32, 1, 9280) TensorShapes(batch=32, height=1, width=9280, channel=1)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_12__input_23 I TensorShapes(batch=1, height=56, width=56, channel=256) O TensorShapes(batch=1, height=56, width=56, channel=256)
+CIN [256, 128, 64, 32, 16, 8]
+COUT [64, 32, 16, 8]
+COUT [64, 32, 16, 8]
+VGG__VGG_Sequential_features__Conv2d_12__input_23 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_12__input_23 W:  [8, 3, 3, 128]	I: [1, 4, 14, 128]	O: [1, 2, 14, 256]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_12__input_23_franky (32, 2, 9280) TensorShapes(batch=32, height=1, width=9280, channel=2)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_14__input_27 I TensorShapes(batch=1, height=56, width=56, channel=256) O TensorShapes(batch=1, height=56, width=56, channel=256)
+CIN [256, 128, 64, 32, 16, 8]
+COUT [64, 32, 16, 8]
+COUT [64, 32, 16, 8]
+VGG__VGG_Sequential_features__Conv2d_14__input_27 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_14__input_27 W:  [8, 3, 3, 128]	I: [1, 4, 14, 128]	O: [1, 2, 14, 256]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_14__input_27_franky (32, 2, 9280) TensorShapes(batch=32, height=1, width=9280, channel=2)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__MaxPool2d_16__input_29 I TensorShapes(batch=1, height=56, width=56, channel=256) O TensorShapes(batch=1, height=28, width=28, channel=256)
+VGG__VGG_Sequential_features__MaxPool2d_16__input_29 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__MaxPool2d_16__input_29 W:            None	I: [1, 4, 14, 256]	O:  [1, 2, 7, 256]	D:1.000000	T:maxpool2d
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_17__input_31 I TensorShapes(batch=1, height=28, width=28, channel=256) O TensorShapes(batch=1, height=28, width=28, channel=512)
+CIN [256, 128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+VGG__VGG_Sequential_features__Conv2d_17__input_31 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_17__input_31 W:  [8, 3, 3, 128]	I:  [1, 4, 7, 256]	O:  [1, 2, 7, 512]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_17__input_31_franky (64, 2, 9280) TensorShapes(batch=64, height=1, width=9280, channel=2)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_19__input_35 I TensorShapes(batch=1, height=28, width=28, channel=512) O TensorShapes(batch=1, height=28, width=28, channel=512)
+CIN [512, 256, 128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+weight input channel splitting in core memory
+VGG__VGG_Sequential_features__Conv2d_19__input_35 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_19__input_35 W:  [8, 3, 3, 128]	I:  [1, 4, 7, 256]	O:  [1, 2, 7, 512]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_19__input_35_franky (64, 4, 9280) TensorShapes(batch=64, height=1, width=9280, channel=4)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_21__input_39 I TensorShapes(batch=1, height=28, width=28, channel=512) O TensorShapes(batch=1, height=28, width=28, channel=512)
+CIN [512, 256, 128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+weight input channel splitting in core memory
+VGG__VGG_Sequential_features__Conv2d_21__input_39 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_21__input_39 W:  [8, 3, 3, 128]	I:  [1, 4, 7, 256]	O:  [1, 2, 7, 512]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_21__input_39_franky (64, 4, 9280) TensorShapes(batch=64, height=1, width=9280, channel=4)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__MaxPool2d_23__input_41 I TensorShapes(batch=1, height=28, width=28, channel=512) O TensorShapes(batch=1, height=14, width=14, channel=512)
+VGG__VGG_Sequential_features__MaxPool2d_23__input_41 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__MaxPool2d_23__input_41 W:            None	I:  [1, 4, 8, 512]	O:  [1, 2, 4, 512]	D:1.000000	T:maxpool2d
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_24__input_43 I TensorShapes(batch=1, height=14, width=14, channel=512) O TensorShapes(batch=1, height=14, width=14, channel=512)
+CIN [512, 256, 128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+weight input channel splitting in core memory
+VGG__VGG_Sequential_features__Conv2d_24__input_43 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_24__input_43 W:  [8, 3, 3, 128]	I:  [1, 4, 4, 256]	O:  [1, 2, 4, 512]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_24__input_43_franky (64, 4, 9280) TensorShapes(batch=64, height=1, width=9280, channel=4)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_26__input_47 I TensorShapes(batch=1, height=14, width=14, channel=512) O TensorShapes(batch=1, height=14, width=14, channel=512)
+CIN [512, 256, 128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+weight input channel splitting in core memory
+VGG__VGG_Sequential_features__Conv2d_26__input_47 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_26__input_47 W:  [8, 3, 3, 128]	I:  [1, 4, 4, 256]	O:  [1, 2, 4, 512]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_26__input_47_franky (64, 4, 9280) TensorShapes(batch=64, height=1, width=9280, channel=4)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__Conv2d_28__input_51 I TensorShapes(batch=1, height=14, width=14, channel=512) O TensorShapes(batch=1, height=14, width=14, channel=512)
+CIN [512, 256, 128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+COUT [128, 64, 32, 16, 8]
+weight input channel splitting in core memory
+VGG__VGG_Sequential_features__Conv2d_28__input_51 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_28__input_51 W:  [8, 3, 3, 128]	I:  [1, 4, 4, 256]	O:  [1, 2, 4, 512]	D:0.125000	T:conv2d
+UNIFIED PARAMETERS
+unified VGG__VGG_Sequential_features__Conv2d_28__input_51_franky (64, 4, 9280) TensorShapes(batch=64, height=1, width=9280, channel=4)
+#### This is sub computation at layer level VGG__VGG_Sequential_features__MaxPool2d_30__input_53 I TensorShapes(batch=1, height=14, width=14, channel=512) O TensorShapes(batch=1, height=7, width=7, channel=512)
+VGG__VGG_Sequential_features__MaxPool2d_30__input_53 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__MaxPool2d_30__input_53 W:            None	I:  [1, 8, 4, 512]	O:  [1, 4, 2, 512]	D:1.000000	T:maxpool2d
+#### This is sub computation at layer level VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 I TensorShapes(batch=1, height=7, width=7, channel=512) O TensorShapes(batch=1, height=7, width=7, channel=512)
+VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 W:            None	I:  [1, 7, 2, 512]	O:  [1, 7, 2, 512]	D:1.000000	T:avgpool2d
+Schedule boost
+VGG__VGG_Sequential_features__Conv2d_0__input_3 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__Conv2d_0__input_3 WC:   [16, 3, 3, 8]	IC:   [1, 4, 58, 8]	OC:  [1, 2, 56, 64] WM:   [16, 3, 3, 8]	IM: [1, 224, 56, 8]	OM:[1, 224, 56, 64]	D:0.333333	T:conv2d	
+VGG__VGG_Sequential_features__Conv2d_2__input_7 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__Conv2d_2__input_7 WC:  [16, 3, 3, 64]	IC:  [1, 4, 56, 32]	OC:  [1, 2, 56, 64] WM:  [16, 3, 3, 64]	IM:[1, 224, 56, 64]	OM:[1, 224, 56, 64]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__MaxPool2d_4__input_9 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__MaxPool2d_4__input_9 WC:            None	IC:  [1, 4, 56, 64]	OC:  [1, 2, 28, 64] WM:            None	IM:[1, 224, 56, 64]	OM:[1, 112, 28, 64]	D:1.000000	T:maxpool2d	
+VGG__VGG_Sequential_features__Conv2d_5__input_11 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_5__input_11 WC:  [16, 3, 3, 64]	IC:  [1, 4, 30, 64]	OC: [1, 2, 28, 128] WM:  [32, 3, 3, 64]	IM:[1, 112, 28, 64]	OM:[1, 112, 28, 128]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__Conv2d_7__input_15 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_7__input_15 WC:  [8, 3, 3, 128]	IC:  [1, 4, 28, 64]	OC: [1, 2, 28, 128] WM: [32, 3, 3, 128]	IM:[1, 112, 28, 128]	OM:[1, 112, 28, 128]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__MaxPool2d_9__input_17 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__MaxPool2d_9__input_17 WC:            None	IC: [1, 4, 28, 128]	OC: [1, 2, 14, 128] WM:            None	IM:[1, 112, 28, 128]	OM:[1, 56, 14, 128]	D:1.000000	T:maxpool2d	
+VGG__VGG_Sequential_features__Conv2d_10__input_19 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_10__input_19 WC:  [8, 3, 3, 128]	IC: [1, 4, 16, 128]	OC: [1, 2, 14, 256] WM: [64, 3, 3, 128]	IM:[1, 56, 14, 128]	OM:[1, 56, 14, 256]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__Conv2d_12__input_23 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_12__input_23 WC:  [8, 3, 3, 128]	IC: [1, 4, 14, 128]	OC: [1, 2, 14, 256] WM: [64, 3, 3, 256]	IM:[1, 56, 14, 256]	OM:[1, 56, 14, 256]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__Conv2d_14__input_27 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_14__input_27 WC:  [8, 3, 3, 128]	IC: [1, 4, 14, 128]	OC: [1, 2, 14, 256] WM: [64, 3, 3, 256]	IM:[1, 56, 14, 256]	OM:[1, 56, 14, 256]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__MaxPool2d_16__input_29 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__MaxPool2d_16__input_29 WC:            None	IC: [1, 4, 14, 256]	OC:  [1, 2, 7, 256] WM:            None	IM:[1, 56, 14, 256]	OM: [1, 28, 7, 256]	D:1.000000	T:maxpool2d	
+VGG__VGG_Sequential_features__Conv2d_17__input_31 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_17__input_31 WC:  [8, 3, 3, 128]	IC:  [1, 4, 7, 256]	OC:  [1, 2, 7, 512] WM:[128, 3, 3, 256]	IM: [1, 28, 7, 256]	OM: [1, 28, 7, 512]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__Conv2d_19__input_35 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_19__input_35 WC:  [8, 3, 3, 128]	IC:  [1, 4, 7, 256]	OC:  [1, 2, 7, 512] WM:[128, 3, 3, 512]	IM: [1, 28, 7, 512]	OM: [1, 28, 7, 512]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__Conv2d_21__input_39 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_21__input_39 WC:  [8, 3, 3, 128]	IC:  [1, 4, 7, 256]	OC:  [1, 2, 7, 512] WM:[128, 3, 3, 512]	IM: [1, 28, 7, 512]	OM: [1, 28, 7, 512]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__MaxPool2d_23__input_41 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__MaxPool2d_23__input_41 WC:            None	IC:  [1, 4, 8, 512]	OC:  [1, 2, 4, 512] WM:            None	IM: [1, 28, 7, 512]	OM: [1, 14, 4, 512]	D:1.000000	T:maxpool2d	
+VGG__VGG_Sequential_features__Conv2d_24__input_43 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_24__input_43 WC:  [8, 3, 3, 128]	IC:  [1, 4, 4, 256]	OC:  [1, 2, 4, 512] WM:[128, 3, 3, 512]	IM: [1, 14, 4, 512]	OM: [1, 14, 4, 512]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__Conv2d_26__input_47 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_26__input_47 WC:  [8, 3, 3, 128]	IC:  [1, 4, 4, 256]	OC:  [1, 2, 4, 512] WM:[128, 3, 3, 512]	IM: [1, 14, 4, 512]	OM: [1, 14, 4, 512]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__Conv2d_28__input_51 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  1 CIN  0
+VGG__VGG_Sequential_features__Conv2d_28__input_51 WC:  [8, 3, 3, 128]	IC:  [1, 4, 4, 256]	OC:  [1, 2, 4, 512] WM:[128, 3, 3, 512]	IM: [1, 14, 4, 512]	OM: [1, 14, 4, 512]	D:0.125000	T:conv2d	
+VGG__VGG_Sequential_features__MaxPool2d_30__input_53 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_Sequential_features__MaxPool2d_30__input_53 WC:            None	IC:  [1, 8, 4, 512]	OC:  [1, 4, 2, 512] WM:            None	IM: [1, 14, 4, 512]	OM:  [1, 7, 2, 512]	D:1.000000	T:maxpool2d	
+VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 MemTiles W  0 COUT  0 CIN  0 CORE     H  0 COUT  0 CIN  0
+VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 WC:            None	IC:  [1, 7, 2, 512]	OC:  [1, 7, 2, 512] WM:            None	IM:  [1, 7, 2, 512]	OM:  [1, 7, 2, 512]	D:1.000000	T:avgpool2d	
+VGG__VGG_Sequential_features__Conv2d_12__input_23 W CORE TensorShapes(batch=8, height=3, width=3, channel=128) MEM TensorShapes(batch=64, height=3, width=3, channel=256)
+VGG__VGG_Sequential_features__Conv2d_14__input_27 W CORE TensorShapes(batch=8, height=3, width=3, channel=128) MEM TensorShapes(batch=64, height=3, width=3, channel=256)
+VGG__VGG_Sequential_features__Conv2d_17__input_31 W CORE TensorShapes(batch=8, height=3, width=3, channel=128) MEM TensorShapes(batch=128, height=3, width=3, channel=256)
+VGG__VGG_Sequential_features__Conv2d_19__input_35 W CORE TensorShapes(batch=8, height=3, width=3, channel=128) MEM TensorShapes(batch=128, height=3, width=3, channel=512)
+VGG__VGG_Sequential_features__Conv2d_21__input_39 W CORE TensorShapes(batch=8, height=3, width=3, channel=128) MEM TensorShapes(batch=128, height=3, width=3, channel=512)
+VGG__VGG_Sequential_features__Conv2d_24__input_43 W CORE TensorShapes(batch=8, height=3, width=3, channel=128) MEM TensorShapes(batch=128, height=3, width=3, channel=512)
+VGG__VGG_Sequential_features__Conv2d_26__input_47 W CORE TensorShapes(batch=8, height=3, width=3, channel=128) MEM TensorShapes(batch=128, height=3, width=3, channel=512)
+VGG__VGG_Sequential_features__Conv2d_28__input_51 W CORE TensorShapes(batch=8, height=3, width=3, channel=128) MEM TensorShapes(batch=128, height=3, width=3, channel=512)
+# total number of channel split 8
+  0 data       VGG__input_0 Ops 0 Shape [1, 224, 224, 3]  IN [] OUT ['VGG__VGG_Sequential_features__Conv2d_0__input_3']
+  1 conv2d     VGG__VGG_Sequential_features__Conv2d_0__input_3 Ops 86704128 Shape [1, 224, 224, 64]  IN ['VGG__input_0'] OUT ['VGG__VGG_Sequential_features__Conv2d_2__input_7']
+  2 conv2d     VGG__VGG_Sequential_features__Conv2d_2__input_7 Ops 1849688064 Shape [1, 224, 224, 64]  IN ['VGG__VGG_Sequential_features__Conv2d_0__input_3'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_4__input_9']
+  3 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_4__input_9 Ops 3211264 Shape [1, 112, 112, 64]  IN ['VGG__VGG_Sequential_features__Conv2d_2__input_7'] OUT ['VGG__VGG_Sequential_features__Conv2d_5__input_11']
+  4 conv2d     VGG__VGG_Sequential_features__Conv2d_5__input_11 Ops 924844032 Shape [1, 112, 112, 128]  IN ['VGG__VGG_Sequential_features__MaxPool2d_4__input_9'] OUT ['VGG__VGG_Sequential_features__Conv2d_7__input_15']
+  5 conv2d     VGG__VGG_Sequential_features__Conv2d_7__input_15 Ops 1849688064 Shape [1, 112, 112, 128]  IN ['VGG__VGG_Sequential_features__Conv2d_5__input_11'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_9__input_17']
+  6 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_9__input_17 Ops 1605632 Shape [1, 56, 56, 128]  IN ['VGG__VGG_Sequential_features__Conv2d_7__input_15'] OUT ['VGG__VGG_Sequential_features__Conv2d_10__input_19']
+  7 conv2d     VGG__VGG_Sequential_features__Conv2d_10__input_19 Ops 924844032 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__MaxPool2d_9__input_17'] OUT ['VGG__VGG_Sequential_features__Conv2d_12__input_23']
+  8 conv2d     VGG__VGG_Sequential_features__Conv2d_12__input_23 Ops 1849688064 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__Conv2d_10__input_19'] OUT ['VGG__VGG_Sequential_features__Conv2d_14__input_27']
+  9 conv2d     VGG__VGG_Sequential_features__Conv2d_14__input_27 Ops 1849688064 Shape [1, 56, 56, 256]  IN ['VGG__VGG_Sequential_features__Conv2d_12__input_23'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_16__input_29']
+ 10 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_16__input_29 Ops 802816 Shape [1, 28, 28, 256]  IN ['VGG__VGG_Sequential_features__Conv2d_14__input_27'] OUT ['VGG__VGG_Sequential_features__Conv2d_17__input_31']
+ 11 conv2d     VGG__VGG_Sequential_features__Conv2d_17__input_31 Ops 924844032 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_16__input_29'] OUT ['VGG__VGG_Sequential_features__Conv2d_19__input_35']
+ 12 conv2d     VGG__VGG_Sequential_features__Conv2d_19__input_35 Ops 1849688064 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_17__input_31'] OUT ['VGG__VGG_Sequential_features__Conv2d_21__input_39']
+ 13 conv2d     VGG__VGG_Sequential_features__Conv2d_21__input_39 Ops 1849688064 Shape [1, 28, 28, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_19__input_35'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_23__input_41']
+ 14 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_23__input_41 Ops 401408 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_21__input_39'] OUT ['VGG__VGG_Sequential_features__Conv2d_24__input_43']
+ 15 conv2d     VGG__VGG_Sequential_features__Conv2d_24__input_43 Ops 462422016 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_23__input_41'] OUT ['VGG__VGG_Sequential_features__Conv2d_26__input_47']
+ 16 conv2d     VGG__VGG_Sequential_features__Conv2d_26__input_47 Ops 462422016 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_24__input_43'] OUT ['VGG__VGG_Sequential_features__Conv2d_28__input_51']
+ 17 conv2d     VGG__VGG_Sequential_features__Conv2d_28__input_51 Ops 462422016 Shape [1, 14, 14, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_26__input_47'] OUT ['VGG__VGG_Sequential_features__MaxPool2d_30__input_53']
+ 18 maxpool2d  VGG__VGG_Sequential_features__MaxPool2d_30__input_53 Ops 100352 Shape [1, 7, 7, 512]  IN ['VGG__VGG_Sequential_features__Conv2d_28__input_51'] OUT ['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0']
+ 19 avgpool2d  VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 Ops 0 Shape [1, 7, 7, 512]  IN ['VGG__VGG_Sequential_features__MaxPool2d_30__input_53'] OUT []
+ ############################################# 
+ ######  Given a Graph and Schedule boost : We create Live Tensor
+ ############################################# 
+ ############################################# 
+ ######  Reset Live Structure
+ ############################################# 
+VGG__input_0
+VGG__VGG_Sequential_features__Conv2d_0__input_3
+VGG__VGG_Sequential_features__Conv2d_2__input_7
+VGG__VGG_Sequential_features__MaxPool2d_4__input_9
+VGG__VGG_Sequential_features__Conv2d_5__input_11
+VGG__VGG_Sequential_features__Conv2d_7__input_15
+VGG__VGG_Sequential_features__MaxPool2d_9__input_17
+VGG__VGG_Sequential_features__Conv2d_10__input_19
+VGG__VGG_Sequential_features__Conv2d_12__input_23
+VGG__VGG_Sequential_features__Conv2d_14__input_27
+VGG__VGG_Sequential_features__MaxPool2d_16__input_29
+VGG__VGG_Sequential_features__Conv2d_17__input_31
+VGG__VGG_Sequential_features__Conv2d_19__input_35
+VGG__VGG_Sequential_features__Conv2d_21__input_39
+VGG__VGG_Sequential_features__MaxPool2d_23__input_41
+VGG__VGG_Sequential_features__Conv2d_24__input_43
+VGG__VGG_Sequential_features__Conv2d_26__input_47
+VGG__VGG_Sequential_features__Conv2d_28__input_51
+VGG__VGG_Sequential_features__MaxPool2d_30__input_53
+VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0
+ ############################################# 
+ ######  Attempting Code Generation boost
+ ############################################# 
+ ############################################# 
+ ######  Element Wise: reuse one of the operands
+ ############################################# 
+ ############################################# 
+ ######  Concatenation: I love concatenation memory reuse
+ ############################################# 
+ ############################################# 
+ ######  Memory Management given a Schedule
+ ############################################# 
+Allocating Params in DDR
+VGG__VGG_Sequential_features__Conv2d_0__input_3_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 0 0x0 5
+VGG__VGG_Sequential_features__Conv2d_0__input_3_franky TensorShapes(batch=4, height=1, width=1220, channel=1) 1536 0xc0 5
+VGG__VGG_Sequential_features__Conv2d_2__input_7_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 40960 0x1400 5
+VGG__VGG_Sequential_features__Conv2d_2__input_7_franky TensorShapes(batch=4, height=1, width=9312, channel=1) 42496 0x14c0 5
+VGG__VGG_Sequential_features__MaxPool2d_4__input_9_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=20) 340480 0xa640 5
+VGG__VGG_Sequential_features__Conv2d_5__input_11_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 341504 0xa6c0 5
+VGG__VGG_Sequential_features__Conv2d_5__input_11_franky TensorShapes(batch=8, height=1, width=9312, channel=1) 343040 0xa780 5
+VGG__VGG_Sequential_features__Conv2d_7__input_15_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 939008 0x1ca80 5
+VGG__VGG_Sequential_features__Conv2d_7__input_15_franky TensorShapes(batch=16, height=1, width=9280, channel=1) 940544 0x1cb40 5
+VGG__VGG_Sequential_features__MaxPool2d_9__input_17_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=20) 2128384 0x40f40 5
+VGG__VGG_Sequential_features__Conv2d_10__input_19_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 2129408 0x40fc0 5
+VGG__VGG_Sequential_features__Conv2d_10__input_19_franky TensorShapes(batch=32, height=1, width=9280, channel=1) 2130944 0x41080 5
+VGG__VGG_Sequential_features__Conv2d_12__input_23_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 4506624 0x89880 5
+VGG__VGG_Sequential_features__Conv2d_12__input_23_franky TensorShapes(batch=32, height=1, width=9280, channel=2) 4508160 0x89940 5
+VGG__VGG_Sequential_features__Conv2d_14__input_27_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 9259520 0x11a940 5
+VGG__VGG_Sequential_features__Conv2d_14__input_27_franky TensorShapes(batch=32, height=1, width=9280, channel=2) 9261056 0x11aa00 5
+VGG__VGG_Sequential_features__MaxPool2d_16__input_29_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=20) 14012416 0x1aba00 5
+VGG__VGG_Sequential_features__Conv2d_17__input_31_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 14013440 0x1aba80 5
+VGG__VGG_Sequential_features__Conv2d_17__input_31_franky TensorShapes(batch=64, height=1, width=9280, channel=2) 14014976 0x1abb40 5
+VGG__VGG_Sequential_features__Conv2d_19__input_35_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 23517696 0x2cdb40 5
+VGG__VGG_Sequential_features__Conv2d_19__input_35_franky TensorShapes(batch=64, height=1, width=9280, channel=4) 23519232 0x2cdc00 5
+VGG__VGG_Sequential_features__Conv2d_21__input_39_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 42524672 0x511c00 5
+VGG__VGG_Sequential_features__Conv2d_21__input_39_franky TensorShapes(batch=64, height=1, width=9280, channel=4) 42526208 0x511cc0 5
+VGG__VGG_Sequential_features__MaxPool2d_23__input_41_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=20) 61531648 0x755cc0 5
+VGG__VGG_Sequential_features__Conv2d_24__input_43_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 61532672 0x755d40 5
+VGG__VGG_Sequential_features__Conv2d_24__input_43_franky TensorShapes(batch=64, height=1, width=9280, channel=4) 61534208 0x755e00 5
+VGG__VGG_Sequential_features__Conv2d_26__input_47_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 80539648 0x999e00 5
+VGG__VGG_Sequential_features__Conv2d_26__input_47_franky TensorShapes(batch=64, height=1, width=9280, channel=4) 80541184 0x999ec0 5
+VGG__VGG_Sequential_features__Conv2d_28__input_51_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=47) 99546624 0xbddec0 5
+VGG__VGG_Sequential_features__Conv2d_28__input_51_franky TensorShapes(batch=64, height=1, width=9280, channel=4) 99548160 0xbddf80 5
+VGG__VGG_Sequential_features__MaxPool2d_30__input_53_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=20) 118553600 0xe21f80 5
+VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0_inst_parameters TensorShapes(batch=1, height=1, width=1, channel=20) 118554624 0xe22000 5
+Allocating Inputs in DDR dict_keys(['VGG__input_0'])
+VGG__input_0 118555648 0xe22080
+Param Size 0x7110400
+Allocating Outputs in DDR dict_keys(['VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0'])
+VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 121766912 0xe84080
+Input Size 0x310000
+Output Size 0x31000
+Allocating SWAP in DDR
+C 121967616 0xe8a280
+Step  data VGG__input_0
+Step  VGG__input_0 is an input
+WARNING VGG__input_0 data WARNING
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_0__input_3
+	Memory access IN DDR -- PAR pa  -- TMP fm  -- OUT DDR -- AT at  VGG__VGG_Sequential_features__Conv2d_0__input_3 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_2__input_7
+	Memory access IN DDR -- PAR pa  -- TMP fm  -- OUT DDR -- AT at  VGG__VGG_Sequential_features__Conv2d_2__input_7 
+Step  maxpool2d VGG__VGG_Sequential_features__MaxPool2d_4__input_9
+	Memory access IN DDR -- PAR pa  -- TMP fm  -- OUT DDR -- AT at  VGG__VGG_Sequential_features__MaxPool2d_4__input_9 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_5__input_11
+	Memory access IN DDR -- PAR DDR -- TMP fm  -- OUT DDR -- AT at  VGG__VGG_Sequential_features__Conv2d_5__input_11 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_7__input_15
+	Memory access IN DDR -- PAR DDR -- TMP fm  -- OUT DDR -- AT at  VGG__VGG_Sequential_features__Conv2d_7__input_15 
+Step  maxpool2d VGG__VGG_Sequential_features__MaxPool2d_9__input_17
+	Memory access IN fm  -- PAR pa  -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__MaxPool2d_9__input_17 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_10__input_19
+	Memory access IN fm  -- PAR pa  -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__Conv2d_10__input_19 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_12__input_23
+	Memory access IN DDR -- PAR DDR -- TMP fm  -- OUT DDR -- AT at  VGG__VGG_Sequential_features__Conv2d_12__input_23 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_14__input_27
+	Memory access IN DDR -- PAR DDR -- TMP fm  -- OUT DDR -- AT at  VGG__VGG_Sequential_features__Conv2d_14__input_27 
+Step  maxpool2d VGG__VGG_Sequential_features__MaxPool2d_16__input_29
+	Memory access IN fm  -- PAR pa  -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__MaxPool2d_16__input_29 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_17__input_31
+	Memory access IN fm  -- PAR pa  -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__Conv2d_17__input_31 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_19__input_35
+	Memory access IN fm  -- PAR DDR -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__Conv2d_19__input_35 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_21__input_39
+	Memory access IN fm  -- PAR DDR -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__Conv2d_21__input_39 
+Step  maxpool2d VGG__VGG_Sequential_features__MaxPool2d_23__input_41
+	Memory access IN fm  -- PAR pa  -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__MaxPool2d_23__input_41 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_24__input_43
+	Memory access IN fm  -- PAR DDR -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__Conv2d_24__input_43 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_26__input_47
+	Memory access IN fm  -- PAR DDR -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__Conv2d_26__input_47 
+Step  conv2d VGG__VGG_Sequential_features__Conv2d_28__input_51
+	Memory access IN fm  -- PAR DDR -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__Conv2d_28__input_51 
+Step  maxpool2d VGG__VGG_Sequential_features__MaxPool2d_30__input_53
+	Memory access IN fm  -- PAR pa  -- TMP fm  -- OUT fm  -- AT at  VGG__VGG_Sequential_features__MaxPool2d_30__input_53 
+Step  avgpool2d VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0
+	Memory access IN fm  -- PAR pa  -- TMP fm  -- OUT DDR -- AT at  VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 
+Allocating SWAP in DDR
+ ############################################# 
+ ######  Naive instruction dependency
+ ############################################# 
+ ############################################# 
+ ######  Code Generation at Node Level and then Recursively
+ ############################################# 
+Dependency ON 0 0 CUR 0 BY 0 
+1 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+1 22 VGG__input_0 ON 0 CUR 0 BY 1
+2 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+2 22 VGG__VGG_Sequential_features__Conv2d_0__input_3 ON 0 CUR 4 BY 1
+3 22 <class 'SC.HwAbstraction.code_pool.Pool'> False
+3 22 VGG__VGG_Sequential_features__Conv2d_2__input_7 ON 2 CUR 4 BY 9
+4 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+4 22 VGG__VGG_Sequential_features__MaxPool2d_4__input_9 ON 2 CUR 8 BY 1
+5 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+5 22 VGG__VGG_Sequential_features__Conv2d_5__input_11 ON 2 CUR 4 BY 1
+6 22 <class 'SC.HwAbstraction.code_pool.Pool'> False
+6 22 VGG__VGG_Sequential_features__Conv2d_7__input_15 ON 2 CUR 4 BY 1
+7 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+7 22 VGG__VGG_Sequential_features__MaxPool2d_9__input_17 ON 2 CUR 8 BY 1
+8 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+8 22 VGG__VGG_Sequential_features__Conv2d_10__input_19 ON 8 CUR 4 BY 2
+9 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+9 22 VGG__VGG_Sequential_features__Conv2d_12__input_23 ON 4 CUR 4 BY 1
+10 22 <class 'SC.HwAbstraction.code_pool.Pool'> False
+10 22 VGG__VGG_Sequential_features__Conv2d_14__input_27 ON 2 CUR 4 BY 1
+11 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+11 22 VGG__VGG_Sequential_features__MaxPool2d_16__input_29 ON 2 CUR 8 BY 1
+12 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+12 22 VGG__VGG_Sequential_features__Conv2d_17__input_31 ON 8 CUR 4 BY 1
+13 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+13 22 VGG__VGG_Sequential_features__Conv2d_19__input_35 ON 4 CUR 4 BY 1
+14 22 <class 'SC.HwAbstraction.code_pool.Pool'> False
+14 22 VGG__VGG_Sequential_features__Conv2d_21__input_39 ON 4 CUR 4 BY 9
+15 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+15 22 VGG__VGG_Sequential_features__MaxPool2d_23__input_41 ON 4 CUR 8 BY 1
+16 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+16 22 VGG__VGG_Sequential_features__Conv2d_24__input_43 ON 8 CUR 4 BY 1
+17 22 <class 'SC.HwAbstraction.code_convolution.Conv'> False
+17 22 VGG__VGG_Sequential_features__Conv2d_26__input_47 ON 4 CUR 4 BY 1
+18 22 <class 'SC.HwAbstraction.code_pool.Pool'> False
+18 22 VGG__VGG_Sequential_features__Conv2d_28__input_51 ON 4 CUR 4 BY 9
+19 22 <class 'SC.HwAbstraction.code_pool.Pool'> False
+19 22 VGG__VGG_Sequential_features__MaxPool2d_30__input_53 ON 4 CUR 8 BY 9
+20 22 <class 'SC.HwAbstraction.code_end.Bracket_End'> False
+20 22 VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 ON 8 CUR 8 BY 2
+21 22 bracket ON 2 CUR 2 BY 0
+ ############################################# 
+ ######  Code Generation at Node Level and then Recursively
+ ############################################# 
+CODE VGG__VGG_Sequential_features__Conv2d_0__input_3 conv2d
+('VGG__input_0', 5)
+('VGG__VGG_Sequential_features__Conv2d_0__input_3', 5)
+[True, True] True
+Resolution Resolution(inputs={'VGG__input_0': 'tiling'}, tmp=None, out={'VGG__VGG_Sequential_features__Conv2d_0__input_3': 'tiling'})
+Memory_Access(input=5, parameters=3, output=5)
+BATCH IN  Shape [1, 224, 224, 3] Heights [[113, 0], [113, 111]] 
+BATCH OUT Shape [1, 224, 224, 64] Heights [[112, 0], [112, 112]] 
+BATCH AIE2 CORES OUTPUT CHANNEL [64] TensorShapes(batch=1, height=2, width=56, channel=64) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [64] TensorShapes(batch=1, height=2, width=56, channel=64) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+CODE VGG__VGG_Sequential_features__Conv2d_2__input_7 conv2d
+('VGG__VGG_Sequential_features__Conv2d_0__input_3', 5)
+('VGG__VGG_Sequential_features__Conv2d_2__input_7', 5)
+[True, True] True
+Resolution Resolution(inputs={'VGG__VGG_Sequential_features__Conv2d_0__input_3': 'tiling'}, tmp=None, out={'VGG__VGG_Sequential_features__Conv2d_2__input_7': 'tiling'})
+Memory_Access(input=5, parameters=3, output=5)
+BATCH IN  Shape [1, 224, 224, 64] Heights [[57, 0], [58, 55], [58, 111], [57, 167]] 
+BATCH OUT Shape [1, 224, 224, 64] Heights [[56, 0], [56, 56], [56, 112], [56, 168]] 
+BATCH AIE2 CORES OUTPUT CHANNEL [64] TensorShapes(batch=1, height=2, width=56, channel=64) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [64] TensorShapes(batch=1, height=2, width=56, channel=64) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [64] TensorShapes(batch=1, height=2, width=56, channel=64) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [64] TensorShapes(batch=1, height=2, width=56, channel=64) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+CODE VGG__VGG_Sequential_features__MaxPool2d_4__input_9 maxpool2d
+('VGG__VGG_Sequential_features__Conv2d_2__input_7', 5)
+('VGG__VGG_Sequential_features__MaxPool2d_4__input_9', 5)
+[True, True] True
+Resolution Resolution(inputs={'VGG__VGG_Sequential_features__Conv2d_2__input_7': 'tiling'}, tmp=None, out={'VGG__VGG_Sequential_features__MaxPool2d_4__input_9': 'tiling'})
+Memory_Access(input=5, parameters=3, output=5)
+BATCH IN  Shape [1, 224, 224, 64] Heights [[112, 0], [112, 112]] 
+BATCH OUT Shape [1, 112, 112, 64] Heights [[56, 0], [56, 56]] 
+BATCH AIE2 CORES OUTPUT CHANNEL [64] TensorShapes(batch=1, height=2, width=28, channel=64) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [64] TensorShapes(batch=1, height=2, width=28, channel=64) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+CODE VGG__VGG_Sequential_features__Conv2d_5__input_11 conv2d
+('VGG__VGG_Sequential_features__MaxPool2d_4__input_9', 5)
+('VGG__VGG_Sequential_features__Conv2d_5__input_11', 5)
+[True, True] True
+Resolution Resolution(inputs={'VGG__VGG_Sequential_features__MaxPool2d_4__input_9': 'tiling'}, tmp=None, out={'VGG__VGG_Sequential_features__Conv2d_5__input_11': 'tiling'})
+Memory_Access(input=5, parameters=5, output=5)
+ You are HERE because IO and WEIGHTs are all in DDR   And you have to split the space for both so you can tile the hight   This is a reminder 
+598016 411041792 6422528 0.6666666666666666
+BATCH IN  Shape [1, 112, 112, 64] Heights [[57, 0], [57, 55]] 
+BATCH OUT Shape [1, 112, 112, 128] Heights [[56, 0], [56, 56]] 
+PAR BATCH NOT PIPELINED [8] Name VGG__VGG_Sequential_features__Conv2d_5__input_11_franky Parameter True	Space 595968 bits, Start 343040 End 939008 Extra 1 	Specifier 0 Layout 5 	Shape  [8, 1, 9312, 1] CNN_Shape TensorShapes(batch=8, height=1, width=9312, channel=1)
+BATCH AIE2 CORES OUTPUT CHANNEL [8] TensorShapes(batch=1, height=2, width=28, channel=128) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+PAR BATCH NOT PIPELINED [8] Name VGG__VGG_Sequential_features__Conv2d_5__input_11_franky Parameter True	Space 595968 bits, Start 343040 End 939008 Extra 1 	Specifier 0 Layout 5 	Shape  [8, 1, 9312, 1] CNN_Shape TensorShapes(batch=8, height=1, width=9312, channel=1)
+BATCH AIE2 CORES OUTPUT CHANNEL [8] TensorShapes(batch=1, height=2, width=28, channel=128) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+CODE VGG__VGG_Sequential_features__Conv2d_7__input_15 conv2d
+('VGG__VGG_Sequential_features__Conv2d_5__input_11', 5)
+('VGG__VGG_Sequential_features__Conv2d_7__input_15', 5)
+[True, True] True
+Resolution Resolution(inputs={'VGG__VGG_Sequential_features__Conv2d_5__input_11': 'tiling'}, tmp=None, out={'VGG__VGG_Sequential_features__Conv2d_7__input_15': 'tiling'})
+Memory_Access(input=5, parameters=5, output=5)
+ You are HERE because IO and WEIGHTs are all in DDR   And you have to split the space for both so you can tile the hight   This is a reminder 
+1187840 411041792 12845056 0.6666666666666666
+BATCH IN  Shape [1, 112, 112, 128] Heights [[29, 0], [30, 27], [30, 55], [29, 83]] 
+BATCH OUT Shape [1, 112, 112, 128] Heights [[28, 0], [28, 28], [28, 56], [28, 84]] 
+PAR BATCH NOT PIPELINED [16] Name VGG__VGG_Sequential_features__Conv2d_7__input_15_franky Parameter True	Space 1187840 bits, Start 940544 End 2128384 Extra 1 	Specifier 0 Layout 5 	Shape  [16, 1, 9280, 1] CNN_Shape TensorShapes(batch=16, height=1, width=9280, channel=1)
+BATCH AIE2 CORES OUTPUT CHANNEL [16] TensorShapes(batch=1, height=2, width=28, channel=128) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+PAR BATCH NOT PIPELINED [16] Name VGG__VGG_Sequential_features__Conv2d_7__input_15_franky Parameter True	Space 1187840 bits, Start 940544 End 2128384 Extra 1 	Specifier 0 Layout 5 	Shape  [16, 1, 9280, 1] CNN_Shape TensorShapes(batch=16, height=1, width=9280, channel=1)
+BATCH AIE2 CORES OUTPUT CHANNEL [16] TensorShapes(batch=1, height=2, width=28, channel=128) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+PAR BATCH NOT PIPELINED [16] Name VGG__VGG_Sequential_features__Conv2d_7__input_15_franky Parameter True	Space 1187840 bits, Start 940544 End 2128384 Extra 1 	Specifier 0 Layout 5 	Shape  [16, 1, 9280, 1] CNN_Shape TensorShapes(batch=16, height=1, width=9280, channel=1)
+BATCH AIE2 CORES OUTPUT CHANNEL [16] TensorShapes(batch=1, height=2, width=28, channel=128) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+PAR BATCH NOT PIPELINED [16] Name VGG__VGG_Sequential_features__Conv2d_7__input_15_franky Parameter True	Space 1187840 bits, Start 940544 End 2128384 Extra 1 	Specifier 0 Layout 5 	Shape  [16, 1, 9280, 1] CNN_Shape TensorShapes(batch=16, height=1, width=9280, channel=1)
+BATCH AIE2 CORES OUTPUT CHANNEL [16] TensorShapes(batch=1, height=2, width=28, channel=128) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [128] TensorShapes(batch=1, height=2, width=14, channel=128) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [256] TensorShapes(batch=1, height=2, width=14, channel=256) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+ERROR BANKD ADDRESS  Name VGG__VGG_Sequential_features__Conv2d_10__input_19 Parameter False	Space 6422528 bits, Start 4317184 End 10739712 Extra 1 	Specifier 0 Layout 4 	Shape  [1, 56, 56, 256] CNN_Shape TensorShapes(batch=1, height=56, width=56, channel=256)
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+CODE VGG__VGG_Sequential_features__Conv2d_12__input_23 conv2d
+('VGG__VGG_Sequential_features__Conv2d_10__input_19', 5)
+('VGG__VGG_Sequential_features__Conv2d_12__input_23', 5)
+[True, True] True
+Resolution Resolution(inputs={'VGG__VGG_Sequential_features__Conv2d_10__input_19': 'tiling'}, tmp=None, out={'VGG__VGG_Sequential_features__Conv2d_12__input_23': 'tiling'})
+Memory_Access(input=5, parameters=5, output=5)
+ You are HERE because IO and WEIGHTs are all in DDR   And you have to split the space for both so you can tile the hight   This is a reminder 
+4751360 205520896 6422528 0.6666666666666666
+BATCH IN  Shape [1, 56, 56, 256] Heights [[29, 0], [29, 27]] 
+BATCH OUT Shape [1, 56, 56, 256] Heights [[28, 0], [28, 28]] 
+PAR BATCH NOT PIPELINED [32] Name VGG__VGG_Sequential_features__Conv2d_12__input_23_franky Parameter True	Space 4751360 bits, Start 4508160 End 9259520 Extra 1 	Specifier 0 Layout 5 	Shape  [32, 1, 9280, 2] CNN_Shape TensorShapes(batch=32, height=1, width=9280, channel=2)
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=14, channel=256) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+PAR BATCH NOT PIPELINED [32] Name VGG__VGG_Sequential_features__Conv2d_12__input_23_franky Parameter True	Space 4751360 bits, Start 4508160 End 9259520 Extra 1 	Specifier 0 Layout 5 	Shape  [32, 1, 9280, 2] CNN_Shape TensorShapes(batch=32, height=1, width=9280, channel=2)
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=14, channel=256) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+ERROR BANKD ADDRESS  Name VGG__VGG_Sequential_features__Conv2d_10__input_19 Parameter False	Space 3325952 bits, Start 4259840 End 7585792 Extra 1 	Specifier 0 Layout 4 	Shape  [1, 56, 56, 256] CNN_Shape TensorShapes(batch=1, height=29, width=56, channel=256)
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+CODE VGG__VGG_Sequential_features__Conv2d_14__input_27 conv2d
+('VGG__VGG_Sequential_features__Conv2d_12__input_23', 5)
+('VGG__VGG_Sequential_features__Conv2d_14__input_27', 5)
+[True, True] True
+Resolution Resolution(inputs={'VGG__VGG_Sequential_features__Conv2d_12__input_23': 'tiling'}, tmp=None, out={'VGG__VGG_Sequential_features__Conv2d_14__input_27': 'tiling'})
+Memory_Access(input=5, parameters=5, output=5)
+ You are HERE because IO and WEIGHTs are all in DDR   And you have to split the space for both so you can tile the hight   This is a reminder 
+4751360 205520896 6422528 0.6666666666666666
+BATCH IN  Shape [1, 56, 56, 256] Heights [[29, 0], [29, 27]] 
+BATCH OUT Shape [1, 56, 56, 256] Heights [[28, 0], [28, 28]] 
+PAR BATCH NOT PIPELINED [32] Name VGG__VGG_Sequential_features__Conv2d_14__input_27_franky Parameter True	Space 4751360 bits, Start 9261056 End 14012416 Extra 1 	Specifier 0 Layout 5 	Shape  [32, 1, 9280, 2] CNN_Shape TensorShapes(batch=32, height=1, width=9280, channel=2)
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=14, channel=256) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+PAR BATCH NOT PIPELINED [32] Name VGG__VGG_Sequential_features__Conv2d_14__input_27_franky Parameter True	Space 4751360 bits, Start 9261056 End 14012416 Extra 1 	Specifier 0 Layout 5 	Shape  [32, 1, 9280, 2] CNN_Shape TensorShapes(batch=32, height=1, width=9280, channel=2)
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=14, channel=256) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [256] TensorShapes(batch=1, height=2, width=7, channel=256) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [512] TensorShapes(batch=1, height=2, width=7, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+preferred [32, 32]
+PAR BATCH NOT PIPELINED [32, 32] Name VGG__VGG_Sequential_features__Conv2d_19__input_35_franky Parameter True	Space 19005440 bits, Start 23519232 End 42524672 Extra 1 	Specifier 0 Layout 5 	Shape  [64, 1, 9280, 4] CNN_Shape TensorShapes(batch=64, height=1, width=9280, channel=4)
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=7, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=7, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+preferred [32, 32]
+PAR BATCH NOT PIPELINED [32, 32] Name VGG__VGG_Sequential_features__Conv2d_21__input_39_franky Parameter True	Space 19005440 bits, Start 42526208 End 61531648 Extra 1 	Specifier 0 Layout 5 	Shape  [64, 1, 9280, 4] CNN_Shape TensorShapes(batch=64, height=1, width=9280, channel=4)
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=7, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+ERROR BANKD ADDRESS  Name VGG__VGG_Sequential_features__Conv2d_21__input_39 Parameter False	Space 200704 bits, Start 4718592 End 4919296 Extra 1 	Specifier 0 Layout 4 	Shape  [1, 28, 28, 512] CNN_Shape TensorShapes(batch=1, height=28, width=28, channel=32)
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=7, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
+ERROR BANKD ADDRESS  Name VGG__VGG_Sequential_features__Conv2d_21__input_39 Parameter False	Space 200704 bits, Start 4718848 End 4919552 Extra 1 	Specifier 0 Layout 4 	Shape  [1, 28, 28, 512] CNN_Shape TensorShapes(batch=1, height=28, width=28, channel=32)
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [512] TensorShapes(batch=1, height=2, width=4, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+preferred [32, 32]
+PAR BATCH NOT PIPELINED [32, 32] Name VGG__VGG_Sequential_features__Conv2d_24__input_43_franky Parameter True	Space 19005440 bits, Start 61534208 End 80539648 Extra 1 	Specifier 0 Layout 5 	Shape  [64, 1, 9280, 4] CNN_Shape TensorShapes(batch=64, height=1, width=9280, channel=4)
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=4, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=4, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+preferred [32, 32]
+PAR BATCH NOT PIPELINED [32, 32] Name VGG__VGG_Sequential_features__Conv2d_26__input_47_franky Parameter True	Space 19005440 bits, Start 80541184 End 99546624 Extra 1 	Specifier 0 Layout 5 	Shape  [64, 1, 9280, 4] CNN_Shape TensorShapes(batch=64, height=1, width=9280, channel=4)
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=4, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=4, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+preferred [32, 32]
+PAR BATCH NOT PIPELINED [32, 32] Name VGG__VGG_Sequential_features__Conv2d_28__input_51_franky Parameter True	Space 19005440 bits, Start 99548160 End 118553600 Extra 1 	Specifier 0 Layout 5 	Shape  [64, 1, 9280, 4] CNN_Shape TensorShapes(batch=64, height=1, width=9280, channel=4)
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=4, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [32] TensorShapes(batch=1, height=2, width=4, channel=512) 
+BATCH AIE2 CORES HEIGHT [2, 2, 2, 2, 2, 2, 2]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+BATCH AIE2 CORES OUTPUT CHANNEL [512] TensorShapes(batch=1, height=4, width=2, channel=512) 
+BATCH AIE2 CORES HEIGHT [4, 3]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+CODE VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0 avgpool2d
+('VGG__VGG_Sequential_features__MaxPool2d_30__input_53', 4)
+('VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0', 5)
+[True, False] True
+Resolution Resolution(inputs={'VGG__VGG_Sequential_features__MaxPool2d_30__input_53': 'tiling'}, tmp=None, out={'VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0': 'tiling'})
+Memory_Access(input=4, parameters=3, output=5)
+BATCH IN  Shape [1, 7, 7, 512] Heights [[7, 0]] 
+BATCH OUT Shape [1, 7, 7, 512] Heights [[7, 0]] 
+ERROR VERIFY THIS CODE code_class.py 3836
+BATCH AIE2 CORES OUTPUT CHANNEL [512] TensorShapes(batch=1, height=7, width=2, channel=512) 
+BATCH AIE2 CORES HEIGHT [7]
+BATCH AIE2 CORES OUTPUT CHANNEL Done 
+BATCH AIE2 CORES HEIGHT Done
+ ############################################# 
+ ######  Success boost
+ ############################################# 
+Schedule boost
+Total time 1.371000e-02 
+ ############################################# 
+ ######  Writing code to file:work/out.asm
+ ############################################# 
+ BUFFER SIZE and RELATIVE ADDRESS 
+ PARAMETER  BUFFER SIZE 0xe22080 and RELATIVE ADDRESS 0x0
+ INPUT      BUFFER SIZE 0x62000 and RELATIVE ADDRESS 0xe22080
+ OUTPUT BUFFER SIZE 0x6200 and RELATIVE ADDRESS 0xe84080
+ SWAP BUFFER SIZE 0x620000 and RELATIVE ADDRESS 0xe8a280
+ INSTRUCTION BUFFER SIZE 0x40 and RELATIVE ADDRESS 0x30000000
+ BUFFER SIZE and RELATIVE ADDRESS 
+
+    REG_ID_FORMATTED = 0
+    REG_RESULT_SPACE = 1
+    REG_SWAP_SPACE   = 2
+    REG_PAR_SPACE    = 3
+    
+    ADD_REG_ID_FORMATTED = 0x10000000
+    ADD_REG_RESULT_SPACE = 0x10000000
+    ADD_REG_SWAP_SPACE   = 0x10000000
+    ADD_REG_PAR_SPACE    = 0x10000000
+
+
+    druDstBufSize: 16777216,
+    
+Namespace(absolutely=1, changeofpadding=True, depthwiseasfull=True, maxpoolconcatissues=False, batchynormy=False, deephideconvolution=False, skip=False, firstlayerreshape=False, fc=False, biaspatch=False, final=False, inner_as_convolution=True, prefetch=False, avgpool_as_convolution=False, bilinear_as_nearest_avgpool=True, dmem=False, operation_fusion=False, uppy_fusion=False, downsample_fusion=True, operation_fusion_pool_conv=False, operation_fusion_elt=False, nocpu=True, forwardcut='VGG__VGG_AdaptiveAvgPool2d_avgpool__1544', backwardcut=None, softwarepipeline=False, lcsoftwarepipeline=False, circus=False, nocompression='true', cin_sparse=0, optimalavgpool=False, parallelismgraphalgorithm=None, parallelismstrategy="['bottom','top']", network='/wrk/xsjhdnobkup5/taeheej/vitis-ai-staging/quant/quantize_result/VGG_int.xmodel', framework='xmodel', inshapes='[4,224,224,3]', caffemodel=None, output='work/out.asm', address=None, params=None, quant=None, json='work/out.json', subvolumefile='subvolume.txt', stats_bit_map=None, aiesubvolume='true')
+Expecting value: line 1 column 1 (char 0)
+ ############################################# 
+ ######  #### JSON 
+ ############################################# 
+{'inputs': {'VGG__input_0': {'name': 'VGG__input_0', 'name_in_fpga': 'VGG__input_0_fix', 'shape': TensorShapes(batch=1, height=224, width=224, channel=3), 'address': 118555648, 'inKernelW': 3, 'inStrdW': 1, 'padLft': 1, 'padRt': 1, 'druSrcBufSize': 16777216, 'druDstBufSize': 16777216, 'channelAugmentationMode': False, 'druMode': True, 'inDDRSize': 401408, 'reshape': {'shape': TensorShapes(batch=1, height=224, width=224, channel=3), 'kernel': [3, 3], 'pad': [1, 1, 1, 1]}}}, 'outputs': {'VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_i0': {'name': 'VGG__VGG_AdaptiveAvgPool2d_avgpool__1544_fix', 'shape': TensorShapes(batch=1, height=7, width=7, channel=512), 'address': 121766912, 'outDDRSize': 25088}}, 'cmd': ('dpuv4sparse-pycompiler/dpuv3-pycompiler/SC/HwAbstraction/code_generation.py -o work/out.asm -n /wrk/xsjhdnobkup5/taeheej/vitis-ai-staging/quant/quantize_result/VGG_int.xmodel -f xmodel -j work/out.json --aiesubvolume true --forwardcut VGG__VGG_AdaptiveAvgPool2d_avgpool__1544 --nocompression true',), 'swapBufSize': 6422528, 'parameters': {'VGG__VGG_Sequential_features__Conv2d_0__input_3_franky': '0x300000c0', 'VGG__VGG_Sequential_features__Conv2d_2__input_7_franky': '0x300014c0', 'VGG__VGG_Sequential_features__Conv2d_5__input_11_franky': '0x3000a780', 'VGG__VGG_Sequential_features__Conv2d_7__input_15_franky': '0x3001cb40', 'VGG__VGG_Sequential_features__Conv2d_10__input_19_franky': '0x30041080', 'VGG__VGG_Sequential_features__Conv2d_12__input_23_franky': '0x30089940', 'VGG__VGG_Sequential_features__Conv2d_14__input_27_franky': '0x3011aa00', 'VGG__VGG_Sequential_features__Conv2d_17__input_31_franky': '0x301abb40', 'VGG__VGG_Sequential_features__Conv2d_19__input_35_franky': '0x302cdc00', 'VGG__VGG_Sequential_features__Conv2d_21__input_39_franky': '0x30511cc0', 'VGG__VGG_Sequential_features__Conv2d_24__input_43_franky': '0x30755e00', 'VGG__VGG_Sequential_features__Conv2d_26__input_47_franky': '0x30999ec0', 'VGG__VGG_Sequential_features__Conv2d_28__input_51_franky': '0x30bddf80'}}
+work/ out json
+ ############################################# 
+ ######  Garbage 0 
+ ############################################# 
