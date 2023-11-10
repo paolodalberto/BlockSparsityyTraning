@@ -387,9 +387,7 @@ and 1s.
 
 We can exploit this functionality in Keras: the penalty function can
 be added quite easily and per convolution (if you like) and it is
-available in the code reference. We could not use it successfully: we
-do not know if this is because the lack of the penalty itself, the
-optimizer, or the lost function, or just our own fault.
+available in the code reference. We could not use it successfully.
 
 \subsection{Hessian and Fisher Information }
 If we have $N$ parameters/weights, the Hessian $H \in R^{N\times N}$
@@ -403,9 +401,6 @@ Fisher information \cite{yao2020adahessian,abs-2101-08940,zandonati2022fit} and 
 computation of the gradient of the loss function and the citation
 within.  We could not reproduce the authors results.
 
-The goal is to use the $H$ so that we know in advance what will be the
-effect of zeroing weights. This will boil down to a $O(h_i*w_i)$ that
-we can use to estimate the importance of a block
 
 \subsection{Diagonal Hessian}
 We applied a Fisher measure and we just computed $\nabla^2{\bf \ell}$,
