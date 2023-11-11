@@ -1,0 +1,78 @@
+This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: dacblocl.aux
+The style file: ACM-Reference-Format.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: ref.bib
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--no key, author in tensorflow
+Warning--no author, editor, organization, or key in tensorflow
+Warning--to sort, need author or key in tensorflow
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=200001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Warning--no key, author in tensorflow
+Warning--no key, author in tensorflow
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Warning--no key, author in tensorflow
+Warning--no author, editor, organization, or key in tensorflow
+Warning--empty organization in tensorflow
+Warning--empty year in tensorflow
+Warning--empty organization in tensorflow
+Warning--no number and no volume in Cai2023InterlayerSS
+Warning--page numbers missing in both pages and numpages fields in Cai2023InterlayerSS
+Warning--page numbers missing in both pages and numpages fields in abs-2110-04327
+Warning--empty publisher in deng2009imagenet
+Warning--empty address in deng2009imagenet
+Warning--page numbers missing in both pages and numpages fields in abs-2102-11289
+Warning--no number and no volume in Huang2021CoSASB
+Warning--empty address in pytorch_paper
+Warning--no number and no volume in Russo2023MemoryAwareDA
+Warning--page numbers missing in both pages and numpages fields in Russo2023MemoryAwareDA
+Warning--no number and no volume in yao2020adahessian
+Warning--page numbers missing in both pages and numpages fields in yao2020adahessian
+Warning--page numbers missing in both pages and numpages fields in abs-2101-08940
+You've used 20 entries,
+            5897 wiz_defined-function locations,
+            1442 strings with 19197 characters,
+and the built_in function-call counts, 23475 in all, are:
+= -- 2766
+> -- 1292
+< -- 0
++ -- 434
+- -- 438
+* -- 1988
+:= -- 2685
+add.period$ -- 98
+call.type$ -- 20
+change.case$ -- 182
+chr.to.int$ -- 20
+cite$ -- 47
+duplicate$ -- 1748
+empty$ -- 1247
+format.name$ -- 494
+if$ -- 5386
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 42
+newline$ -- 242
+num.names$ -- 154
+pop$ -- 700
+preamble$ -- 1
+purify$ -- 353
+quote$ -- 0
+skip$ -- 613
+stack$ -- 0
+substring$ -- 1336
+swap$ -- 152
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 488
+warning$ -- 23
+while$ -- 110
+width$ -- 0
+write$ -- 413
+(There were 23 warnings)

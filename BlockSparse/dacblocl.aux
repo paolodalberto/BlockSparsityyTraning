@@ -1,0 +1,100 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{rocSPARSE,cuSPARSE}
+\@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:introduction}{{1}{1}{Introduction}{section.1}{}}
+\newlabel{eq:mat}{{1}{1}{Introduction}{equation.1.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Block-Sparse Matrix-Matrix Multiplication}{1}{section.2}\protected@file@percent }
+\newlabel{sec:motivation}{{2}{1}{Block-Sparse Matrix-Matrix Multiplication}{section.2}{}}
+\citation{PaoloG2020}
+\citation{chollet2015keras}
+\citation{PaoloK2020}
+\citation{deng2009imagenet}
+\citation{deng2009imagenet}
+\citation{Caffe}
+\citation{tensorflow}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Block 1x1 and 8x8 performance\relax }}{2}{figure.caption.4}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:block}{{1}{2}{Block 1x1 and 8x8 performance\relax }{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Block Sparsity: Training and Quantization}{2}{section.3}\protected@file@percent }
+\newlabel{sec:training}{{3}{2}{Block Sparsity: Training and Quantization}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Keras: play}{2}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}$\Gamma $ chosen once and full training ahead: PyTorch}{2}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:one-mask}{{3.2}{2}{$\Gamma $ chosen once and full training ahead: PyTorch}{subsection.3.2}{}}
+\newlabel{sec:pytorch}{{3.2}{2}{$\Gamma $ chosen once and full training ahead: PyTorch}{subsection.3.2}{}}
+\citation{10.1145/3473334,abs-2110-04327}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Accuracies of the sparsity models\relax }}{3}{table.caption.5}\protected@file@percent }
+\newlabel{tab_acc}{{1}{3}{Accuracies of the sparsity models\relax }{table.caption.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}The Compiler and its Code generation for AIE}{3}{section.4}\protected@file@percent }
+\newlabel{sec:compiler}{{4}{3}{The Compiler and its Code generation for AIE}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}AIE Hardware abstraction}{3}{subsection.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 4x4 AIE representation\relax }}{3}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:aie}{{2}{3}{4x4 AIE representation\relax }{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Sub Volume, Data compression and Data Movement}{3}{subsection.4.2}\protected@file@percent }
+\citation{abs-2110-04327}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Schedule and memory allocation}{4}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Code Generation }{4}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Time Estimation}{4}{subsection.4.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Resnet single convolution with padding for 4x4: legend AIE: LOAD Activation DDR to Mem, LOADW weights DDR to Mem, LOADFM Activation Mem to AIE2 cores, LOADWM weights Mem to AIE2, WRITE Mem to DDR, WRITEFM AIE2 to Mem, COMP Computation \relax }}{5}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:singleconvestimate}{{3}{5}{Resnet single convolution with padding for 4x4: legend AIE: LOAD Activation DDR to Mem, LOADW weights DDR to Mem, LOADFM Activation Mem to AIE2 cores, LOADWM weights Mem to AIE2, WRITE Mem to DDR, WRITEFM AIE2 to Mem, COMP Computation \relax }{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Time Estimation}{5}{subsection.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7}Time estimates for DDR to Mem-Tile}{5}{subsection.4.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.8}Time estimates for Mem-Tile to AIEs}{5}{subsection.4.8}\protected@file@percent }
+\citation{frantar2023gptq}
+\citation{abs-2102-11289}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.9}Convolution example}{6}{subsection.4.9}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Resnet single convolution with padding and sparsity for 4x4 AIE \relax }}{6}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:singleconvestimate2}{{4}{6}{Resnet single convolution with padding and sparsity for 4x4 AIE \relax }{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{6}{section.5}\protected@file@percent }
+\newlabel{sec:experiments}{{5}{6}{Results}{section.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Execution Time estimates\relax }}{6}{table.caption.9}\protected@file@percent }
+\newlabel{tab_perf}{{2}{6}{Execution Time estimates\relax }{table.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions and Context}{6}{section.6}\protected@file@percent }
+\citation{ahmad2019dense}
+\citation{Huang2021CoSASB,Russo2023MemoryAwareDA,Cai2023InterlayerSS}
+\bibstyle{ACM-Reference-Format}
+\bibdata{ref}
+\bibcite{tensorflow}{{1}{[n.d.]}{{ten}}{{??}}}
+\bibcite{ahmad2019dense}{{2}{2019}{{Ahmad and Scheinkman}}{{Ahmad and Scheinkman}}}
+\bibcite{rocSPARSE}{{3}{2020}{{AMD}}{{AMD}}}
+\bibcite{Cai2023InterlayerSS}{{4}{2023}{{Cai et~al\mbox  {.}}}{{Cai, Wei, Wu, Peng, and Ma}}}
+\bibcite{chollet2015keras}{{5}{2015}{{Chollet et~al\mbox  {.}}}{{Chollet et~al\mbox  {.}}}}
+\bibcite{PaoloG2020}{{6}{2013}{{D'Alberto}}{{D'Alberto}}}
+\bibcite{PaoloK2020}{{7}{2020}{{D'Alberto}}{{D'Alberto}}}
+\bibcite{abs-2110-04327}{{8}{2021}{{D'Alberto et~al\mbox  {.}}}{{D'Alberto, Ma, Li, Hu, Bollavaram, and Fang}}}
+\bibcite{10.1145/3473334}{{9}{2022}{{D'Alberto et~al\mbox  {.}}}{{D'Alberto, Wu, Ng, Nimaiyar, Delaye, and Sirasao}}}
+\bibcite{deng2009imagenet}{{10}{2009}{{Deng et~al\mbox  {.}}}{{Deng, Dong, Socher, Li, Li, and Fei-Fei}}}
+\bibcite{frantar2023gptq}{{11}{2023}{{Frantar et~al\mbox  {.}}}{{Frantar, Ashkboos, Hoefler, and Alistarh}}}
+\bibcite{abs-2102-11289}{{12}{2021}{{Hawks et~al\mbox  {.}}}{{Hawks, Duarte, Fraser, Pappalardo, Tran, and Umuroglu}}}
+\bibcite{Huang2021CoSASB}{{13}{2021}{{Huang et~al\mbox  {.}}}{{Huang, Kang, Dinh, Norell, Kalaiah, Demmel, Wawrzynek, and Shao}}}
+\bibcite{Caffe}{{14}{2014}{{Jia et~al\mbox  {.}}}{{Jia, Shelhamer, Donahue, Karayev, Long, Girshick, Guadarrama, and Darrell}}}
+\bibcite{cuSPARSE}{{15}{2020}{{NVIDIA}}{{NVIDIA}}}
+\bibcite{pytorch_paper}{{16}{2019}{{Paszke et~al\mbox  {.}}}{{Paszke, Gross, Massa, Lerer, Bradbury, Chanan, Killeen, Lin, Gimelshein, Antiga, Desmaison, Kopf, Yang, DeVito, Raison, Tejani, Chilamkurthy, Steiner, Fang, Bai, and Chintala}}}
+\bibcite{Russo2023MemoryAwareDA}{{17}{2023}{{Russo et~al\mbox  {.}}}{{Russo, Palesi, Ascia, Patti, Monteleone, and Catania}}}
+\bibcite{yao2020adahessian}{{18}{2021}{{Yao et~al\mbox  {.}}}{{Yao, Gholami, Shen, Keutzer, and Mahoney}}}
+\bibcite{abs-2101-08940}{{19}{2021}{{Yu et~al\mbox  {.}}}{{Yu, Yao, Gholami, Dong, Mahoney, and Keutzer}}}
+\bibcite{zandonati2022fit}{{20}{2022}{{Zandonati et~al\mbox  {.}}}{{Zandonati, Pol, Pierini, Sirkin, and Kopetz}}}
+\newlabel{tocindent-1}{0pt}
+\newlabel{tocindent0}{0pt}
+\newlabel{tocindent1}{4.185pt}
+\newlabel{tocindent2}{10.34999pt}
+\newlabel{tocindent3}{0pt}
+\@writefile{toc}{\contentsline {section}{References}{7}{section*.11}\protected@file@percent }
+\newlabel{TotPages}{{7}{7}{}{page.7}{}}
