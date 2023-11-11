@@ -408,13 +408,11 @@ that is we compute just the diagonal of the Hessian. Again, we use the
 $L_2$ over the normalized weight and went thought the process of
 training. The elements of the diagonal are not representative in
 general, but they are a good approximation of the contribution of a
-single weight. Clearly, convolution is linear and any CNN is a deep
-network.
-
-The Fisher and $\nabla^2{\bf \ell}$ did not provide any main
-advantages. But this information is found very useful in quantization
-and optimizations within the same field and application. We embrace the
-community to help us to understand this better. 
+single weight.  The Fisher and $\nabla^2{\bf \ell}$ did not provide
+any main advantages. But this information is found very useful in
+quantization and optimizations within the same field and
+application. We embrace the community to help us to understand this
+better.
 
 \subsection{PyTorch} 
 \label{sec:pytorch}
@@ -545,7 +543,7 @@ generation of CPU+FPGA chips.
 
 
 \subsection{Sub Volume, Data compression and Data Movement}
-There are a few assumptions we would like to spell them out. The
+There are a few assumptions we would like to write down. The
 computation is split by column: each output tensor is split evenly by
 width, so each memtile will store different columns by width, each
 core will compute different output channels, and the computation
@@ -564,19 +562,18 @@ is, if we have the inputs, output, and weights in memtile, what is the
 largest computation we can do in the AIE? The minimum computation is
 at least one output channel and one row by height. If this is not
 possible, we try to reduce the size of the width (e.g., shaping the
-tensor in memtile by using DDR spils) and we can manage to split the
+tensor in memtile by using DDR spills) and we can manage to split the
 input channels (this will require to split the weights accordingly and
 accumulate). We call W-Split the distribution of tensor by columns in
 the AIE mesh. We can COUT-split, this will require the partial
 transfer of weights (but we can stream by height).  We can CIN-split
 when we need to split by input channel, this is the last resort
-because it is also the most expensive (accumulation of the outputs).
-The split of the computation is also called tiling. Once we have the
-subvolume, we know if input and output tensor need W-split or
-CIN-split. This in general, means that the tensor cannot fit
-completely in Mem-tile and part of it will be moved. Or the
-computation will need to read from mem-tile the same inputs or weights
-multiple times.
+because it is also the most expensive (accumulation of the
+outputs). Once we have the subvolume, we know if input and output
+tensor need W-split or CIN-split. This in general, means that the
+tensor cannot fit completely in Mem-tile and part of it will be
+moved. Or the computation will need to read from mem-tile the same
+inputs or weights multiple times.
 
 At this stage, the subvolume describes the smallest shape of the
 weights we need to manage. We compress the weight accordingly to such
@@ -624,15 +621,14 @@ associated with each sub-computation. Consider a subcomputation as
 data movement, computation, and data movement, and data movements are
 optional or decorators.  Then the code generation of each
 $Conv(\Vc{X}_w,\Vc{W})$ is independent and, recursively and as needed,
-there will be specific splits of the computation accordingly. This
-could be simply described using loops but it is actually a tree (i.e,
-a root with $k$ children). Sub convolutions so determined may have
-different memory requirements, we try as much as possible to obtain
-symmetric computations (some columns will have to compute slightly
-larger than needed tensors). If the convolution has strides and large
-kernel, each sub-convolution may have overlap data but defined
-addresses and data movement if necessary. For example, computing the
-output by rows and the weights are reused.
+there will be specific splits of the computation accordingly. This is
+a tree (i.e, a root with $k$ children). Sub convolutions so determined
+may have different memory requirements, we try as much as possible to
+obtain symmetric computations (some columns will have to compute
+slightly larger than needed tensors). If the convolution has strides
+and large kernel, each sub-convolution may have overlap data but
+defined addresses and data movement if necessary. For example,
+computing the output by rows and the weights are reused.
 \begin{equation}
   \forall w, \;   Conv(\Vc{X}_w,\Vc{W}) \rightarrow  \dot{\sum}_h Conv(\Vc{X}_{w,h},\Vc{W})
 \end{equation}
@@ -650,25 +646,24 @@ practice, there is a further decomposition using only AIE cores but it
 is completely determined by the subvolume computation as we explained
 previously. Then, we can explicitly determine the data movements from
 mem-tile to core and back. Here, we shall show how we produce the
-execution time estimates as in Figure \ref{fig:estimate-dense}.  Do
+execution time estimates as in Figure \ref{fig:estimate-dense} or \ref{fig:singleconvestimate}.  Do
 not adjust the paper or do, on the vertical line there is time in
 seconds and it evolves by going up (if you flip, it goes from left to
 right); on the horizontal line, there are the instructions separated
 to create a sequence of time series. We shall explain further in the
-next sections. Thus, should be easier to appreciate the compiler work
-and its time estimation effort.
+next sections.
 
 An important feature of the current system is the concept of {\bf
   iteration}: Using locks and chaining them (locks like in
 semaphores): We can write a single instruction from the prospective of
 a single core (as a SIMD instruction) but driving all cores at once
 (ASM-like code) for multiple iterations:
-\newpage
+
 {\footnotesize
 \begin{verbatim}
-  LOADFM Lock k_0 mem-tile add core add iter i
+  LOADFM Lock k_0 mem-tile addr core addr iter i
   CONV iteration      i
-  WRITEFM Lock k_1 mem-tile add core add iter i
+  WRITEFM Lock k_1 mem-tile addr core addr iter i
 \end{verbatim}
 }
 
@@ -683,18 +678,18 @@ memtile to core) and this requires a custom load that will not be
 repeated {\footnotesize
 \begin{verbatim}
   ## Head top padding < 50 us First comp block
-  LOADFM Lock k_0 mem-tile add_0 core add iter 1
+  LOADFM Lock k_0 mem-tile addr_0 core addr iter 1
   CONV iteration 1
-  WRITEFM Lock k_1 mem-tile add_1 core add iter 1
+  WRITEFM Lock k_1 mem-tile addr_1 core addr iter 1
   ## Body iteration > 50 us < 150 us
   ## k_0 -> k_2 -> k_4 Lock Chain
-  LOADFM Lock k_2 mem-tile add_2 core add iter 9
+  LOADFM Lock k_2 mem-tile addr_2 core addr iter 9
   CONV iteration 7
-  WRITEFM Lock k_3 mem-tile add_3 core add iter 9
+  WRITEFM Lock k_3 mem-tile addr_3 core addr iter 9
   ## tail  > 150 us Last computation block
-  LOADFM Lock k_4 mem-tile add_4 core add iter 1
+  LOADFM Lock k_4 mem-tile addr_4 core addr iter 1
   CONV iteration 1
-  WRITEFM Lock k_5 mem-tile add_5 core add iter 1
+  WRITEFM Lock k_5 mem-tile addr_5 core addr iter 1
 \end{verbatim}
  } See Figure \ref{fig:singleconvestimate} for how this code will play
 out in practice. At this stage we have all the information we
@@ -716,7 +711,7 @@ time and visualize it as in Figure \ref{fig:estimate-dense}.
 We have two communication types: activations and weights. Per
 mem-tile there are two dedicated channels.
 \begin{itemize}
- \item if we share activations and weights in the same mem-tile, we
+ \item If we share activations and weights in the same mem-tile, we
    can use one channel for activations and one for weights. Thus the
    loads from DDR to MEM-tile (LOAD and LOADW) are parallel with a
    bandwidth of 4GB/s. Writes from mem-tile to DDR (WRITE) can use
@@ -739,8 +734,8 @@ the reuse.
 
 The Memtile connections with AIE cores can be designed differently. We
 assume here a few channels with again 4GB/s bandwidth. One memetile
-can broad cast inputs to columns of cores (and to the nearest
-neighbors). These communications are for activations (LOADFM). One
+can broad cast inputs to a cores column (and to the nearest
+neighbor). These communications are for activations (LOADFM). One
 Memtile can broadcast to rows of cores (or the nearest neighbor),
 these are for weights (LOADWM). We assume that the column and row
 communications are parallel and each memtile core connection is
@@ -995,13 +990,8 @@ its entirety as much as we made public some already.
 
 In Table \ref{tab_perf}, we present the estimates of the total
 execution time for three networks and seven configurations. We report
-also the case where the compiler failes to generate code and thus
-estiamtes. A $4\times 4$ cohort can be replicated up to 40 times
-(think as a batch of 40) and we can do better when the weight are
-shared into a single memtiles for each 40 copies and separated from
-activations (there is such design).
-
-Here We present the collection of execution times as images: 
+also the case where the compiler fails to generate code.  Here, we
+present the collection of execution times as images:
 \begin{itemize}
   \item Figure \ref{fig:incv3-1} Inception V3 2x2 dense and sparse
   \item Figure \ref{fig:incv3-2} Inception V3 3x3 dense and sparse
