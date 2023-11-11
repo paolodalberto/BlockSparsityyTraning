@@ -117,7 +117,7 @@ Each block is a constant either non zero or zero:
 \end{equation*}}
 Of course, the matrix $\Vc{A}$ can have any value and so
 $\Vc{C}$. Some applications have some constraints about the row and
-columns of $\Vc{B}_i$: for example, each row or column cannot be
+columns of $\Vc{B}_i$: for example, all the values in each row or column cannot be
 zero. In practice, we do not prune the network, we keep the same
 number of {\em channels} every where.
 
@@ -134,8 +134,8 @@ matrix $\Gamma$ of zeros and ones (or columns). The $\Gamma$ is a bit
 matrix (here) but it can be represented as a short integer matrix
 representing the non-zero block column. $\Gamma$ is two orders of
 magnitude ($8\times 8 \times 4$) smaller than the sparse or original
-$\Vc{B}$ matrix. We are working with {\em man made} block sparsity:
-for example, the block is a property of the hardware ans not of the
+$\Vc{B}$ matrix. We are working with {\em human made} block sparsity:
+for example, the block is a property of the hardware and not of the
 application.
 
 In classification, the model weight size determines one important
@@ -143,7 +143,7 @@ aspect of the model complexity: the number of operations per single
 output, the relation between layers (e.g., depth), and redundancy.  In
 our context, sparsity is the zeroing of weights (convolution and fully
 connected): we start with dense models using full precision and we
-have to find a way to chose the binary matrix $\Gamma$, the mask. For
+have to find a way to choose the binary matrix $\Gamma$, the mask. For
 a matrix multiplication the mask is $\Gamma \in \R^{n\times m}$. In a
 convolution, $n$ is the number of output channels (divided by 8) and
 $m$ is the number of input channels (as above) and each $\Vc{B}_i \in
@@ -176,9 +176,9 @@ explicit communications between DDR, MemTile, and cores. Knowing the
 subproblem sizes per core and the computation throughput and with a
 clear specification of what is executed in parallel: we can estimate
 the execution time per layer and of the entire network with an
-accuracy closer to a simulation. The code is valid, the native AIE2
+accuracy closer to a simulation. If the code is valid, the native AIE2
 compiler can interpret it, with all the DMA settings in place, and we
-tested for a single core in HW.  We shall use this code to have a
+tested for a single core in hardware.  We shall use this code to have a
 detailed time estimates for all parts of the computation: we shall
 show estimates for three CNN models, a eight different AIE designs;
 see Section \ref{sec:experiments}.
@@ -218,8 +218,8 @@ There will be a meaningful product to compute if and only if
 $\gamma_{i*N+k} =1$, $\dot{\omega}_{j*N+k} =1$, and
 $k_\gamma=k_\omega$. Without any extra information, this is simply
 merge sort. If we take $\gamma_{i*N+k} = (i*N,k_\gamma)$ when the
-relative block is non zero, nothing otherwise, and do the same for
-$\dot{\omega}_{j*N+k}$, then we merge-sort these vectors, we do
+relative block is non zero, nothing happens. Otherwise, do the same for
+$\dot{\omega}_{j*N+k}$. Then we merge-sort these vectors. We do
 computations only on equality $k_\gamma = k_\omega$. If you like to
 break codes yourself, see how the Sparse Sparse Matrix multiplication
 using Coordinate Block Structure (COO) is \cite{PaoloG2020}. We have a
@@ -258,12 +258,12 @@ naturally recurring and  we must train the network for it.
 First, let us clarify block sparsity for convolution weights, then we
 clarify our training process. A convolution has a weight tensor in
 four dimension: $\Vc{W} \in \R^{c_{out}\times h \times k \times
-  c_{in}}$. If you can visualize the $h$ and $k$ dimension going into
-the paper: We can simplify the weight as $\dot{\Vc{W}} \in \R^{c_{out}
+  c_{in}}$. In the hyperplane of the $h$ and $k$, 
+  we can simplify the weight as $\dot{\Vc{W}} \in \R^{c_{out}
   \times c_{in}}$ and block sparsity can be simply described by a mask
 $\Gamma\dot{\Vc{W}}$. Although, we speak of a $8\times 8$ of non
 zeros, this is in practice a $8\times h\times k\times 8$ block. For
-the matrix multiply $h=k=1$ and there is no difference from the
+the matrix multiply $h=k=1$, there is no difference from the
 previous discussions.
 
 
@@ -376,7 +376,7 @@ also we try to maximize the difference of the elements.
             & + \beta*L2(\Gamma-T) + \iota*L1(\Gamma) &&
 \end{flalign}
 
-This last penalty function represents our attempt to state the
+This last penalty function represents our attempt to state that the
 $\gamma_ i$ should be positive and in the interval $[0,1]$ and in a
 such a way that we maximize the distance of the elements between 0s
 and 1s.
@@ -396,10 +396,10 @@ million parameters). When we are already close to the optimal solution
 or we are trying to move from the optimal solution without using
 information from the gradient, the Hessian provides the most
 information close by an already established solution point. There are
-also way to compute the Hessian and the effect of the hessian by using
+also the way to compute the Hessian and the effect of the hessian by using
 Fisher information \cite{yao2020adahessian,abs-2101-08940,zandonati2022fit} and this will reduce to the
-computation of the gradient of the loss function and the citation
-within.  We could not reproduce the authors results.
+computation of the gradient of the loss function.
+%and the citation within.  We could not reproduce the authors results.
 
 
 \subsection{Diagonal Hessian}
@@ -411,8 +411,8 @@ general, but they are a good approximation of the contribution of a
 single weight.  The Fisher and $\nabla^2{\bf \ell}$ did not provide
 any main advantages. But this information is found very useful in
 quantization and optimizations within the same field and
-application. We embrace the community to help us to understand this
-better.
+application. 
+%We embrace the community to help us to understand this better.
 
 \subsection{PyTorch} 
 \label{sec:pytorch}
@@ -553,8 +553,8 @@ core and we reuse them as much as possible (unless we need to stream
 the weight instead). The set of cores is a cohort and symmetric
 computations are always selected. This means that we do not merge two
 operations like convolution and max-pool and give three columns to
-convolution and one column to max-pool. Other approaches in the
-literature do this more advanced methodologies.
+convolution and one column to max-pool. 
+%Other approaches in the literature do this more advanced methodologies.
 
 Before we start describing the memory allocation, we have to explain
 and compute the size of the sub-volume computation at AIE core.  That
@@ -579,7 +579,7 @@ At this stage, the subvolume describes the smallest shape of the
 weights we need to manage. We compress the weight accordingly to such
 a subvolume so that any data movement will always be a multiple of the
 subvolume and can be a single load. Such a compress data will have the
-same properties whether is sparse or not. Of course, sparse data is
+same properties whether it is sparse or dense. Of course, sparse data is
 smaller and we compute fewer operations.
 
 
@@ -591,8 +591,8 @@ distributed among the memtiles identified by one starting address and
 a final address and weights are distributed similarly with a start and a final
 address. At each step the memory allocation will check if we can
 allocate a tensor in memtile. If we cannot, we evict all tensors into
-DDR and then split/time the computation. If we can, we do, and we will
-evict the tensors no longer needed accordingly.
+DDR and then split/time the computation. 
+%If we can, we do, and we will evict the tensors no longer needed accordingly.
 
 At the end of this stage, every tensor will be associated to an
 address in memtile or DDR (or both). If there are only DDR addresses,
@@ -762,7 +762,7 @@ execution time is a feature of the analysis but for us the estimate of
 the communications is more compelling and we can easily mute the
 computation contribution.
 
-We do not account the wait and synchronization necessary to reprogram
+We do not account the wait and synchronization which are necessary to reprogram
 the fabric. These are very expensive running on a few milliseconds.
 
 During and especially once we generated the code for all data
@@ -804,7 +804,7 @@ the bottom of the computation.
 
 In this particular scenario, the computation dominates the execution
 time and compression basically cut the execution time by half: from
-200 $\mu s$ to 130. There are convolutions in Resnet that realize
+200 $\mu s$ to 130 $\mu s$. There are convolutions in Resnet that realize
 up to $2\times$ performance but also there are convolutions that are
 dominated by the read or by the writing, and where sparsity help only
 in space saving.
@@ -815,7 +815,7 @@ in space saving.
 \section{Results}
 \label{sec:experiments}
 In this section, we present the performance of sparsity applied to all
-the convolutions (but the first one) for Resnet 50 Figure
+the convolutions (except the first one) for Resnet 50 Figure
 \ref{fig:estimate-dense} and \ref{fig:estimate-sparse}, and Inception
 V3 Figure \ref{fig:incv3-estimate-dense}.
 
