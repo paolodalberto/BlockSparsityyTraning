@@ -127,13 +127,14 @@
 %% Of note is the shared affiliation of the first two authors, and the
 %% "authornote" and "authornotemark" commands
 %% used to denote shared contribution to the research.
-\author{Paolo D'\!Alberto}
-\author{Taehee Jeong}
-\author{Akshay Jain}
-\author{Shreyas Manjunath}
-\author{Mrinal Sarmah}
-\author{Samuel Hsu}
-\author{Nitesh Pipralia}
+\author{Anonymous} 
+%\author{Paolo D'\!Alberto}
+%\author{Taehee Jeong}
+%\author{Akshay Jain}
+%\author{Shreyas Manjunath}
+%\author{Mrinal Sarmah}
+%\author{Samuel Hsu}
+%\author{Nitesh Pipralia}
 
 %%
 %% By default, the full list of authors will be used in the page
@@ -141,7 +142,8 @@
 %% other information printed in the page headers. This command allows
 %% the author to define a more concise list
 %% of authors' names for this purpose.
-\renewcommand{\shortauthors}{ D'\!Alberto et al.}
+%\renewcommand{\shortauthors}{ D'\!Alberto et al.}
+\renewcommand{\shortauthors}{ Anonymous  et al.}
 
 %%
 %% The abstract is a short summary of the work to be presented in the
@@ -154,8 +156,8 @@ compaction and computation splitting into threads. If we take a
 Resnet50, we can reduce the weight by half with little accuracy
 loss. We can achieve speeds similar to an hypothetical Resnet25. We
 shall present performance estimates by accurate and complete code
-generation for a small and efficient set of AIE2 (Xilinx Versal
-FPGAs).
+generation for a small and efficient set of AIE2 (Xilinx/AMD Versal
+FPGAs) using Resnet50, Inception V3, and VGG16.
 \end{abstract}
 
 %%
@@ -276,13 +278,13 @@ $\gamma_{i*N+k}$ and $\dot{\omega}_{j*N+k}$ are at the very least
 contiguous. There will be a meaningful product to compute if and only
 if $\gamma_{i*N+k} =1$, $\dot{\omega}_{j*N+k} =1$.  We merge-sort
 these vectors.  See how the Sparse Sparse Matrix multiplication using
-Coordinate Block Structure (COO) is \cite{PaoloG2020}.  Now, the
-quantitative part, assume we want to achieve a fixed sparsity (i.e.,
-density) of 50\% for a square matrix of size $N$ and we choose the
-block size $k \times k$. The larger $k$ is, the smaller the overhead
-will be.  The relative performance of the $k^3$ multiplication is
-better as $k$ get larger because spatial and temporal locality and
-optimized code for a constant/parameterized $k$.
+Coordinate Block Structure (COO) is applied for example in
+\cite{PaoloG2020}.  Now, the quantitative part, assume we want to
+achieve a fixed sparsity (i.e., density) of 50\% for a square matrix
+of size $N$ and we choose the block size $k \times k$. The larger $k$
+is, the smaller the overhead will be.  The relative performance of the
+$k^3$ multiplication is better as $k$ get larger because spatial and
+temporal locality and optimized code for a constant/parameterized $k$.
 
 \doublefigure{0.80}{1x1.png}{8x8.png}{Block 1x1 and 8x8
   performance}{fig:block}
@@ -291,9 +293,9 @@ In Figure \ref{fig:block}, we present two scatter plots: on the
 abscissa the effective multiplication-and-addition number, on the
 ordinate the performance in GFLOPS, when the sparse matrix with dense
 block is 1x1 and 8x8. Given the same problem, we may use more threads
-and thus the Jenga of points.  We can see that given he same number of
-effective operations, the block permits better performance and
-exploits better performance for each precision.
+and thus the Jenga effect.  With the same number of effective
+operations, the block permits and exploits higher GFLOPS per effective
+operation.
 
 
 
@@ -320,20 +322,22 @@ previous discussions.
 \subsection{Keras: play}
 We provide a repository using Keras \cite{chollet2015keras} where we
 implements the contents of this section: Any one can reproduce and
-break \cite{PaoloK2020}. We target convolutions only and without
-quantization. The idea of the framework is simple: we take any model
-and we create a copy where we enhance the convolution with a
-(non-trainable) $\Gamma$. A convolution will have three parameters
-(saving the model into a different format).  The forward computation
-is modified so that the weights used for convolution are
-$\Gamma\Vc{W}$. We assume the backward computation (i.e., gradient) is
-done automatically from the forward definition. There is no need to
-change the bias. For example, we take Resnet50 from the keras
-application repository, we start with a $\Gamma=1$, and we trained one
-epoch using imagenet repository \cite{deng2009imagenet}.  The goal is
-to choose $\Gamma$ so that we achieve the required sparsity and to
-have the minimum loss in accuracy. Using this repository, we can test
-different ways to train but we skip for lack of space.
+break and there are example available online.%\cite{PaoloK2020}.
+
+We target convolutions only and without quantization. The idea of the
+framework is simple: we take any model and we create a copy where we
+enhance the convolution with a (non-trainable) $\Gamma$. A convolution
+will have three parameters (saving the model into a different format).
+The forward computation is modified so that the weights used for
+convolution are $\Gamma\Vc{W}$. We assume the backward computation
+(i.e., gradient) is done automatically from the forward
+definition. There is no need to change the bias. For example, we take
+Resnet50 from the keras application repository, we start with a
+$\Gamma=1$, and we trained one epoch using imagenet repository
+\cite{deng2009imagenet}.  The goal is to choose $\Gamma$ so that we
+achieve the required sparsity and to have the minimum loss in
+accuracy. Using this repository, we can test different ways to train
+but we skip for lack of space.
 
 \subsection{$\Gamma$ chosen once and full training ahead: PyTorch}
 \label{sec:one-mask}
@@ -421,8 +425,10 @@ which is similar to the caffe layout \cite{Caffe} (different from
 \cite{tensorflow}).
 
 For this project, we are at the third generation of a compiler for
-custom architectures (previously DPUV1 and DPUV3int8
-\cite{10.1145/3473334,abs-2110-04327}). The main difference is the
+custom architectures. % (previously DPUV1 and DPUV3int8
+%\cite{10.1145/3473334,abs-2110-04327}).
+
+The main difference is the
 ability to represent a parameterized block sparsity (block size and
 overall sparsity ratios) and the capability to split these tensors
 when we split the computation. All weights are statically prepared
@@ -522,8 +528,8 @@ order). Every computation will have its data movements for the first
 two levels of the memory hierarchy. The heuristics have a simple
 objective: find the largest problem fitting the memory level.
 
-We use an implementation that takes a recursive approach in tiling
-\cite{abs-2110-04327}: For clarity, $\sum$ is a sum or reduction and
+We use an implementation that takes a recursive approach in tiling: %\cite{abs-2110-04327}
+For clarity, $\sum$ is a sum or reduction and
 $\dot{\sum}$ is a parallel loop and a W-split can be written as
 \begin{equation}
   \Vc{Y} =  Conv(\Vc{X},\Vc{W}) = \dot{\sum}_w
@@ -617,8 +623,8 @@ two dedicated channels.
    are identical.
 \end{itemize}
 Although, mem-tile are circular buffers to improve the memory
-allocation, the streaming as \cite{abs-2110-04327} is not applicable
-here.
+allocation, the streaming  is not applicable
+here. % as \cite{abs-2110-04327}.
    
 
 The Memtile connections with AIE cores can be designed differently. We
@@ -758,7 +764,8 @@ For a $4\times 4$ AIE set up, Resnet 50 fits in memtile from the
 beginning to the last operation (beside the first convolution and this
 is by costruction). The estimates advantage by sparsity is almost
 completely achieved. We provide with the software also all the
-experimental results in \cite{PaoloK2020} as interactive interface and
+experimental results %in \cite{PaoloK2020}
+as interactive interface and
 showing the compiler output in long form.
 
 \section{Conclusions and Context}

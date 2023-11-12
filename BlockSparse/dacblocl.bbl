@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{20}
+\begin{thebibliography}{13}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -104,54 +104,6 @@
 \newblock
 
 
-\bibitem[\protect\citeauthoryear{D'Alberto}{D'Alberto}{2020}]%
-        {PaoloK2020}
-\bibfield{author}{\bibinfo{person}{Paolo D'Alberto}.}
-  \bibinfo{year}{2020}\natexlab{}.
-\newblock \bibinfo{title}{Block Sparsity and Training}.
-\newblock
-  \bibinfo{howpublished}{https://github.com/paolodalberto/BlockSparsityyTraning}.
-\newblock
-
-
-\bibitem[\protect\citeauthoryear{D'Alberto, Ma, Li, Hu, Bollavaram, and
-  Fang}{D'Alberto et~al\mbox{.}}{2021}]%
-        {abs-2110-04327}
-\bibfield{author}{\bibinfo{person}{Paolo D'Alberto}, \bibinfo{person}{Jiangsha
-  Ma}, \bibinfo{person}{Jintao Li}, \bibinfo{person}{Yiming Hu},
-  \bibinfo{person}{Manasa Bollavaram}, {and} \bibinfo{person}{Shaoxia Fang}.}
-  \bibinfo{year}{2021}\natexlab{}.
-\newblock \showarticletitle{{DPUV3INT8:} {A} Compiler View to programmable
-  {FPGA} Inference Engines}.
-\newblock \bibinfo{journal}{\emph{CoRR}}  \bibinfo{volume}{abs/2110.04327}
-  (\bibinfo{year}{2021}).
-\newblock
-\showeprint[arXiv]{2110.04327}
-\urldef\tempurl%
-\url{https://arxiv.org/abs/2110.04327}
-\showURL{%
-\tempurl}
-
-
-\bibitem[\protect\citeauthoryear{D'Alberto, Wu, Ng, Nimaiyar, Delaye, and
-  Sirasao}{D'Alberto et~al\mbox{.}}{2022}]%
-        {10.1145/3473334}
-\bibfield{author}{\bibinfo{person}{Paolo D'Alberto}, \bibinfo{person}{Victor
-  Wu}, \bibinfo{person}{Aaron Ng}, \bibinfo{person}{Rahul Nimaiyar},
-  \bibinfo{person}{Elliott Delaye}, {and} \bibinfo{person}{Ashish Sirasao}.}
-  \bibinfo{year}{2022}\natexlab{}.
-\newblock \showarticletitle{XDNN: Inference for Deep Convolutional Neural
-  Networks}.
-\newblock \bibinfo{journal}{\emph{ACM Trans. Reconfigurable Technol. Syst.}}
-  \bibinfo{volume}{15}, \bibinfo{number}{2}, Article \bibinfo{articleno}{18}
-  (\bibinfo{date}{jan} \bibinfo{year}{2022}), \bibinfo{numpages}{29}~pages.
-\newblock
-\showISSN{1936-7406}
-\urldef\tempurl%
-\url{https://doi.org/10.1145/3473334}
-\showDOI{\tempurl}
-
-
 \bibitem[\protect\citeauthoryear{Deng, Dong, Socher, Li, Li, and Fei-Fei}{Deng
   et~al\mbox{.}}{2009}]%
         {deng2009imagenet}
@@ -246,37 +198,6 @@
 \newblock
 
 
-\bibitem[\protect\citeauthoryear{Paszke, Gross, Massa, Lerer, Bradbury, Chanan,
-  Killeen, Lin, Gimelshein, Antiga, Desmaison, Kopf, Yang, DeVito, Raison,
-  Tejani, Chilamkurthy, Steiner, Fang, Bai, and Chintala}{Paszke
-  et~al\mbox{.}}{2019}]%
-        {pytorch_paper}
-\bibfield{author}{\bibinfo{person}{Adam Paszke}, \bibinfo{person}{Sam Gross},
-  \bibinfo{person}{Francisco Massa}, \bibinfo{person}{Adam Lerer},
-  \bibinfo{person}{James Bradbury}, \bibinfo{person}{Gregory Chanan},
-  \bibinfo{person}{Trevor Killeen}, \bibinfo{person}{Zeming Lin},
-  \bibinfo{person}{Natalia Gimelshein}, \bibinfo{person}{Luca Antiga},
-  \bibinfo{person}{Alban Desmaison}, \bibinfo{person}{Andreas Kopf},
-  \bibinfo{person}{Edward Yang}, \bibinfo{person}{Zachary DeVito},
-  \bibinfo{person}{Martin Raison}, \bibinfo{person}{Alykhan Tejani},
-  \bibinfo{person}{Sasank Chilamkurthy}, \bibinfo{person}{Benoit Steiner},
-  \bibinfo{person}{Lu Fang}, \bibinfo{person}{Junjie Bai}, {and}
-  \bibinfo{person}{Soumith Chintala}.} \bibinfo{year}{2019}\natexlab{}.
-\newblock \showarticletitle{PyTorch: An Imperative Style, High-Performance Deep
-  Learning Library}.
-\newblock In \bibinfo{booktitle}{\emph{Advances in Neural Information
-  Processing Systems 32}}, \bibfield{editor}{\bibinfo{person}{H.~Wallach},
-  \bibinfo{person}{H.~Larochelle}, \bibinfo{person}{A.~Beygelzimer},
-  \bibinfo{person}{F.~d\textquotesingle Alch\'{e}-Buc},
-  \bibinfo{person}{E.~Fox}, {and} \bibinfo{person}{R.~Garnett}} (Eds.).
-  \bibinfo{publisher}{Curran Associates, Inc.}, \bibinfo{pages}{8026--8037}.
-\newblock
-\urldef\tempurl%
-\url{http://papers.nips.cc/paper/9015-pytorch-an-imperative-style-high-performance-deep-learning-library.pdf}
-\showURL{%
-\tempurl}
-
-
 \bibitem[\protect\citeauthoryear{Russo, Palesi, Ascia, Patti, Monteleone, and
   Catania}{Russo et~al\mbox{.}}{2023}]%
         {Russo2023MemoryAwareDA}
@@ -293,48 +214,6 @@
 \url{https://api.semanticscholar.org/CorpusID:260442361}
 \showURL{%
 \tempurl}
-
-
-\bibitem[\protect\citeauthoryear{Yao, Gholami, Shen, Keutzer, and Mahoney}{Yao
-  et~al\mbox{.}}{2021}]%
-        {yao2020adahessian}
-\bibfield{author}{\bibinfo{person}{Zhewei Yao}, \bibinfo{person}{Amir Gholami},
-  \bibinfo{person}{Sheng Shen}, \bibinfo{person}{Kurt Keutzer}, {and}
-  \bibinfo{person}{Michael~W Mahoney}.} \bibinfo{year}{2021}\natexlab{}.
-\newblock \showarticletitle{ADAHESSIAN: An Adaptive Second Order Optimizer for
-  Machine Learning}.
-\newblock \bibinfo{journal}{\emph{AAAI (Accepted)}} (\bibinfo{year}{2021}).
-\newblock
-
-
-\bibitem[\protect\citeauthoryear{Yu, Yao, Gholami, Dong, Mahoney, and
-  Keutzer}{Yu et~al\mbox{.}}{2021}]%
-        {abs-2101-08940}
-\bibfield{author}{\bibinfo{person}{Shixing Yu}, \bibinfo{person}{Zhewei Yao},
-  \bibinfo{person}{Amir Gholami}, \bibinfo{person}{Zhen Dong},
-  \bibinfo{person}{Michael~W. Mahoney}, {and} \bibinfo{person}{Kurt Keutzer}.}
-  \bibinfo{year}{2021}\natexlab{}.
-\newblock \showarticletitle{Hessian-Aware Pruning and Optimal Neural Implant}.
-\newblock \bibinfo{journal}{\emph{CoRR}}  \bibinfo{volume}{abs/2101.08940}
-  (\bibinfo{year}{2021}).
-\newblock
-\showeprint[arXiv]{2101.08940}
-\urldef\tempurl%
-\url{https://arxiv.org/abs/2101.08940}
-\showURL{%
-\tempurl}
-
-
-\bibitem[\protect\citeauthoryear{Zandonati, Pol, Pierini, Sirkin, and
-  Kopetz}{Zandonati et~al\mbox{.}}{2022}]%
-        {zandonati2022fit}
-\bibfield{author}{\bibinfo{person}{Ben Zandonati}, \bibinfo{person}{Adrian~Alan
-  Pol}, \bibinfo{person}{Maurizio Pierini}, \bibinfo{person}{Olya Sirkin},
-  {and} \bibinfo{person}{Tal Kopetz}.} \bibinfo{year}{2022}\natexlab{}.
-\newblock \bibinfo{title}{FIT: A Metric for Model Sensitivity}.
-\newblock
-\newblock
-\showeprint[arxiv]{cs.LG/2210.08502}
 
 
 \end{thebibliography}
