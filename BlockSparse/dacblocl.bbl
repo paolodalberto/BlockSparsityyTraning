@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{13}
+\begin{thebibliography}{12}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -92,15 +92,6 @@
   \bibinfo{year}{2015}\natexlab{}.
 \newblock \bibinfo{title}{Keras}.
 \newblock \bibinfo{howpublished}{\url{https://keras.io}}.
-\newblock
-
-
-\bibitem[\protect\citeauthoryear{D'Alberto}{D'Alberto}{2013}]%
-        {PaoloG2020}
-\bibfield{author}{\bibinfo{person}{Paolo D'Alberto}.}
-  \bibinfo{year}{2013}\natexlab{}.
-\newblock
-  \bibinfo{howpublished}{https://github.com/paolodalberto/SparseFastMM/}.
 \newblock
 
 

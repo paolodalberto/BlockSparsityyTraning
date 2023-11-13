@@ -29,45 +29,45 @@ Warning--page numbers missing in both pages and numpages fields in abs-2102-1128
 Warning--no number and no volume in Huang2021CoSASB
 Warning--no number and no volume in Russo2023MemoryAwareDA
 Warning--page numbers missing in both pages and numpages fields in Russo2023MemoryAwareDA
-You've used 13 entries,
+You've used 12 entries,
             5897 wiz_defined-function locations,
-            1400 strings with 17275 characters,
-and the built_in function-call counts, 14117 in all, are:
-= -- 1646
-> -- 665
+            1395 strings with 17190 characters,
+and the built_in function-call counts, 13385 in all, are:
+= -- 1567
+> -- 645
 < -- 0
-+ -- 221
-- -- 228
-* -- 1097
-:= -- 1559
-add.period$ -- 62
-call.type$ -- 13
-change.case$ -- 103
-chr.to.int$ -- 13
-cite$ -- 35
-duplicate$ -- 1135
-empty$ -- 804
-format.name$ -- 260
-if$ -- 3248
++ -- 216
+- -- 220
+* -- 1059
+:= -- 1474
+add.period$ -- 58
+call.type$ -- 12
+change.case$ -- 98
+chr.to.int$ -- 12
+cite$ -- 34
+duplicate$ -- 1063
+empty$ -- 753
+format.name$ -- 252
+if$ -- 3088
 int.to.chr$ -- 2
 int.to.str$ -- 1
 missing$ -- 26
-newline$ -- 167
-num.names$ -- 96
-pop$ -- 456
+newline$ -- 160
+num.names$ -- 88
+pop$ -- 429
 preamble$ -- 1
-purify$ -- 212
+purify$ -- 198
 quote$ -- 0
-skip$ -- 415
+skip$ -- 387
 stack$ -- 0
-substring$ -- 843
-swap$ -- 105
+substring$ -- 791
+swap$ -- 100
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 334
+type$ -- 304
 warning$ -- 18
-while$ -- 74
+while$ -- 66
 width$ -- 0
-write$ -- 278
+write$ -- 263
 (There were 18 warnings)

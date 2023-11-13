@@ -66,16 +66,16 @@
 \acmDOI{XXXXXXX.XXXXXXX}
 
 %% These commands are for a PROCEEDINGS abstract or paper.
-\acmConference[Conference acronym 'XX]{Make sure to enter the correct
-  conference title from your rights confirmation emai}{June 03--05,
-  2018}{Woodstock, NY}
+\acmConference[Conference acronym DAC]{Make sure to enter the correct
+  conference title from your rights confirmation emai}{June ,
+  2024}{San Francisco, CA}
 %%
 %%  Uncomment \acmBooktitle if the title of the proceedings is different
 %%  from ``Proceedings of ...''!
 %%
 %%\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
 %%  June 03--05, 2018, Woodstock, NY}
-\acmISBN{978-1-4503-XXXX-X/18/06}
+\acmISBN{TBD} %978-1-4503-XXXX-X/18/06}
 
 
 %%
@@ -186,10 +186,10 @@ FPGAs) using Resnet50, Inception V3, and VGG16.
 \section{Introduction}
 \label{sec:introduction}
 
-We shall start by what we mean for block sparsity and for a vertical
-solution. Block sparsity is an intuitive concept but it is also a
-little misunderstood. Take a matrix multiplication as in Equation
-\ref{eq:mat}
+We shall start presenting what we mean for block sparsity and for a
+vertical solution. Block sparsity is an intuitive concept but it is
+also a little misunderstood. Take a matrix multiplication as in
+Equation \ref{eq:mat}
 \begin{equation}
   \label{eq:mat}
   \begin{pmatrix}
@@ -261,9 +261,8 @@ general.
 \section{Block-Sparse Matrix-Matrix Multiplication}
 \label{sec:motivation}
 
- As mental and practical exercise, consider $\Gamma$ and
-$\Omega$ two appropriate 0,1 matrices so that for square matrices in
-$\R^{N\times N}$
+ As thought experiment, consider $\Gamma$ and $\Omega$ two appropriate
+ 0,1 matrices so that for square matrices in $\R^{N\times N}$
 \begin{equation}
   \Vc{C} = (\Gamma \Vc{A}) * (\Omega \Vc{B})^t
 \end{equation}
@@ -276,10 +275,11 @@ More precisely, consider non-zero blocks of size $k\times k$ so that
 Thanks to the sparsity and if we store only non-zeros, then
 $\gamma_{i*N+k}$ and $\dot{\omega}_{j*N+k}$ are at the very least
 contiguous. There will be a meaningful product to compute if and only
-if $\gamma_{i*N+k} =1$, $\dot{\omega}_{j*N+k} =1$.  We merge-sort
+if $\gamma_{i*N+k} =1$ and  $\dot{\omega}_{j*N+k} =1$.  We merge-sort
 these vectors.  See how the Sparse Sparse Matrix multiplication using
 Coordinate Block Structure (COO) is applied for example in
-\cite{PaoloG2020}.  Now, the quantitative part, assume we want to
+in Figure \ref{fig:block}. We shall provide software to reproduce this. % \cite{PaoloG2020}.
+Now, the quantitative part, assume we want to
 achieve a fixed sparsity (i.e., density) of 50\% for a square matrix
 of size $N$ and we choose the block size $k \times k$. The larger $k$
 is, the smaller the overhead will be.  The relative performance of the
@@ -319,10 +319,9 @@ the matrix multiply $h=k=1$, there is no difference from the
 previous discussions.
 
 
-\subsection{Keras: play}
-We provide a repository using Keras \cite{chollet2015keras} where we
-implements the contents of this section: Any one can reproduce and
-break and there are example available online.%\cite{PaoloK2020}.
+\subsection{Keras}
+We shall provide a repository using Keras \cite{chollet2015keras}
+where we implements the contents of this section. %\cite{PaoloK2020}.
 
 We target convolutions only and without quantization. The idea of the
 framework is simple: we take any model and we create a copy where we
@@ -337,7 +336,8 @@ $\Gamma=1$, and we trained one epoch using imagenet repository
 \cite{deng2009imagenet}.  The goal is to choose $\Gamma$ so that we
 achieve the required sparsity and to have the minimum loss in
 accuracy. Using this repository, we can test different ways to train
-but we skip for lack of space.
+but we skip for lack of space (incremental, Fisher measure, Hessian,
+diagonal Hessian, penalty losses).
 
 \subsection{$\Gamma$ chosen once and full training ahead: PyTorch}
 \label{sec:one-mask}
@@ -360,15 +360,14 @@ the whole network or for one convolution at a time.
 
 In Table \ref{tab_acc}, we show the results by using one-time masks
 and full training: VGG-16, ResNet-50, Inceptionv3 on ImageNet20 (20
-classes) and ImageNet1k (1000 classes). See Section
-\ref{sec:one-mask}. We use three samples per class for the validation
-accuracy for ImageNet1k data set; instead, we use 50 samples per class
-for ImageNet20. Fine-tuning sparse networks on the original ImageNet
-data-set \cite{deng2009imagenet} is expensive. To reduce the training
-time, we chose 20 classes (from the original 1000 classes) with the
-least number of images per class in the training data-set and this
-choice will affect the accuracy because there are fewer sample for
-re-training.
+classes) and ImageNet1k (1000 classes).  We use three samples per
+class for the validation accuracy for ImageNet1k data set; instead, we
+use 50 samples per class for ImageNet20. Fine-tuning sparse networks
+on the original ImageNet data-set \cite{deng2009imagenet} is
+expensive. To reduce the training time, we chose 20 classes (from the
+original 1000 classes) with the least number of images per class in
+the training data-set and this choice will affect the accuracy because
+there are fewer samples for re-training.
 
 
 \begin{table}[ht]
@@ -414,19 +413,20 @@ and we shall use it for time estimates (i.e., Section
 Within our Xilinx/AMD effort, we can take a PyTorch/Keras model,
 quantize it using Vitis AI, and create an intermediate representation
 that we call Xilinx Intermediate Representation (XIR). This is a graph
-where each node is an operation that reads tensors and writes one tensor. A
-convolution has one quantized input: we use the tensor layout format
-BHWC, the tensors are represented in INT8 with a position where the
-fraction starts (power of two scale). It computes a tensor using the
-same layout as the input and with a proper scale. The weights and bias
-are properties of the convolutions, as such they can be tailored; the
-layout of the weight tensor is $COUT\times h \times w \times CIN$,
-which is similar to the caffe layout \cite{Caffe} (different from
-\cite{tensorflow}).
-
-For this project, we are at the third generation of a compiler for
-custom architectures. % (previously DPUV1 and DPUV3int8
-%\cite{10.1145/3473334,abs-2110-04327}).
+where each node is an operation that reads tensors and writes one
+tensor. A convolution has one quantized input: we use the tensor
+layout format BHWC, the tensors are represented in INT8 with a
+position where the fraction starts (power of two scale). It computes a
+tensor using the same layout as the input and with a proper scale. The
+weights and bias are properties of the convolutions, as such they can
+be tailored; the layout of the weight tensor is $COUT\times h \times w
+\times CIN$, which is similar to the caffe layout \cite{Caffe}
+(different from \cite{tensorflow}). For this project, we are at the
+third generation of a compiler for custom architectures.
+\begin{comment}
+  (previously DPUV1 and DPUV3int8
+  \cite{10.11451/3473334,abs-2110-04327}).
+\end{comment}
 
 The main difference is the
 ability to represent a parameterized block sparsity (block size and
@@ -484,8 +484,8 @@ by width, each core will compute different output channels, and the
 computation streams computing the height of the tensor by using core
 input and output ping/pong. As often as possible, we store the weights
 in the core and we reuse them as much as possible (unless we need to
-stream the weight instead). The set of cores is a cohort and symmetric
-computations are always selected. This means that we do not merge two
+stream the weight instead). The set of cores is a cohort and we always
+choose symmetric computations. This means that we do not merge two
 operations like convolution and max-pool and give three columns to
 convolution and one column to max-pool.
 
@@ -517,7 +517,7 @@ that an input tensor is distributed among the memtiles identified by
 one starting address and a final address and so the weights. At each
 step the memory allocation will check if we can allocate. If we
 cannot, we evict all tensors into DDR and then split/time the
-computation.
+computation. 
 
 At the end of this stage, every tensor will be associated to an
 address in memtile or DDR (or both). If there are only DDR addresses,
@@ -541,12 +541,16 @@ this stage each input, output, and weights will have addresses
 associated with each sub-computation. Then the code generation of each
 $Conv(\Vc{X}_w,\Vc{W})$ is independent and, recursively and as needed,
 there will be specific splits of the computation accordingly. This is
-a tree (i.e, a root with $k$ children). If the convolution has strides
-and large kernel, each sub-convolution may have overlap data but
-defined addresses and data movement if necessary. For example,
-computing the output by rows and the weights are reused.
+a tree (i.e, a root with $w$ children instead of a loop with $w$
+iterations, we do not have support for loops at this level). If the
+convolution has strides and large kernel, each sub-convolution may
+have overlap data but defined addresses and data movement if
+necessary. For example, computing the output by rows and the weights
+are reused.
 
-
+Note scheduling and memory allocation among layers is a hard problem
+and often barely addressed by other systems. We addressed as first
+requirements.
 
 \subsection{Code Generation }
 The compiler recursively creates a list of operations smaller and
@@ -554,14 +558,21 @@ smaller that can actually be executed Mem-Tile to Mem-Tile. In
 practice, there is a further decomposition using only AIE cores but it
 is completely determined by the subvolume computation. Here, we shall
 show how we produce the execution time estimates as in Figure
-\ref{fig:singleconvestimate}.
+\ref{fig:singleconvestimate}.  This is the computation of a
+convolution with top/bottom padding by height:
+\begin{equation}
+  \Vc{Y}_{height} =   Conv(\Vc{X}_{h=0}) \dot{+} \dot{\sum}_{h=1}^9
+  Conv(\Vc{X}_w) \dot{+} Conv(\Vc{X}_{h=10})
+\end{equation}
 
 An important feature of the current system is the concept of {\bf
-  iteration}: Using locks and chaining them (locks like in
-semaphores): We can write a single instruction from the prospective of
-a single core (as a SIMD instruction) but driving all cores at once
-(ASM-like code) for multiple iterations:
-{\footnotesize 
+  iteration} between mem-tile and core: Using locks and chaining them
+(locks like in semaphores): We can write a single instruction from the
+prospective of a single core (as a SIMD instruction) but driving all
+cores at once (ASM-like code) for multiple iterations ($\dot{\sum}_{h=1}^i
+Conv(\Vc{X}_w)$):
+
+{\small %footnotesize
 \begin{verbatim}
   LOADFM Lock k_0 mem-tile addr core addr iter i
   CONV iteration      i
@@ -575,7 +586,7 @@ compute different slices of data.
 
 In our environment padding is common and we can manage by a custom
 load (from memtile to core) and this requires a custom load that will
-not be repeated {\footnotesize
+not be repeated {\small %\footnotesize
 \begin{verbatim}
   ## Head top pad < 50 us First comp block
   LOADFM Lock k_0 mem-tile addr_0 core addr iter 1
@@ -764,14 +775,22 @@ For a $4\times 4$ AIE set up, Resnet 50 fits in memtile from the
 beginning to the last operation (beside the first convolution and this
 is by costruction). The estimates advantage by sparsity is almost
 completely achieved. We provide with the software also all the
-experimental results %in \cite{PaoloK2020}
-as interactive interface and
-showing the compiler output in long form.
+experimental results %in \cite{PaoloK2020} as interactive interface
+and showing the compiler output in long form.
+
+Corner cases are represented as failure in Table \ref{tab_perf}. Some
+cases is because of inability to break the weight tensor evenly,
+sometime is for incorrect data management especially for prime
+numbers. These are all issues will be address as the technology
+matures. Please, note that VGG16 using 8x8 is slower than 7x7 by using
+sparse.  It may happen because a symmetric computation my use too
+small sub-volume computations and thus more iterations.
 
 \section{Conclusions and Context}
 This is a multifaceted problem and we present a complete solution from
 training techniques, compilers, code generation, HW definition, and
-time estimations.
+time estimations. It is a vertical software system and more complex
+than just a prototype.
 
 This could be seen as a quantization and sparsification problem: How
 to reduce the footprint of a CNN network. There are post training
@@ -779,8 +798,8 @@ techniques that are targeting quantization and unstructured sparsity
 \cite{frantar2023gptq} and all the references within. We need to be
 more aggressive and training for it (as starting point
 \cite{abs-2102-11289}), our sparsity is not really a property of the
-model and software can describe it and the hardware can take
-advantage.
+model and software can describe it and the hardware can take advantage
+(but we do not need to have hardware support at instruction level).
 
 This work stemmed from a collaboration between Xilinx and Numenta and
 the idea set forward by the authors in \cite{ahmad2019dense}, where
