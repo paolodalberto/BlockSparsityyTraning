@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{12}
+\begin{thebibliography}{15}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -121,6 +121,19 @@
 \showeprint[arxiv]{cs.LG/2210.17323}
 
 
+\bibitem[\protect\citeauthoryear{Gray, Radford, and Kingma}{Gray
+  et~al\mbox{.}}{2017}]%
+        {Gray2017GPUKF}
+\bibfield{author}{\bibinfo{person}{Scott Gray}, \bibinfo{person}{Alec Radford},
+  {and} \bibinfo{person}{Diederik~P. Kingma}.} \bibinfo{year}{2017}\natexlab{}.
+\newblock \showarticletitle{GPU Kernels for Block-Sparse Weights}.
+\newblock
+\urldef\tempurl%
+\url{https://api.semanticscholar.org/CorpusID:52220661}
+\showURL{%
+\tempurl}
+
+
 \bibitem[\protect\citeauthoryear{Hawks, Duarte, Fraser, Pappalardo, Tran, and
   Umuroglu}{Hawks et~al\mbox{.}}{2021}]%
         {abs-2102-11289}
@@ -179,6 +192,44 @@
 \urldef\tempurl%
 \url{https://doi.org/10.1145/2647868.2654889}
 \showDOI{\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Kurtz, Kopinsky, Gelashvili, Matveev, Carr,
+  Goin, Leiserson, Moore, Shavit, and Alistarh}{Kurtz et~al\mbox{.}}{2020}]%
+        {pmlr-v119-kurtz20a}
+\bibfield{author}{\bibinfo{person}{Mark Kurtz}, \bibinfo{person}{Justin
+  Kopinsky}, \bibinfo{person}{Rati Gelashvili}, \bibinfo{person}{Alexander
+  Matveev}, \bibinfo{person}{John Carr}, \bibinfo{person}{Michael Goin},
+  \bibinfo{person}{William Leiserson}, \bibinfo{person}{Sage Moore},
+  \bibinfo{person}{Nir Shavit}, {and} \bibinfo{person}{Dan Alistarh}.}
+  \bibinfo{year}{2020}\natexlab{}.
+\newblock \showarticletitle{Inducing and Exploiting Activation Sparsity for
+  Fast Inference on Deep Neural Networks}. In
+  \bibinfo{booktitle}{\emph{Proceedings of the 37th International Conference on
+  Machine Learning}} \emph{(\bibinfo{series}{Proceedings of Machine Learning
+  Research})}, \bibfield{editor}{\bibinfo{person}{Hal~Daumé III} {and}
+  \bibinfo{person}{Aarti Singh}} (Eds.), Vol.~\bibinfo{volume}{119}.
+  \bibinfo{publisher}{PMLR}, \bibinfo{pages}{5533--5543}.
+\newblock
+\urldef\tempurl%
+\url{https://proceedings.mlr.press/v119/kurtz20a.html}
+\showURL{%
+\tempurl}
+
+
+\bibitem[\protect\citeauthoryear{Li, Orr, Ohan, costa, Murray, Sanders, Beker,
+  and Masters}{Li et~al\mbox{.}}{2023}]%
+        {li2023popsparse}
+\bibfield{author}{\bibinfo{person}{Zhiyi Li}, \bibinfo{person}{Douglas Orr},
+  \bibinfo{person}{Valeriu Ohan}, \bibinfo{person}{Godfrey~Da costa},
+  \bibinfo{person}{Tom Murray}, \bibinfo{person}{Adam Sanders},
+  \bibinfo{person}{Deniz Beker}, {and} \bibinfo{person}{Dominic Masters}.}
+  \bibinfo{year}{2023}\natexlab{}.
+\newblock \bibinfo{title}{PopSparse: Accelerated block sparse matrix
+  multiplication on IPU}.
+\newblock
+\newblock
+\showeprint[arxiv]{cs.LG/2303.16999}
 
 
 \bibitem[\protect\citeauthoryear{NVIDIA}{NVIDIA}{2020}]%

@@ -295,7 +295,8 @@ ordinate the performance in GFLOPS, when the sparse matrix with dense
 block is 1x1 and 8x8. Given the same problem, we may use more threads
 and thus the Jenga effect.  With the same number of effective
 operations, the block permits and exploits higher GFLOPS per effective
-operation.
+operation (Float is 2x faster than Double precision and this can be
+emphasized further \cite{Gray2017GPUKF,li2023popsparse} and \cite{pmlr-v119-kurtz20a} .
 
 
 
@@ -810,7 +811,10 @@ it.
 The difficulty of generate code for complex architectures can be
 described and solved in different ways. There are recent attempts of
 introducing SW/HW solution for spatial processors like ours
-\cite{Huang2021CoSASB,Russo2023MemoryAwareDA,Cai2023InterlayerSS}. 
+\cite{Huang2021CoSASB,Russo2023MemoryAwareDA,Cai2023InterlayerSS}.
+Usually major attention is given only to matrix multiplication and
+GPUs \cite{Gray2017GPUKF} \cite{li2023popsparse}, we can work on only static
+sparsity at this time.
 
 
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2023.6.11)  13 NOV 2023 09:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2023.6.11)  13 NOV 2023 11:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -987,92 +987,94 @@ Class acmart Warning: A possible image without description on input line 290.
 
 ]
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 10.95pt on input line 342.
+(Font)              scaled to size 10.95pt on input line 343.
 LaTeX Font Info:    Font shape `OT1/LinuxLibertineT-TLF/m/n' will be
-(Font)              scaled to size 6.1pt on input line 342.
+(Font)              scaled to size 6.1pt on input line 343.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 342.
+(hyperref)                removing `math shift' on input line 343.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\Gamma' on input line 342.
+(hyperref)                removing `\Gamma' on input line 343.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 342.
+(hyperref)                removing `math shift' on input line 343.
 
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 9.0pt on input line 411.
+(Font)              scaled to size 9.0pt on input line 412.
 LaTeX Font Info:    Font shape `T1/LinuxBiolinumT-TLF/m/n' will be
-(Font)              scaled to size 7.0pt on input line 411.
+(Font)              scaled to size 7.0pt on input line 412.
 [2.2 <./1x1.png> <./8x8.png>] Excluding 'comment' comment.
 LaTeX Font Info:    Font shape `T1/LinuxLibertineT-TLF/m/it' will be
-(Font)              scaled to size 9.0pt on input line 439.
-<AIE.png, id=137, 819.06pt x 1059.96pt>
+(Font)              scaled to size 9.0pt on input line 440.
+<AIE.png, id=143, 819.06pt x 1059.96pt>
 File: AIE.png Graphic file (type png)
 <use AIE.png>
-Package pdftex.def Info: AIE.png  used on input line 444.
+Package pdftex.def Info: AIE.png  used on input line 445.
 (pdftex.def)             Requested size: 168.8025pt x 218.44153pt.
 
 
-Class acmart Warning: A possible image without description on input line 444.
+Class acmart Warning: A possible image without description on input line 445.
 
 Excluding 'comment' comment.
 Underfull \vbox (badness 6396) has occurred while \output is active []
 
  [3.3 <./AIE.png>]
 LaTeX Font Info:    Trying to load font information for T1+zi4 on input line 57
-6.
+7.
  (/usr/share/texlive/texmf-dist/tex/latex/inconsolata/t1zi4.fd
 File: t1zi4.fd 2018/01/14 T1/zi4 (Inconsolata)
 )
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 8.0pt on input line 576.
+(Font)              scaled to size 8.0pt on input line 577.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `zi4' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `T1/zi4/m/n' will be
-(Font)              scaled to size 9.0pt on input line 581.
-<singledenseconv.png, id=149, 1131.22626pt x 549.05125pt>
+(Font)              scaled to size 9.0pt on input line 582.
+<singledenseconv.png, id=155, 1131.22626pt x 549.05125pt>
 File: singledenseconv.png Graphic file (type png)
 <use singledenseconv.png>
-Package pdftex.def Info: singledenseconv.png  used on input line 615.
+Package pdftex.def Info: singledenseconv.png  used on input line 616.
 (pdftex.def)             Requested size: 192.91872pt x 93.63069pt.
 
-Underfull \hbox (badness 1253) in paragraph at lines 615--615
+Underfull \hbox (badness 1253) in paragraph at lines 616--616
 \T1/LinuxLibertineT-TLF/b/n/9 DDR to Mem, LOADFM Ac-ti-va-tion Mem to AIE2 core
 s,
  []
 
 
-Class acmart Warning: A possible image without description on input line 615.
+Class acmart Warning: A possible image without description on input line 616.
 
 [4.4 <./singledenseconv.png>]
-<singlesparseconv.png, id=160, 1130.2225pt x 549.05125pt>
+<singlesparseconv.png, id=166, 1130.2225pt x 549.05125pt>
 File: singlesparseconv.png Graphic file (type png)
 <use singlesparseconv.png>
-Package pdftex.def Info: singlesparseconv.png  used on input line 677.
+Package pdftex.def Info: singlesparseconv.png  used on input line 678.
 (pdftex.def)             Requested size: 240.90463pt x 117.02162pt.
 
 
-Class acmart Warning: A possible image without description on input line 677.
+Class acmart Warning: A possible image without description on input line 678.
 
 [5.5 <./singlesparseconv.png>] Excluding 'comment' comment. (./dacblocl.bbl
 LaTeX Info: Redefining \tempurl on input line 83.
-LaTeX Info: Redefining \tempurl on input line 138.
-LaTeX Info: Redefining \tempurl on input line 158.
-LaTeX Info: Redefining \tempurl on input line 180.
-LaTeX Info: Redefining \tempurl on input line 205.
+LaTeX Info: Redefining \tempurl on input line 132.
+LaTeX Info: Redefining \tempurl on input line 151.
+LaTeX Info: Redefining \tempurl on input line 171.
+LaTeX Info: Redefining \tempurl on input line 193.
+LaTeX Info: Redefining \tempurl on input line 215.
+LaTeX Info: Redefining \tempurl on input line 256.
 )
 
 Class acmart Warning: Some images may lack descriptions.
 
 
 Class acmart Warning: \vspace should only be used to provide space above/below 
-surrounding objects on input line 888.
+surrounding objects on input line 892.
 
 
 Class acmart Warning: CCS concepts are mandatory for papers over two pages.
@@ -1082,20 +1084,20 @@ Package balance Warning: You have called \balance in second column
 (balance)                Columns might not be balanced.
 
 [6.6]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 888.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 888.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 892.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 892.
  (./dacblocl.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 888.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 888.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 892.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 892.
 Package rerunfilecheck Info: File `dacblocl.out' has not changed.
 (rerunfilecheck)             Checksum: 761B6D44FE058AD0FEF15052FB34741D;3113.
  ) 
 Here is how much of TeX's memory you used:
- 19604 strings out of 481239
- 295743 string characters out of 5920377
- 601187 words of memory out of 5000000
- 33921 multiletter control sequences out of 15000+600000
- 713924 words of font info for 378 fonts, out of 8000000 for 9000
+ 19622 strings out of 481239
+ 296161 string characters out of 5920377
+ 601458 words of memory out of 5000000
+ 33930 multiletter control sequences out of 15000+600000
+ 714470 words of font info for 382 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
  63i,12n,100p,799b,412s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/inconsolata/i4-t1-4.enc}{/usr/
@@ -1122,10 +1124,10 @@ inLibertineTZ.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/txexs
 .pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/txmiaX.pfb></usr/s
 hare/texlive/texmf-dist/fonts/type1/public/txfonts/txsyb.pfb></usr/share/texliv
 e/texmf-dist/fonts/type1/public/newtx/txsys.pfb>
-Output written on dacblocl.pdf (6 pages, 646825 bytes).
+Output written on dacblocl.pdf (6 pages, 648955 bytes).
 PDF statistics:
- 299 PDF objects out of 1000 (max. 8388607)
- 238 compressed objects within 3 object streams
- 52 named destinations out of 1000 (max. 500000)
+ 311 PDF objects out of 1000 (max. 8388607)
+ 250 compressed objects within 3 object streams
+ 55 named destinations out of 1000 (max. 500000)
  51370 words of extra memory for PDF output out of 51595 (max. 10000000)
 

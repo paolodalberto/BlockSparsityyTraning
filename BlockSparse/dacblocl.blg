@@ -25,49 +25,54 @@ Warning--no number and no volume in Cai2023InterlayerSS
 Warning--page numbers missing in both pages and numpages fields in Cai2023InterlayerSS
 Warning--empty publisher in deng2009imagenet
 Warning--empty address in deng2009imagenet
+Warning--empty booktitle in Gray2017GPUKF
+Warning--empty publisher in Gray2017GPUKF
+Warning--empty address in Gray2017GPUKF
+Warning--page numbers missing in both pages and numpages fields in Gray2017GPUKF
 Warning--page numbers missing in both pages and numpages fields in abs-2102-11289
 Warning--no number and no volume in Huang2021CoSASB
+Warning--empty address in pmlr-v119-kurtz20a
 Warning--no number and no volume in Russo2023MemoryAwareDA
 Warning--page numbers missing in both pages and numpages fields in Russo2023MemoryAwareDA
-You've used 12 entries,
+You've used 15 entries,
             5897 wiz_defined-function locations,
-            1395 strings with 17190 characters,
-and the built_in function-call counts, 13385 in all, are:
-= -- 1567
-> -- 645
+            1416 strings with 18075 characters,
+and the built_in function-call counts, 17422 in all, are:
+= -- 1942
+> -- 908
 < -- 0
-+ -- 216
-- -- 220
-* -- 1059
-:= -- 1474
-add.period$ -- 58
-call.type$ -- 12
-change.case$ -- 98
-chr.to.int$ -- 12
-cite$ -- 34
-duplicate$ -- 1063
-empty$ -- 753
-format.name$ -- 252
-if$ -- 3088
++ -- 305
+- -- 306
+* -- 1438
+:= -- 1961
+add.period$ -- 72
+call.type$ -- 15
+change.case$ -- 132
+chr.to.int$ -- 15
+cite$ -- 42
+duplicate$ -- 1371
+empty$ -- 968
+format.name$ -- 350
+if$ -- 3958
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 26
-newline$ -- 160
-num.names$ -- 88
-pop$ -- 429
+missing$ -- 36
+newline$ -- 191
+num.names$ -- 114
+pop$ -- 563
 preamble$ -- 1
-purify$ -- 198
+purify$ -- 258
 quote$ -- 0
-skip$ -- 387
+skip$ -- 502
 stack$ -- 0
-substring$ -- 791
-swap$ -- 100
+substring$ -- 1024
+swap$ -- 126
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 304
-warning$ -- 18
-while$ -- 66
+type$ -- 394
+warning$ -- 23
+while$ -- 82
 width$ -- 0
-write$ -- 263
-(There were 18 warnings)
+write$ -- 322
+(There were 23 warnings)
