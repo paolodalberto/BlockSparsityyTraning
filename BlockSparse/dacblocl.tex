@@ -156,8 +156,8 @@ compaction and computation splitting into threads. If we take a
 Resnet50, we can reduce the weight by half with little accuracy
 loss. We can achieve speeds similar to an hypothetical Resnet25. We
 shall present performance estimates by accurate and complete code
-generation for a small and efficient set of AIE2 (Xilinx/AMD Versal
-FPGAs) using Resnet50, Inception V3, and VGG16.
+generation for a small and efficient set of AIE2 (AMD Versal FPGAs)
+using Resnet50, Inception V3, and VGG16.
 \end{abstract}
 
 %%
@@ -168,7 +168,7 @@ FPGAs) using Resnet50, Inception V3, and VGG16.
 %%
 %% Keywords. The author(s) should pick words that accurately describe
 %% the work being presented. Separate the keywords with commas.
-\keywords{Sparsity, AI, Performance, FPGA, and Tools}
+\keywords{AI, FPGA, Performance, Sparsity, and Tools}
 %% A "teaser" image appears between the author and affiliation
 %% information and the body of the document, and typically spans the
 %% page.
@@ -186,10 +186,10 @@ FPGAs) using Resnet50, Inception V3, and VGG16.
 \section{Introduction}
 \label{sec:introduction}
 
-We shall start presenting what we mean for block sparsity and for a
-vertical solution. Block sparsity is an intuitive concept but it is
-also a little misunderstood. Take a matrix multiplication as in
-Equation \ref{eq:mat}
+We explain what we mean for block sparsity and for a vertical
+solution. Block sparsity is an intuitive concept but it is also a
+little misunderstood. Take a matrix multiplication in Equation
+\ref{eq:mat}
 \begin{equation}
   \label{eq:mat}
   \begin{pmatrix}
@@ -205,14 +205,11 @@ Equation \ref{eq:mat}
     \Vc{B}_2 & \Vc{0} \\ 
   \end{pmatrix}\\
 \end{equation}
-This is simply the computation
-{\small \begin{equation}
-  \Vc{C}_0 = \Vc{A}_{1} \Vc{B}_{2}; \;
-  \Vc{C}_1 = \Vc{A}_{0} \Vc{B}_{1}; \;
-  \Vc{C}_2 = \Vc{A}_{3} \Vc{B}_{2}; \;
-  \Vc{C}_3 = \Vc{A}_{2} \Vc{B}_{1}
+This is the computation {\small \begin{equation} \Vc{C}_0 = \Vc{A}_{1}
+    \Vc{B}_{2}; \; \Vc{C}_1 = \Vc{A}_{0} \Vc{B}_{1}; \; \Vc{C}_2 =
+    \Vc{A}_{3} \Vc{B}_{2}; \; \Vc{C}_3 = \Vc{A}_{2} \Vc{B}_{1}
 \end{equation}}
-and in general with proper $\gamma_i$ (i.e., a mask):
+and in general with proper $\gamma_i$ (i.e., a mask)
 \begin{equation}
   \Vc{C}_i = \sum_{k=0}^1 \Vc{A}_{2i+ k} \big(\gamma_{2*k+i} \Vc{B}_{2*k+i}\big)
 \end{equation}
@@ -225,44 +222,42 @@ based on AMD AIE2 products and we support others.  For example,
   \Vc{B} = \dot{\sum}_i \gamma_i \Vc{B}_i, \;\; \gamma_i \in \{0,1\} 
 \end{equation}
 
-This is a well known data structure in the sparse computation field:
-We can use Compress Block Row or Column format (CBR). There are
-standard Matrix Sparse-Matrix Multiplication interfaces and algorithms
-for CPU and GPUs using this data format (where only one operand is
-sparse or both) \cite{rocSPARSE,cuSPARSE}.
+This is a well known data structure in the sparse computation field.
+We can use {\em compress block row} (CBR) or {\em }column format
+(CBC). There are standard matrix sparse-matrix multiplication
+interfaces and algorithms for CPU and GPUs using this data format
+(where only one operand is sparse or both) \cite{rocSPARSE,cuSPARSE}.
 
 We explore training techniques (PyTorch and the Keras).  The most
-successful so far is the simplest: we take a pre-trained model, we
-compute a $\Gamma$ per layer using a function to determine the blocks
-more likely to be zeros (Norm) and then we train the model till
-convergence or accuracy achieved. We take the sparse model and we
-quantize to 8-bit integer computations by using the Vitis-AI
-quantizer. The final model is a Xilinx IR quantized model. See Section
+successful is the simplest. We take a pre-trained model. We compute a
+$\Gamma$ per layer using a function to determine the more likely zeros
+blocks (using a Norm). Then we train the model till convergence or
+accuracy achieved. We take the sparse model and we quantize to 8-bit
+integer computations with the Vitis-AI quantizer. The final model is a
+XIR quantized model (Xilin intermediate representation). See Section
 \ref{sec:training}. We have a custom compiler that takes the XIR model
 and an abstraction of a connected set of AIE2. See Section
-\ref{sec:compiler}. Given the HW and per layer, the compiler computes
-the maximum sub-volume computation per core. By heuristics and
-following a schedule, it computes a memory allocation in mem-tile for
-input, outputs, and weights. It formats the weights so that to exploit
-spatial distribution to Mem-tiles and cores into a single compacted
-tensor. We generate all the explicit communications between DDR,
-MemTile, and cores. Knowing the subproblem sizes per core and the
-computation throughput and with a clear specification of what is
-executed in parallel: we can estimate the execution time per layer and
-of the entire network with an accuracy closer to a simulation.  We
-shall use this in order to write time estimates for all parts of the
-computation: we shall show estimates for three CNN models, a eight
-different AIE designs; see Section \ref{sec:experiments}.
+\ref{sec:compiler}. The compiler computes the maximum sub-volume
+computation per core. By heuristics and following a schedule, it
+computes a memory allocation in memtile for input, outputs, and
+weights. It formats the weights exploiting spatial distribution to
+memtiles and cores. We generate all the explicit communications
+between DDR, memtile, and cores. We Know the subproblem sizes per
+core, the computation throughput and with a clear specification of
+what is executed in parallel. Then, we can estimate the execution time
+per layer and entire network with an accuracy closer to a simulation.
+We compute time estimates for all parts of the computation. We will
+show estimates for three CNN models and eight different AIE designs;
+see Section \ref{sec:experiments}.
 
-In the following Section \ref{sec:motivation}, we shall start with a
-quantitative measure about the advantages of block sparsity in
-general.
+In the following Section \ref{sec:motivation}, we start with a
+quantitative measure about the advantages of block sparsity.
 
 \section{Block-Sparse Matrix-Matrix Multiplication}
 \label{sec:motivation}
 
- As thought experiment, consider $\Gamma$ and $\Omega$ two appropriate
- 0,1 matrices so that for square matrices in $\R^{N\times N}$
+As a thought experiment, consider $\Gamma$ and $\Omega$ two matrices
+in $\{0,1\}^{N\times N}$.
 \begin{equation}
   \Vc{C} = (\Gamma \Vc{A}) * (\Omega \Vc{B})^t
 \end{equation}
@@ -273,18 +268,20 @@ More precisely, consider non-zero blocks of size $k\times k$ so that
 
 
 Thanks to the sparsity and if we store only non-zeros, then
-$\gamma_{i*N+k}$ and $\dot{\omega}_{j*N+k}$ are at the very least
-contiguous. There will be a meaningful product to compute if and only
-if $\gamma_{i*N+k} =1$ and  $\dot{\omega}_{j*N+k} =1$.  We merge-sort
-these vectors.  See how the Sparse Sparse Matrix multiplication using
-Coordinate Block Structure (COO) is applied for example in
-in Figure \ref{fig:block}. We shall provide software to reproduce this. % \cite{PaoloG2020}.
-Now, the quantitative part, assume we want to
-achieve a fixed sparsity (i.e., density) of 50\% for a square matrix
-of size $N$ and we choose the block size $k \times k$. The larger $k$
-is, the smaller the overhead will be.  The relative performance of the
-$k^3$ multiplication is better as $k$ get larger because spatial and
-temporal locality and optimized code for a constant/parameterized $k$.
+$\gamma_{i*N+k}$ and $\dot{\omega}_{j*N+k}$ are at contiguous. There
+will be a meaningful product to compute if and only if $\gamma_{i*N+k}
+=1$ and $\dot{\omega}_{j*N+k} =1$.  We merge-sort these vectors.  See
+how the sparse sparse matrix multiplication using {\em Coordinate
+  Block Structure} (COO) is applied in Figure \ref{fig:block}.
+\begin{comment}
+  We provide software to reproduce this. % \cite{PaoloG2020}.
+\end{comment}
+Now, assume we want to achieve a fixed sparsity (i.e., density) of
+50\% for a square matrix of size $N$ and we choose the block size $k
+\times k$. The larger $k$ is, the smaller the overhead will be.  The
+relative performance of the $k^3$ multiplication is better as $k$ get
+larger because spatial, temporal locality, and further optimized code
+for a constant/parameterized such as $k$.
 
 \doublefigure{0.80}{1x1.png}{8x8.png}{Block 1x1 and 8x8
   performance}{fig:block}
@@ -292,12 +289,12 @@ temporal locality and optimized code for a constant/parameterized $k$.
 In Figure \ref{fig:block}, we present two scatter plots: on the
 abscissa the effective multiplication-and-addition number, on the
 ordinate the performance in GFLOPS, when the sparse matrix with dense
-block is 1x1 and 8x8. Given the same problem, we may use more threads
-and thus the Jenga effect.  With the same number of effective
-operations, the block permits and exploits higher GFLOPS per effective
-operation (Float is 2x faster than Double precision and this can be
-emphasized further \cite{Gray2017GPUKF,li2023popsparse} and \cite{pmlr-v119-kurtz20a}).
-
+block is $1\times 1$ (above) and $8\times8$ (below). Given the same
+problem, we deploy more threads and thus the Jenga effect.  With the
+same number of effective operations, the block permits and exploits
+higher GFLOPS per effective operation (Float is 2x faster than Double
+precision and this can be emphasized further
+\cite{Gray2017GPUKF,li2023popsparse} and \cite{pmlr-v119-kurtz20a}).
 
 
 \section{Block Sparsity: Training and Quantization}
@@ -305,40 +302,38 @@ emphasized further \cite{Gray2017GPUKF,li2023popsparse} and \cite{pmlr-v119-kurt
 
 In Convolutional Neural Networks, the two main operations are
 convolutions/correlations and fully connected layers (matrix
-multiplication). The block sparsity we are seeking to deploy is not
-naturally recurring and  we must train the network for it.
+multiplication). The block sparsity we plan to deploy is not naturally
+recurring.  We must train the network for it.
 
-First, let us clarify block sparsity for convolution weights, then we
-clarify our training process. A convolution has a weight tensor in
-four dimension: $\Vc{W} \in \R^{c_{out}\times h \times k \times
-  c_{in}}$. In the hyperplane of the $h$ and $k$, 
-  we can simplify the weight as $\dot{\Vc{W}} \in \R^{c_{out}
-  \times c_{in}}$ and block sparsity can be simply described by a mask
-$\Gamma\dot{\Vc{W}}$. Although, we speak of a $8\times 8$ of non
-zeros, this is in practice a $8\times h\times k\times 8$ block. For
-the matrix multiply $h=k=1$, there is no difference from the
-previous discussions.
+A convolution has a weight tensor in four dimension: $\Vc{W} \in
+\R^{c_{out}\times h \times k \times c_{in}}$. In the hyperplane of the
+$h$ and $k$, we can simplify the weight as $\dot{\Vc{W}} \in
+\R^{c_{out} \times c_{in}}$ and block sparsity can be simply described
+by a mask $\Gamma\dot{\Vc{W}}$. Although, we speak of a $8\times 8$ of
+non-zeros, this is in practice a $8\times h\times k\times 8$
+block. For the matrix multiply $h=k=1$, there is no difference from
+the previous discussions. We explain the training process.
 
 
 \subsection{Keras}
 We shall provide a repository using Keras \cite{chollet2015keras}
 where we implements the contents of this section. %\cite{PaoloK2020}.
 
-We target convolutions only and without quantization. The idea of the
-framework is simple: we take any model and we create a copy where we
-enhance the convolution with a (non-trainable) $\Gamma$. A convolution
-will have three parameters (saving the model into a different format).
-The forward computation is modified so that the weights used for
+We target convolutions only and without quantization. The idea is
+simple: we take any model and we create a copy where we enhance the
+convolution with a (non-trainable) $\Gamma$. A convolution will have
+three parameters (saving the model into a different format).  The
+forward computation is modified so that the weights used for
 convolution are $\Gamma\Vc{W}$. We assume the backward computation
 (i.e., gradient) is done automatically from the forward
 definition. There is no need to change the bias. For example, we take
-Resnet50 from the keras application repository, we start with a
+Resnet50 from the Keras application repository, we start with a
 $\Gamma=1$, and we trained one epoch using imagenet repository
-\cite{deng2009imagenet}.  The goal is to choose $\Gamma$ so that we
-achieve the required sparsity and to have the minimum loss in
-accuracy. Using this repository, we can test different ways to train
-but we skip for lack of space (incremental, Fisher measure, Hessian,
-diagonal Hessian, penalty losses).
+\cite{deng2009imagenet}.  The goal is to choose $\Gamma$ in such a way
+we achieve the required sparsity and the minimum loss in accuracy. We
+can tested different approaches such as incremental, Fisher measure,
+Hessian, diagonal Hessian, and custom penalty losses. We will give
+full description in another venue.
 
 \subsection{$\Gamma$ chosen once and full training ahead: PyTorch}
 \label{sec:one-mask}
@@ -348,18 +343,18 @@ $\gamma_i$, this will be representative of a block $\Vc{W}_i \in \R^{8
   \times h \times w \times 8} \sim \R^{8\times 8}$. We can choose the
 $\Vc{W}_i$ using a measure of importance:
 \begin{itemize}
-  \item $L_2 = \sqrt{\sum_k w_k^2}$ with $w_k$ elements of $\Vc{W}_i$,
-  \item $L_1 = \sum_k |w_k|$,
+  \item $L_2 = \sqrt{\sum_k w_k^2}$ with $w_k \in \Vc{W}_i$,
+  \item $L_1 = \sum_k |w_k|$ as above,
   \item Variance $\sigma^2 = \frac{1}{64}\sum_k (w_k -\mu)^2$ with
-    $\mu = \frac{1}{64}\sum w_k $ or $\frac{1}{N}\sum w_k$ (the whole
-    tensor). In signal processing $\sigma^2$ is the power of the
-    signal.
+    $\mu = \frac{1}{64}\sum w_k, w_k \in \Vc{W}_i $ or $\frac{1}{N}\sum
+    w_k, w_k \in \Vc{W}$. In signal processing $\sigma^2$ is the power
+    of the signal.
 \end{itemize}
-We can then sort them in ascending order and for example choose the
-first 50\% to set to zero. Then we start re-training. We do this for
-the whole network or for one convolution at a time. 
+We can then sort them in ascending order. We set the first half to
+zero.  Then we start re-training. We do this for the entire network or
+for one convolution at a time.
 
-In Table \ref{tab_acc}, we show the results by using one-time masks
+In Table \ref{tab_acc}, we show the results by using one-time mask
 and full training: VGG-16, ResNet-50, Inceptionv3 on ImageNet20 (20
 classes) and ImageNet1k (1000 classes).  We use three samples per
 class for the validation accuracy for ImageNet1k data set; instead, we
@@ -402,75 +397,69 @@ Classification accuracy on ImageNet1k drops by only 1 - 2\% after
 applying 50\% sparsity with a $8\times 8$ block (this is without any
 quantization). We experiment with different block shapes such as
 $16\times 4$ and $4\times 16$ on ResNet-50, but the accuracy is
-slightly worse compared to block of $8\times 8$. Fine-grained sparsity
-($1\times 1$ block) does not sacrifice any accuracy (i.e., almost
-any).  We use the sparsified models, we quantize them using Vitis AI,
-and we shall use it for time estimates (i.e., Section
-\ref{sec:experiments}).
+slightly worse. Fine-grained sparsity ($1\times 1$ block or
+unstructured) does not sacrifice any accuracy (i.e., almost any).  We
+use the sparsified models, we quantize them using Vitis AI, and we use
+them for time estimates (i.e., Section \ref{sec:experiments}).
 
 
 \section{The Compiler and its Code generation for AIE}
 \label{sec:compiler}
-Within our Xilinx/AMD effort, we can take a PyTorch/Keras model,
-quantize it using Vitis AI, and create an intermediate representation
-that we call Xilinx Intermediate Representation (XIR). This is a graph
-where each node is an operation that reads tensors and writes one
-tensor. A convolution has one quantized input: we use the tensor
-layout format BHWC, the tensors are represented in INT8 with a
-position where the fraction starts (power of two scale). It computes a
-tensor using the same layout as the input and with a proper scale. The
-weights and bias are properties of the convolutions, as such they can
-be tailored; the layout of the weight tensor is $COUT\times h \times w
-\times CIN$, which is similar to the caffe layout \cite{Caffe}
-(different from \cite{tensorflow}). For this project, we are at the
-third generation of a compiler for custom architectures.
+We can take a PyTorch/Keras model, quantize it using Vitis AI, and
+create an intermediate representation that we call Xilinx Intermediate
+Representation (XIR). XIR is a graph where each node is an operation
+that reads tensors and writes one tensor.  A convolution has one
+quantized input.  We use the tensor layout format BHWC, the tensors
+are represented in INT8 with a position where the fraction starts
+(power of two scale). It computes a tensor using the same layout and
+with a proper scale. The weights and bias are properties of the
+convolutions. they can be tailored.  The layout of the weight tensor
+is $COUT\times h \times w \times CIN$, which is similar to the caffe
+layout \cite{Caffe} (different from \cite{tensorflow}). 
 \begin{comment}
   (previously DPUV1 and DPUV3int8
   \cite{10.11451/3473334,abs-2110-04327}).
 \end{comment}
 
-The main difference is the
-ability to represent a parameterized block sparsity (block size and
-overall sparsity ratios) and the capability to split these tensors
-when we split the computation. All weights are statically prepared
-into DDR and we move them explicitly towards the inner levels. Inputs
-and outputs have designated space in DDR. DDR can and it will be used
-for tensors spills.  The memory allocation to Mem-Tile is basically
+The main differences from our previous compilers are the parameterized
+representation of block sparsity and the capability to split tensors
+and computations accordingly. All weights are statically prepared into
+DDR and we move them explicitly towards the inner levels. Inputs and
+outputs have designated space in DDR. DDR can and it will be used for
+tensors spills.  The memory allocation to memtile is basically
 coloring algorithms and some heuristics. In this architecture, we do
-not allow {\em streaming} of neither data or weights (because they
-share space in Mem-Tile). In a previous architecture, we could.
+not allow {\em streaming} of neither data nor weights (because they
+share space in memtile and input and output have different
+consumption/production rates).
 
-\subsection{AIE Hardware abstraction}
+\subsection{AIE Hardware Abstraction}
 
 \singlefigure{0.70}{AIE.png}{4x4 AIE representation}{fig:aie}
 
-For this presentation, see Figure \ref{fig:aie}, we work with a mesh
-of 4x4 AIE2 cores connected by 4 horizontal and 4 vertical
-interconnections (we shall presents estimates for square 2x2,
-.. $i\times i$ .. 8x8 and rectangular shapes are in the works). Each
-core has 8 banks memories for a total 64KB. About 6 banks are used as
-input/output/weight buffers and 2 banks are used as temporary space
-for kernels. Each core can request and send data to its direct
-neighbors (if aware of connection and control). Double buffering as
-ping/pong is commonly used for inputs and outputs.
+see Figure \ref{fig:aie}, we work with a mesh of 4x4 AIE2 cores
+connected by 4 horizontal and 4 vertical interconnections.  We present
+estimates for square 2x2, .. $i\times i$ .. 8x8 and rectangular shapes
+are in the works. Each core has 8 banks memories for a total 64
+KB. About six banks are used as input/output/weight buffers and two
+banks are used as temporary space for kernels. Each core can request
+and send data to its direct neighbors (if aware of connection and
+control). Double buffering using ping/pong is used for inputs and
+outputs.
 
-There are four mem-tiles: each 512KB and each can either be connected
-to one columns and its direct neighbor column, or it can be connected
-to a row and its neighbor. The total amount of space is 2MB. Memtile
-is a circular buffer to exploit more flexible allocation, implicitly a
-$2 \times 2$ architecture will have one memtile per column and a total
-of two (1MB).
+There are four memtiles: each 512 KB and each is connected to one
+columns and its direct neighbor column, or it is connected to a row
+and its neighbor. The total amount of space is 2 MB. Memtile is a
+circular buffer to exploit more flexible allocation. Note a $2 \times
+2$ architecture will have one memtile per column and a total of two
+memtiles (1 MB).
 
 A Memtile can broad-cast data per column or per row. We can dedicate a
-memtile for weights, one for activations, or we can share. We shall
-show mostly shared configurations. To maximize the computation
-parallelism, every core will write data per column into memtile: there
-are different designs that can be used. We shall explore the case
-where Inputs/Outputs/Weights are evenly distributed across mem-tiles
-although the distribution is different per tensor.
+memtile for weights, one for activations, or we can share. We use
+shared configurations. To maximize the computation parallelism, every
+core will write data per column into memtile.
 \begin{comment}
-The DDR is connected with two channels to write into each mem-tile and
-each mem-tile can use two channels to write into DDR. DDR and Mem-tile
+The DDR is connected with two channels to write into each memtile and
+each memtile can use two channels to write into DDR. DDR and memtile
 communications are parallel.  The abstraction can be extended to more
 complex connections (from $1\times 1$, $8\times 2$, to $8\times 8$ and
 more rows of memtiles designed for larger chips). But $4\times 4$ is
@@ -478,47 +467,48 @@ representative for the AIE engines you will find in the next
 generation of CPU+FPGA chips.
 \end{comment}
 
-\subsection{Sub Volume, Data compression and Data Movement}
-The computation is split by column (cores columns): each output tensor
-is split evenly by width, so each memtile will store different columns
-by width, each core will compute different output channels, and the
-computation streams computing the height of the tensor by using core
-input and output ping/pong. As often as possible, we store the weights
-in the core and we reuse them as much as possible (unless we need to
-stream the weight instead). The set of cores is a cohort and we always
-choose symmetric computations. This means that we do not merge two
-operations like convolution and max-pool and give three columns to
-convolution and one column to max-pool.
+
+\subsection{Subvolumes, Data Compression, and Data Movements}
+The computation is split by column (cores columns). The output tensor
+is split evenly by width. Each memtile will store different columns by
+width, each core will compute different output channels, and the
+computation streams computing by rows the tensor and using ping/pong
+double buffering. As often as possible, we store the weights in the
+core and we reuse them (unless we need to {\em stream} the weight
+instead). The cores set is a cohort and we always choose symmetric
+computations. We do not merge two operations like convolution and
+max-pool and give three columns to convolution and one column to
+max-pool. Other solutions in the literature address this approach.
 
 If we have the inputs, output, and weights in memtile, what is the
 largest computation we can do in the AIE? The minimum computation is
-at least one output channel and one row (by height). If this is not
+one output channel and one row (i.e, by height). If this is not
 possible, we try to reduce the size of the width (e.g., shaping the
 tensor in memtile by using DDR spills) and we can manage to split the
 input channels and to split the weights accordingly and prepare for
 accumulattion. We call W-Split the distribution of tensor by columns
-in the AIE mesh. We can COUT-split, this will require the partial
-transfer of weights (but we can stream by height).  We can CIN-split
-when we need to split by input channel, this is the last resort
-because it is also the most expensive (accumulation of the
-outputs).
+in the AIE mesh. We can COUT-split, this requires the partial transfer
+of weights.  We can CIN-split when we need to split by input channel,
+this is the last resort because it is also the most expensive
+(accumulation of the outputs).
 
-At this stage, the subvolume describes the smallest shape of the
-weights we need to manage. We compress the weight accordingly to such
-a subvolume so that any data movement will always be a multiple of the
-subvolume and can be a single load. Such a compress data will have the
-same properties whether it is sparse or dense. Of course, sparse data is
-smaller and we compute fewer operations.
+The subvolume describes the smallest shape of the weights we need to
+manage and the largest computation in the core. We compress the weight
+accordingly. Any data movement will always be a multiple of the
+subvolume and is a single load. Such a compressed data will have the
+same properties whether it is sparse or dense. The sparse data is
+smaller, we compute fewer operations, we can compute larger
+subproblems, and fewer data movements.
 
 
 \subsection{Schedule and memory allocation}
-During the scheduling of each layer, we evaluate what can fit in mem
-tile. Here, activation and weight tensors share the space. It means
-that an input tensor is distributed among the memtiles identified by
-one starting address and a final address and so the weights. At each
-step the memory allocation will check if we can allocate. If we
-cannot, we evict all tensors into DDR and then split/time the
-computation. 
+During the scheduling of each layer, we evaluate what tensors can fit
+in memtile. Here, activation and weight tensors share the space. It
+means that an input tensor is distributed among the memtiles
+identified by one starting address and a final address and so do the
+weights. At each step, the memory allocation will check if we can
+allocate. If we cannot, we evict all tensors into DDR and then
+split/time the computation.
 
 At the end of this stage, every tensor will be associated to an
 address in memtile or DDR (or both). If there are only DDR addresses,
@@ -529,36 +519,35 @@ order). Every computation will have its data movements for the first
 two levels of the memory hierarchy. The heuristics have a simple
 objective: find the largest problem fitting the memory level.
 
-We use an implementation that takes a recursive approach in tiling: %\cite{abs-2110-04327}
-For clarity, $\sum$ is a sum or reduction and
+%\cite{abs-2110-04327}
+We use an implementation that takes a recursive approach in tiling.
 $\dot{\sum}$ is a parallel loop and a W-split can be written as
+follows:
 \begin{equation}
   \Vc{Y} =  Conv(\Vc{X},\Vc{W}) = \dot{\sum}_w
   Conv(\Vc{X}_w,\Vc{W})
 \end{equation}
-The split is pre-computed as function of the foot print, before and
+The split is pre-computed as function of the footprint, before and
 after each convolution there will be an explicit data movement. At
-this stage each input, output, and weights will have addresses
-associated with each sub-computation. Then the code generation of each
-$Conv(\Vc{X}_w,\Vc{W})$ is independent and, recursively and as needed,
+this stage each input, output, and weights have addresses associated
+with each sub-computation. Then the code generation of each
+$Conv(\Vc{X}_w,\Vc{W})$ is independent and, recursively as needed,
 there will be specific splits of the computation accordingly. This is
-a tree (i.e, a root with $w$ children instead of a loop with $w$
-iterations, we do not have support for loops at this level). If the
-convolution has strides and large kernel, each sub-convolution may
-have overlap data but defined addresses and data movement if
-necessary. For example, computing the output by rows and the weights
-are reused.
+a tree. If the convolution has strides and large kernel, each
+sub-convolution has overlap data; however, the sub-convolution has
+defined addresses and data movements. For example, computing the
+output by rows and the weights are reused.
 
 Note scheduling and memory allocation among layers is a hard problem
-and often barely addressed by other systems. We addressed as first
+and often barely addressed by other systems. We addressed as our first
 requirements.
 
 \subsection{Code Generation }
-The compiler recursively creates a list of operations smaller and
-smaller that can actually be executed Mem-Tile to Mem-Tile. In
-practice, there is a further decomposition using only AIE cores but it
-is completely determined by the subvolume computation. Here, we shall
-show how we produce the execution time estimates as in Figure
+The compiler creates recursively a list of operations. These
+operations are smaller and smaller and they can be executed memtile to
+memtile. There is a further decomposition using only AIE cores and it
+is completely determined by the subvolume computation. Here, we show
+how we produce the execution time estimates as in Figure
 \ref{fig:singleconvestimate}.  This is the computation of a
 convolution with top/bottom padding by height:
 \begin{equation}
@@ -567,91 +556,87 @@ convolution with top/bottom padding by height:
 \end{equation}
 
 An important feature of the current system is the concept of {\bf
-  iteration} between mem-tile and core: Using locks and chaining them
-(locks like in semaphores): We can write a single instruction from the
-prospective of a single core (as a SIMD instruction) but driving all
-cores at once (ASM-like code) for multiple iterations ($\dot{\sum}_{h=1}^i
-Conv(\Vc{X}_w)$):
+  iteration} between memtile and core.  Using locks and chaining the
+locks, we write a single instruction from the prospective of a single
+core (as a SIMD instruction) and driving all cores at once (ASM-like
+code) for multiple iterations ($\dot{\sum}_{h=1}^i Conv(\Vc{X}_w)$):
 
 {\small %footnotesize
 \begin{verbatim}
-  LOADFM Lock k_0 mem-tile addr core addr iter i
+  LOADFM Lock k_0 memtile addr core addr iter i
   CONV iteration      i
-  WRITEFM Lock k_1 mem-tile addr core addr iter i
+  WRITEFM Lock k_1 memtile addr core addr iter i
 \end{verbatim}
 } There is an implicit lock (say \verb2k_x2) that is used for the pong
-and the system cycles in between locks (\verb2k_x2 and \verb2k_02).
+and the system cycles between locks (\verb2k_x2 and \verb2k_02).
 These three operations will be execute a number of iterations {\em i}
-and using a ping/pong they will load different slices of data and
+and, using a ping/pong, they will load different slices of data and
 compute different slices of data.
 
-In our environment padding is common and we can manage by a custom
-load (from memtile to core) and this requires a custom load that will
-not be repeated {\small %\footnotesize
+Padding is common and we can manage it by a custom load (from memtile
+to core) and this load will not repeat {\small
+  %\footnotesize
 \begin{verbatim}
   ## Head top pad < 50 us First comp block
-  LOADFM Lock k_0 mem-tile addr_0 core addr iter 1
+  LOADFM Lock k_0 memtile addr_0 core addr iter 1
   CONV iteration 1
-  WRITEFM Lock k_1 mem-tile addr_1 core addr iter 1
+  WRITEFM Lock k_1 memtile addr_1 core addr iter 1
   ## Body iteration > 50 us < 150 us
   ## k_0 -> k_2 -> k_4 Lock Chain
-  LOADFM Lock k_2 mem-tile addr_2 core addr iter 9
+  LOADFM Lock k_2 memtile addr_2 core addr iter 9
   CONV iteration 7
-  WRITEFM Lock k_3 mem-tile addr_3 core addr iter 9
+  WRITEFM Lock k_3 memtile addr_3 core addr iter 9
   ## tail bottom pad > 150 us Last computation block
-  LOADFM Lock k_4 mem-tile addr_4 core addr iter 1
+  LOADFM Lock k_4 memtile addr_4 core addr iter 1
   CONV iteration 1
-  WRITEFM Lock k_5 mem-tile addr_5 core addr iter 1
+  WRITEFM Lock k_5 memtile addr_5 core addr iter 1
 \end{verbatim}
- } See Figure \ref{fig:singleconvestimate} for how this code will play
-out in practice. At this stage we have all the information we
-need. Per layer, the code generation is a two pass process: first, we
-generate code for the all load/store and then we combine them into
-chains having dependency so that to be logically correct and as fast as
-possible. Take the code above and we introduce a chain information.
-\singlefigure{0.8}{singledenseconv.png}{Resnet single convolution
-  with padding for 4x4: legend AIE: LOAD Activation DDR to Mem, LOADW
+ } We present in Figure \ref{fig:singleconvestimate} the execution of
+this code. At this stage we have all the information. Per layer, the
+code generation is a two pass process. First, we generate code for the
+all loads/stores. Second we combine them into chains with dependency,
+logically correct and as fast as possible.
+\singlefigure{0.8}{singledenseconv.png}{Resnet single convolution with
+  padding for 4x4: legend AIE: LOAD Activation DDR to Mem, LOADW
   weights DDR to Mem, LOADFM Activation Mem to AIE2 cores, LOADWM
   weights Mem to AIE2, WRITE Mem to DDR, WRITEFM AIE2 to Mem, COMP
   Computation }{fig:singleconvestimate}
 
 
 \subsection{Time Estimation}
-At this stage, we need to explain how we can capture the execution
-time and visualize it as in Figure \ref{fig:singleconvestimate}. %\ref{fig:estimate-dense}.
+We explain how we capture the execution time and visualize it as in
+Figure \ref{fig:singleconvestimate}. %\ref{fig:estimate-dense}.
 
-We start by the Time estimates for DDR to Mem-Tile. We have two
-communication types: activations and weights. Per mem-tile there are
-two dedicated channels.
+We start by the time estimates for DDR to Memtile communications. We
+have two communication types: activations and weights. Per memtile
+there are two dedicated channels.
 \begin{itemize}
- \item If we share activations and weights in the same mem-tile, we
-   can use one channel for activations and one for weights. Thus the
-   loads from DDR to MEM-tile (LOAD and LOADW) are parallel with a
-   bandwidth of 4GB/s. Writes from mem-tile to DDR (WRITE) can use
-   both channels (8GB/s). 
+ \item If we share activations and weights in the same memtile, we can
+   use one channel for activations and one for weights. Thus the loads
+   from DDR to memtile (LOAD and LOADW) are parallel with a bandwidth
+   of 4 GBps. Writes from memtile to DDR (WRITE) can use both channels
+   (8 GBps).
 
- \item If activations and weights go to different mem-tiles (2 and 2),
-   each load is parallel and 8GB/s. Writes
-   are identical.
+ \item If activations and weights go to different memtiles (for
+   example two and two), each load is parallel and 8 GBps. Writes are
+   identical.
 \end{itemize}
-Although, mem-tile are circular buffers to improve the memory
-allocation, the streaming  is not applicable
-here. % as \cite{abs-2110-04327}.
+Memtile are circular buffers so we can manage better the memory
+allocation; however,  we do not allow the streaming. % as \cite{abs-2110-04327}.
    
 
-The Memtile connections with AIE cores can be designed differently. We
-assume here a few channels with again 4GB/s bandwidth. One memetile
-can broad cast inputs to a cores column (and to the nearest
-neighbor). These communications are for activations (LOADFM). One
-Memtile can broadcast to rows of cores (or the nearest neighbor),
-these are for weights (LOADWM). We assume that the column and row
-communications are parallel and each memtile core connection is
-parallel.
+The Memtile connections with AIE cores are different. We assume a few
+channels with again 4 GBps bandwidth. One memetile can broadcast
+inputs to a cores column (and to the nearest neighbor). These
+communications are for activations (LOADFM). One Memtile can broadcast
+to rows of cores (or the nearest neighbor), these are for weights
+(LOADWM). We assume that the column and row communications are
+parallel and each memtile core connection is parallel.
 
-Every communication with iteration 1 is synchronous and sequential:
+Every communication with iteration one is synchronous and sequential:
 the load, convolution, and store is executed one after the other but
 every core is independent.  For synchronization and for bookkeeping,
-we assume that AIE2 weights communication (from memtile) to core are
+we assume that AIE2 weights communications (from memtile) to core are
 synchronous and halting.
 
 Every communication with iteration larger than one, we assume that
@@ -662,11 +647,11 @@ multiplied by the number of iterations.
 We estimate the execution time of a subvolume by the number of
 operations divided by the maximum number of operations per cycle which
 is in our scenario: $4\times 8 \times 8 = 256 $ operations per cycle
-and 1GHz frequency. This is obviously a very optimistic
-validation. The execution time is a feature of the analysis but for us
-the estimate of the communications is more compelling and we can
-easily mute the computation contribution. Note however, that sparsity
-really reduces the computation time. 
+and 1 GHz frequency. This is very optimistic. The execution time is a
+feature of the analysis. The estimate of the communications is
+more compelling and we can easily mute the computation
+contribution. Note however, that sparsity really reduces the
+computation time.
 
 We do not account the wait and synchronization which are necessary to
 reprogram the fabric. These are very expensive running on a few
@@ -687,10 +672,10 @@ It is clear from the Figures above that there are three computations
 actually one load per memtile for a total of 4 loads per activations
 and 4 loads for weights. Because each load is to a different
 memtile, they are parallel.  The activation and weights communications
-are using two different channels and then are in parallel with 4GB/s
+are using two different channels and then are in parallel with 4 GBps
 bandwidth.
 
-There is a single load of the weights from mem-tiles to each
+There is a single load of the weights from memtiles to each
 core. This is done once and it is blocking (LOADWM) but it can be as
 easily made non blocking and parallel to the activations. There is a
 computation using padding (top-padding) and you can see the sequential
@@ -758,11 +743,11 @@ Inception V3, and VGG16.
 When we generate the code for each instruction, we compute the
 execution time. So if we inspect the assembly code we will find time
 information in the context whether or not each instruction contribute
-directly. For data movement to and from DDR and mem-tile, we reduce
+directly. For data movement to and from DDR and memtile, we reduce
 the contribution (sum directly). There is no streaming or
 communication overlapping, thus the sum.
 
-For mem-tile to and from core communications and core computations, we
+For memtile  to and from core communications and core computations, we
 create a time series. We explain in the previous section how we
 account for the execution time for instruction with and without
 iterations. All of this will be an attribute of the layer (node in the
