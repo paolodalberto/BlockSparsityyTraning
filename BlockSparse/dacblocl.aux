@@ -36,9 +36,9 @@
 \@writefile{toc}{\contentsline {section}{\numberline {3}Block Sparsity: Training and Quantization}{2}{section.3}\protected@file@percent }
 \newlabel{sec:training}{{3}{2}{Block Sparsity: Training and Quantization}{section.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Keras}{2}{subsection.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}$\Gamma $ chosen once and full training ahead: PyTorch}{2}{subsection.3.2}\protected@file@percent }
-\newlabel{sec:one-mask}{{3.2}{2}{$\Gamma $ chosen once and full training ahead: PyTorch}{subsection.3.2}{}}
-\newlabel{sec:pytorch}{{3.2}{2}{$\Gamma $ chosen once and full training ahead: PyTorch}{subsection.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}$\Gamma $ Chosen Once and Full Training Ahead: PyTorch}{2}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:one-mask}{{3.2}{2}{$\Gamma $ Chosen Once and Full Training Ahead: PyTorch}{subsection.3.2}{}}
+\newlabel{sec:pytorch}{{3.2}{2}{$\Gamma $ Chosen Once and Full Training Ahead: PyTorch}{subsection.3.2}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Accuracies of the sparsity models\relax }}{2}{table.caption.5}\protected@file@percent }
 \newlabel{tab_acc}{{1}{2}{Accuracies of the sparsity models\relax }{table.caption.5}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}The Compiler and its Code generation for AIE}{3}{section.4}\protected@file@percent }
@@ -47,10 +47,11 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 4x4 AIE representation\relax }}{3}{figure.caption.6}\protected@file@percent }
 \newlabel{fig:aie}{{2}{3}{4x4 AIE representation\relax }{figure.caption.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Subvolumes, Data Compression, and Data Movements}{3}{subsection.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Schedule and memory allocation}{3}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Schedule and Memory Allocation}{3}{subsection.4.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Code Generation }{4}{subsection.4.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Resnet single convolution with padding for 4x4: legend AIE: LOAD Activation DDR to Mem, LOADW weights DDR to Mem, LOADFM Activation Mem to AIE2 cores, LOADWM weights Mem to AIE2, WRITE Mem to DDR, WRITEFM AIE2 to Mem, COMP Computation \relax }}{4}{figure.caption.7}\protected@file@percent }
-\newlabel{fig:singleconvestimate}{{3}{4}{Resnet single convolution with padding for 4x4: legend AIE: LOAD Activation DDR to Mem, LOADW weights DDR to Mem, LOADFM Activation Mem to AIE2 cores, LOADWM weights Mem to AIE2, WRITE Mem to DDR, WRITEFM AIE2 to Mem, COMP Computation \relax }{figure.caption.7}{}}
+\newlabel{eq:convpadding}{{8}{4}{Code Generation}{equation.4.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Resnet single convolution with padding for 4x4: legend AIE: LOAD activation from DDR to memtile, LOADW weights from DDR to memtile, LOADFM activation from memtile to AIE2 cores, LOADWM weights from memtile to AIE2, WRITE from memtile to DDR, WRITEFM from AIE2 to memtile, COMP Computation. \relax }}{4}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:singleconvestimate}{{3}{4}{Resnet single convolution with padding for 4x4: legend AIE: LOAD activation from DDR to memtile, LOADW weights from DDR to memtile, LOADFM activation from memtile to AIE2 cores, LOADWM weights from memtile to AIE2, WRITE from memtile to DDR, WRITEFM from AIE2 to memtile, COMP Computation. \relax }{figure.caption.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Time Estimation}{4}{subsection.4.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Convolution example}{5}{subsection.4.6}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Resnet single convolution with padding and sparsity for 4x4 AIE \relax }}{5}{figure.caption.8}\protected@file@percent }
@@ -90,3 +91,4 @@
 \@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions and Context}{6}{section.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{References}{6}{section*.11}\protected@file@percent }
 \newlabel{TotPages}{{6}{6}{}{page.6}{}}
+\gdef \@abspage@last{6}
