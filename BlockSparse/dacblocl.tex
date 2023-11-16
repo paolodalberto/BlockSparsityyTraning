@@ -646,37 +646,41 @@ milliseconds.
 \subsection{Convolution example}
 \singlefigure{0.999}{singlesparseconv.png}{Resnet single convolution
   with padding and sparsity for 4x4 AIE }{fig:singleconvestimate2}
-Here and in Figure \ref{fig:singleconvestimate} and
-\ref{fig:singleconvestimate2}, we give a full convolution example with
-and without sparsity. In this way, we can explain how the time is
-really estimated and also how the hardware works in principle.
 
-It is clear from the figures above that there are three computations
-(COMP). We load the weight and activations once in memtiles. There are
-actually one load per memtile for a total of four loads per activation
-and four loads for weights. Because each load is to a different memtile,
-they are parallel.  The activation and weight communications are using
-two different channels and they are parallel with 4 GBps bandwidth.
+We present the time estimate for a convolution with padding, dense,
+and with 50\% sparsity, see Figure \ref{fig:singleconvestimate} and
+\ref{fig:singleconvestimate2}.  We explain in details how the time is
+estimated and our assumptions about how the hardware works. First, we
+load the weight and activations once in memtiles (LOAD and
+LOADW). There are actually one load per memtile for a total of four
+loads instructions per activation and weight. Because each load is to
+a different memtile, they are parallel.  The activation and weight
+communications are using two different channels and they are parallel
+with 4 GBps bandwidth.  There is a single load of the weights from
+memtiles to each core (LOADWM). This is done once and it is
+blocking. We can relax this condition.
 
-There is a single load of the weights from memtiles to each
-core. This is done once and it is blocking (LOADWM) but it can be as
-easily made non blocking and parallel to the activations. There is a
-computation using padding (top-padding) and you can see the sequential
-execution of load to cores (LOADFM), computation (COMP), and write to
-memtile (WRITEFM). This computation has iteration 1. There are 9
-iterations for three instructions: we can see the load, the
-computation, and write in parallel. This is a
-simplification; there will be a little load poking out at the
-beginning and a writing poking out at the end.  Then we conclude with
-the final computation with padding at the bottom of the computation.
 
-In this particular scenario, the computation dominates the execution
-time and compression basically cut the execution time by half: from
-200 $\mu s$ to 130 $\mu s$. There are convolutions in Resnet that
-realize up to $2\times$ performance but also there are convolutions
-that are dominated by the read or by the writing, and where sparsity
-help only in space saving. We shall relax sparsity requirements for
-those convolutions.
+
+There are three computations (COMP); that is, top padding, the body,
+and the bottom padding. For the top padding computation, there is the
+sequential execution of loads to cores (LOADFM), computation (COMP),
+and write to memtile (WRITEFM). This computation has iteration 1.
+
+For the body computation, there are 9 iterations for three
+instructions: we can see the load, the computation, and the write are
+parallel. This is a simplification; there will be a little load poking
+out at the beginning and a writing poking out at the end.  Then we
+conclude with padding at the bottom of the computation.
+
+For this convolution, the computation dominates the execution
+time. Sparsity cuts the execution time by half: from 200 $\mu s$ to
+130 $\mu s$. On one hand, there are convolutions that realize up to
+$2\times$ performance; on the other, there are convolutions that are
+dominated by the reading or writing. In the latter case, sparsity
+helps only in space saving and may be spilling. In principle, now that
+we know we can relax sparsity requirements for those convolutions (and
+restart training).
 
 %\SSinglefigure{2.0}{R4x4-4sharedsparse.png}{Resnet50 for 4x4 AIE with 50\%
 %  sparse weights}{fig:estimate-sparse}
@@ -723,57 +727,55 @@ Inception V3, and VGG16.
 %\DDoublefigure{0.80}{Iv36x6-6shareddense.png}{Iv36x6-6sharedsparse.png}{Inception V3 for 6x6 AIE
 %  with dense (left/top)  weights and sparse (right/bottom) }{fig:incv3-estimate-dense}
 
-When we generate the code for each instruction, we compute the
-execution time. So if we inspect the assembly code we will find time
-information in the context whether or not each instruction contribute
-directly. For data movement to and from DDR and memtile, we reduce
-the contribution (sum directly). There is no streaming or
-communication overlapping, thus the sum.
+When we generate the code, we compute the execution time. When we
+inspect the assembly code, we will find time information in the
+context whether or not each instruction contribute directly. For data
+movement to and from DDR and memtile, we reduce the contribution (sum
+directly).
 
-For memtile  to and from core communications and core computations, we
-create a time series. We explain in the previous section how we
-account for the execution time for instruction with and without
-iterations. All of this will be an attribute of the layer (node in the
-graph computation).  To create a complete time estimate, we just need
-to take the schedule of the computation and the graph, visit each node
+For memtile to and from core communications and core computations, we
+create a time series. All of this will be an attribute of the layer
+(node in the graph computation).  To create a complete time estimate,
+we take the schedule of the computation of the graph, visit each node
 accordingly to the schedule, write a {\em json} file describing the
-time series, then by {\em javascript} we can visualize the time series
-using a browser. The Figures in this paper are generated directly.
+time series.  By {\em javascript}, we visualize the time series using
+a browser. The figures in this paper are generated directly.
 
 For a $4\times 4$ AIE set up, Resnet 50 fits in memtile from the
 beginning to the last operation (beside the first convolution and this
 is by costruction). The estimates advantage by sparsity is almost
-completely achieved. We provide with the software also all the
-experimental results %in \cite{PaoloK2020} as interactive interface
-and showing the compiler output in long form.
+completely achieved.
 
 Corner cases are represented as failure in Table \ref{tab_perf}. Some
-cases is because of inability to break the weight tensor evenly,
-sometime is for incorrect data management especially for prime
+cases is because of inability to break the weight tensor evenly.
+Sometime is for incorrect data management especially for prime
 numbers. These are all issues will be address as the technology
 matures. Please, note that VGG16 using 8x8 is slower than 7x7 by using
 sparse.  It may happen because a symmetric computation my use too
-small sub-volume computations and thus more iterations.
+small sub-volume computations and thus more iterations for the same
+amount of data transfers. We will provide a full discussion if space
+permits.
 
 \section{Conclusions and Context}
 This is a multifaceted problem and we present a complete solution from
 training techniques, compilers, code generation, HW definition, and
-time estimations. It is a vertical software system and more complex
-than just a prototype.
+time estimations. It is a vertical software system, more complex than
+just a prototype, and it is used for the validation and comparison of
+different HW designs.
 
-This could be seen as a quantization and sparsification problem: How
-to reduce the footprint of a CNN network. There are post training
-techniques that are targeting quantization and unstructured sparsity
-\cite{frantar2023gptq} and all the references within. We need to be
-more aggressive and training for it (as starting point
-\cite{abs-2102-11289}), our sparsity is not really a property of the
-model and software can describe it and the hardware can take advantage
-(but we do not need to have hardware support at instruction level).
+This could be seen as a quantization and sparsification problem. For
+example, how we can reduce the footprint of a CNN network. There are
+post training techniques that are targeting quantization and
+unstructured sparsity \cite{frantar2023gptq} and all the references
+within. We need to be more aggressive and training for it (as starting
+point \cite{abs-2102-11289}).  Our sparsity is not really a property
+of the model, software can describe it, and the hardware can take
+advantage; however, we do not need specific hardware support at
+instruction level.
 
 This work stemmed from a collaboration between Xilinx and Numenta and
 the idea set forward by the authors in \cite{ahmad2019dense}, where
-the model are too dense and there is a lot we can do about
-it. 
+the models are too dense and there is a lot to improve.
 
 
 The difficulty of generate code for complex architectures can be
@@ -787,64 +789,6 @@ sparsity at this time.
 
 
 
-\begin{comment}
-In Table \ref{tab_perf}, we present the estimates of the total
-execution time for three networks and seven configurations. We report
-also the case where the compiler fails to generate code.  Here, we
-present the collection of execution times as images:
-\begin{itemize}
-  \item Figure \ref{fig:incv3-1} Inception V3 2x2 dense and sparse
-  \item Figure \ref{fig:incv3-2} Inception V3 3x3 dense and sparse
-  \item Figure \ref{fig:incv3-3} Inception V3 4x4 dense and sparse
-  \item Figure \ref{fig:incv3-4} Inception V3 5x5 dense and sparse FAILs
-  \item Figure \ref{fig:incv3-5} Inception V3 6x6 dense and sparse 
-  \item Figure \ref{fig:incv3-6} Inception V3 8x8 dense and sparse
-  \item Figure \ref{fig:incv3-7} Resnet 50 2x2 dense and sparse   
-  \item Figure \ref{fig:incv3-8} Resnet 50 3x3 dense and sparse   
-  \item Figure \ref{fig:incv3-9} Resnet 50 4x4 dense and sparse   
-  \item Figure \ref{fig:incv3-10} Resnet 50 5x5 dense FAILs and sparse   
-  \item Figure \ref{fig:incv3-11} Resnet 50 6x6 dense and sparse   
-  \item Figure \ref{fig:incv3-12} VGG16  2x2 dense and sparse   
-  \item Figure \ref{fig:incv3-13} VGG16  4x4 dense and sparse   
-  \item Figure \ref{fig:incv3-14} VGG16  8x8 dense and sparse   
-\end{itemize}
-\newpage 
-\DDoublefigure{1.3}{IncV3-2x2-2share-dense.png}{IncV3-2x2-2share-sparse.png}{Inception
-  for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)
-}{fig:incv3-1}
-\DDoublefigure{1.3}{IncV3-3x3-3share-dense.png}{IncV3-3x3-3share-sparse.png}{Inception
-  for 3x3 AIE with dense (left/top) weights and sparse (right/bottom)
-}{fig:incv3-2}
-\DDoublefigure{1.3}{IncV3-4x4-4share-dense.png}{IncV3-4x4-4share-sparse.png}{Inception
-  for 4x4 AIE with dense (left/top) weights and sparse (right/bottom)
-}{fig:incv3-3}
-\SSinglefigure{2.6}{IncV3-5x5-5share-dense.png}{Inception for 5x5 AIE
-  with dense weights and FAILED for sparse weights }{fig:incv3-4}
-\DDoublefigure{1.3}{IncV3-6x6-6share-dense.png}{IncV3-6x6-6share-sparse.png}{Inception
-  for 6x6 AIE with dense (left/top) weights and sparse (right/bottom)
-}{fig:incv3-5}
-\DDoublefigure{1.3}{IncV3-8x8-8share-dense.png}{IncV3-8x8-8share-sparse.png}{Inception
-  for 8x8 AIE with dense (left/top) weights and sparse (right/bottom)
-}{fig:incv3-6}
-\DDoublefigure{1.3}{Res2x2-2share-dense.png}{Res2x2-2share-sparse.png}{Resnet
-  for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)
-}{fig:incv3-7}
-\DDoublefigure{1.3}{Res3x3-3share-dense.png}{Res3x3-3share-sparse.png}{Resnet
-  for 3x3 AIE with dense (left/top) weights and sparse (right/bottom)
-}{fig:incv3-8}
-\DDoublefigure{1.3}{Res4x4-4share-dense.png}{Res4x4-4share-sparse.png}{Resnet
-  for 4x4 AIE with dense (left/top) weights and sparse (right/bottom)
-}{fig:incv3-9}
-\SSinglefigure{2.6}{Res5x5-5share-sparse.png}{Resnet for 5x5 AIE with
-  sparse weights and FAILED for dense weights}{fig:incv3-10}
-\DDoublefigure{1.3}{Res6x6-6share-dense.png}{Res6x6-6share-sparse.png}{Resnet
-  for 6x6 AIE with dense (left/top) weights and sparse (right/bottom)
-}{fig:incv3-11}
-
-\DDoublefigure{0.9}{VGG162x2-2shared-dense.png}{VGG162x2-2shared-sparse.png}{VGG 16 (No FC)  for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)}{fig:incv3-12}
-\DDoublefigure{0.9}{VGG164x4-4shared-dense.png}{VGG164x4-4shared-sparse.png}{VGG 16 (No FC)  for 4x4 AIE with dense (left/top) weights and sparse (right/bottom)}{fig:incv3-13}
-\DDoublefigure{0.9}{VGG168x8-8shared-dense.png}{VGG168x8-8shared-sparse.png}{VGG 16 (No FC)  for 8x8 AIE with dense (left/top) weights and sparse (right/bottom)}{fig:incv3-14}
-\end{comment}
 
 
 
