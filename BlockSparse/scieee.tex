@@ -851,6 +851,55 @@ again an overall 2$\times$ speed up. See Figure
 
 
 
+\section{Hidden Problems and Solutions}
+This is a parenthetic about the problems related to sparsity,
+subvolumes, and practical communications. When we take a convolution
+and its weights $\Vc{W} \in \R ^{m\times n}$ where $m$ and $n$ should
+be multiplied by eight to describe the real sizes.
+
+Assume we need to split the computation by $m$ into four buckets. If
+$\Vc{W}$ is dense, then we can just take the tensor and split into
+four slices of size $\cl{\frac{m}{4}}$. The first problem is to
+realize how we split the computation when $\Mod{m}{4}\neq 0$. The
+second problem arises when we introduce sparsity. Consider the case
+when a row of $\Vc{W}$ is 50\% sparse and this is the only
+constraints.  This is no different from the dense: we can split evenly
+the problem. Now, consider that the sparsity is by column: we take a
+column of $\Vc{W}$ and 50\% are zeros in any order.  When we split by
+$m$, by row, there is no assurance of evenly distribution. The worst
+case, two components with only 1 element each.  This can be the case
+when the convolution is large and the number of output channels is
+small, lots of input channels, and the only way to split the problem
+is by input channels. There are interesting solutions for this
+scenario.
+
+First, when we have the list of convolutions and the HW, we can check
+if we need COUT-split or CIN-split. We can train sparsity for one or
+the other. For the CIN-split sparsity we assure that the column has
+50\% sparsity and thus we can evenly split the problem. This training
+is possible and the compiler will prepare all the data structures. By
+default, training and data structure support COUT-split (the compiler
+will have to deal CIN-split unbalance as below).
+
+Second and in advance, we do bookkeeping and we create an unbalanced
+collection of subvolumes, create the proper bit maps, and data
+structures. There is a clear advantage: we transmit only the data
+needed.  There are two disadvantages: asymmetric communications and
+computations. The communications at this level (memtiles) are
+parallel, but the dominant subgroup will dominate. We save energy and
+there is a cost. AIE2 cores will have different work to do
+complicating the synchronization across cores and columns.  The most
+sensible choice is the padding with zeros of the smallest subgroup so
+that to have a symmetric distribution of weights.
+
+The compiler profiles the sparsity per COUT and CIN split. It creates
+a tree where it stores the number of subvolumes for each COUT-and-CIN
+partitions. Then, if necessary, the compiler stores the weights so that
+each subproblem is contiguous but separated. There is only one load
+per subgroup and per memtile.
+
+
+
 
 
 
