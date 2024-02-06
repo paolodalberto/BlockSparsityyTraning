@@ -103,7 +103,9 @@ Where the matrix $\Vc{B}$ is constant, diagonal, and each submatrix
 $\Vc{B_2}$ and $\Vc{B}_1$ can split further down and may have even
 smaller zero blocks. In this work, we chose the basic block of
 $\Vc{B}_i = 8\times 8$. It is a great starting point for architectures
-based on AMD AIE2 products and we support others.  For example,
+based on AMD AIE2 products and we support others (see the hardware
+abstraction Section \ref{sec:aie2} for an explanation why the $8\times 8$
+is, for lack of better words, good).  For example,
 \begin{equation}
   \Vc{B} = \dot{\sum}_i \gamma_i \Vc{B}_i, \;\; \gamma_i \in \{0,1\} 
 \end{equation}
@@ -158,21 +160,21 @@ pre-trained model, compute a $\Gamma$ per layer using a function to
 determine the blocks more likely to be zeros (Norm), and train the
 model until convergence or accuracy is achieved. We take the sparse
 model and quantize to 8-bit integer computations by using the Vitis-AI
-quantizer. The final model is a AMD/Xilinx IR (XIR) quantized model. See
-Section \ref{sec:training}.
+quantizer. The final model is a AMD/Xilinx IR (XIR) quantized
+model. See the training Section \ref{sec:training}.
 
 For the FPGA accelerator using AIE2, we have a custom compiler that
 takes the XIR model and an abstraction of a connected set of AIE2. See
-Section \ref{sec:compiler}. For example, a DDR, one or two memory
-dedicated per column (512 KB each) called {\bf memtile}, short for
-memory tile, 1 to 8 columns, 1 to 8 AIE2 cores per column, and each
-core has 8*8 KB internal memory. There are vertical connections and
-there are horizontal connections. Given the HW and per layer, the
-compiler computes the maximum sub-volume computation per core. By
-heuristics and following a schedule, it computes a memory allocation
-in memtile for input, outputs, and weights. It formats the weights so
-that to exploit spatial distribution to memtiles and cores into a
-single compacted tensor.
+the compiler Section \ref{sec:compiler}. For example, a DDR, one or
+two memory dedicated per column (512 KB each) called {\bf memtile},
+short for memory tile, 1 to 8 columns, 1 to 8 AIE2 cores per column,
+and each core has 8 banks of 8 KB internal memory (64 KB). There are
+vertical connections and there are horizontal connections. Given the
+HW and per layer, the compiler computes the maximum sub-volume
+computation per core. By heuristics and following a schedule, it
+computes a memory allocation in memtile for input, outputs, and
+weights. It formats the weights so that to exploit spatial
+distribution to memtiles and cores into a single compacted tensor.
 
 With the schedule and the DDR-memtile allocation, we generate all the
 explicit communications between DDR, memtile, and cores. Knowing the
@@ -503,7 +505,7 @@ algorithms and some heuristics. In this architecture, we do not allow
 in memtile). In a previous architecture, that was possible.
 
 \subsection{AIE Hardware Abstraction}
-
+\label{sec:aie2}
 \singlefigure{0.80}{AIE.png}{4x4 AIE representation}{fig:aie}
 
 For this presentation, see Figure \ref{fig:aie}, we work with a mesh
@@ -515,6 +517,17 @@ used as input/output/weight buffers and two banks are used as
 temporary space for kernels. Each core can request and send data to
 its direct neighbors (if aware of connection and control). Double
 buffering as ping/pong is commonly used for inputs and outputs.
+
+The AIE2 is a large DSP. It can perform $8\times 8\times 4$
+multiply-addition in a single cycle using INT-8 operands and INT-32
+accumulator (integer with 8 bits and 32 bits respectively). The above
+granularity dictates the sparsity block size of $8 \times 8$. This
+means, we can manage the AIE2 full throughput with enough data per
+block and easily skip non-zero computations without loss of
+performance. We do not investigate nor try pruning the input tensor
+communication. 
+
+
 
 There are four memtiles, where each 512 KB can either be connected to
 one columns and its direct neighbor column, or it can be connected to
@@ -538,6 +551,9 @@ complex connections (from $1\times 1$, $8\times 2$, to $8\times 8$ and
 more rows of memtiles designed for larger chips). But $4\times 4$ is
 representative for the AIE engines you will find in the next
 generation of CPU+FPGA chips.
+
+
+
 
 
 \subsection{Sub Volume, Data Compression, and Data Movement}
@@ -581,6 +597,55 @@ a subvolume so that any data movement will always be a multiple of the
 subvolume and can be a single load. Such a compress data will have the
 same properties whether it is sparse or dense. Of course, sparse data is
 smaller and we compute fewer operations.
+
+\subsubsection{Hidden Problems}
+This and the next section are parenthetic sections about the problems
+related to sparsity, subvolumes, and practical communications, when we
+perform CIN-split. You may skip, if you find the problem of splitting
+sparse tensors too abstract at this time. When we take a convolution
+and its weights $\Vc{W} \in \R ^{m\times n}$ where $m$ and $n$ should
+be multiplied by eight to describe the real sizes.  Assume we must
+split the computation by $m$ into four buckets. If $\Vc{W}$ is dense,
+then we can just take the tensor and split into four slices of size
+$\cl{\frac{m}{4}}$. The first problem is to realize how we split the
+computation when $\Mod{m}{4}\neq 0$. The second problem arises when we
+introduce sparsity. Consider the case when a row of $\Vc{W}$ is 50\%
+sparse and this is the only constraints.  This is no different from
+the dense. We can split evenly the problem because the same sparsity
+applies to all rows. Now, consider that the sparsity is by column: we
+take a column of $\Vc{W}$ and 50\% are zeros in any order.  When we
+must split by $m$, by row, there is no assurance of evenly
+distribution. The worst case, two components with only zero elements
+each and the others have the rest.  This happens when the convolution
+is large and the only way to split the problem is by input channels
+(CIN-split). There are interesting solutions for this scenario.
+\subsubsection{Hidden Solutions}
+First, when we have the list of convolutions and the HW abstraction,
+we can check if we need COUT-split or CIN-split (the compiler does a
+pass and annotates every layer with CIN-split information). We can
+train sparsity for one or the other. For the CIN-split sparsity we
+assure that the column has 50\% sparsity and thus we can evenly split
+the problem. This training is possible and the compiler will prepare
+all the data structures. By default, the training and the data
+structure support COUT-split (the compiler will have to deal CIN-split
+unbalance as below).
+
+Second, we do bookkeeping and we create an unbalanced
+collection of subvolumes, create the proper bit maps, and data
+structures. There is a clear advantage: we transmit only the data
+needed.  There are two disadvantages: asymmetric communications and
+computations. The communications at this level (memtiles) are
+parallel, but the dominant subgroup will dominate. We save energy and
+there is a cost. AIE2 cores will have different work to do
+complicating the synchronization across cores and columns.  The most
+sensible choice is the padding with zeros of the smallest subgroup so
+that to have a symmetric distribution of weights.
+
+The compiler profiles the sparsity per COUT and CIN split. It creates
+a tree where it stores the number of subvolumes for each COUT-and-CIN
+partitions. Then, if necessary, the compiler stores the weights so that
+each subproblem is contiguous but separated. There is only one load
+per subgroup and per memtile.
 
 
 \subsection{Schedule and Memory Allocation}
@@ -851,52 +916,6 @@ again an overall 2$\times$ speed up. See Figure
 
 
 
-\section{Hidden Problems and Solutions}
-This is a parenthetic about the problems related to sparsity,
-subvolumes, and practical communications. When we take a convolution
-and its weights $\Vc{W} \in \R ^{m\times n}$ where $m$ and $n$ should
-be multiplied by eight to describe the real sizes.
-
-Assume we need to split the computation by $m$ into four buckets. If
-$\Vc{W}$ is dense, then we can just take the tensor and split into
-four slices of size $\cl{\frac{m}{4}}$. The first problem is to
-realize how we split the computation when $\Mod{m}{4}\neq 0$. The
-second problem arises when we introduce sparsity. Consider the case
-when a row of $\Vc{W}$ is 50\% sparse and this is the only
-constraints.  This is no different from the dense: we can split evenly
-the problem. Now, consider that the sparsity is by column: we take a
-column of $\Vc{W}$ and 50\% are zeros in any order.  When we split by
-$m$, by row, there is no assurance of evenly distribution. The worst
-case, two components with only 1 element each.  This can be the case
-when the convolution is large and the number of output channels is
-small, lots of input channels, and the only way to split the problem
-is by input channels. There are interesting solutions for this
-scenario.
-
-First, when we have the list of convolutions and the HW, we can check
-if we need COUT-split or CIN-split. We can train sparsity for one or
-the other. For the CIN-split sparsity we assure that the column has
-50\% sparsity and thus we can evenly split the problem. This training
-is possible and the compiler will prepare all the data structures. By
-default, training and data structure support COUT-split (the compiler
-will have to deal CIN-split unbalance as below).
-
-Second and in advance, we do bookkeeping and we create an unbalanced
-collection of subvolumes, create the proper bit maps, and data
-structures. There is a clear advantage: we transmit only the data
-needed.  There are two disadvantages: asymmetric communications and
-computations. The communications at this level (memtiles) are
-parallel, but the dominant subgroup will dominate. We save energy and
-there is a cost. AIE2 cores will have different work to do
-complicating the synchronization across cores and columns.  The most
-sensible choice is the padding with zeros of the smallest subgroup so
-that to have a symmetric distribution of weights.
-
-The compiler profiles the sparsity per COUT and CIN split. It creates
-a tree where it stores the number of subvolumes for each COUT-and-CIN
-partitions. Then, if necessary, the compiler stores the weights so that
-each subproblem is contiguous but separated. There is only one load
-per subgroup and per memtile.
 
 
 
