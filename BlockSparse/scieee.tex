@@ -875,6 +875,56 @@ in space saving.
 \SSinglefigure{2.0}{R4x4-4sharedsparse.png}{Resnet50 for 4x4 AIE with 50\%
   sparse weights}{fig:estimate-sparse}
 
+
+\section{A complementary optimization: Depth-Wise subgraph Tiling}
+We have presented sparsity and performance measure methodologies. We
+can introduce a graph optimization that will take advantage of
+sparsity and introduce a tiling optimization rarely proposed.
+
+Consider a graph and a schedule describing the computation order. For
+example, the schedule $L_0, L_1, \dots L_n$ represent the order each
+layer in the graph is computed. Each layer is computed once. Each
+layer tensor is computed once and it can be read multiple times. We
+find that the sub-schedule $L_0, L_1, \dots L_j$ with $j<n$ determines
+a convex subgraph with one input and one output and every layer spills
+into DDR. We present an example shortly. Currently, the compiler will
+apply different types of splitting W-split and H-Split to accommodate
+data locality and it does it per layer. Every layer output tensor is
+computed once. This addresses the number of DDR communications. We
+cannot do better unless we are ready to allow re-computation. Let us
+investigate the Depth-Wise Tiling.
+
+The layer $L_j$ has a output tensor $T_j$ and an input tensor
+$T_{j-1}$. A projection $\P$ is a function taking an output sub-tensor
+and projects to the input subtensor needed to compute the
+output. Obviously, $T_{j-1} + Padding = \P(L_j,T_j)$. Consider a
+single $u = 1\times 1$ output at layer $L_h$. We consider channels
+immaterial and observing unitary width and height. If $L_j$ is a
+convolution with kernel $k_h\times k_w$ and stride $s_h \times
+s_w$. Then we can see that $k_h\times k_w = k = \P(L_j,u)$ and $s+k =
+\P(L_j,2*u)$ (simplified).
+
+Take the subgraph schedule and $u$ above. In reverse order, starting
+from $L_j$ compute $\P(L_j,T_j)$. When a layer $L_m$ and tensor $T_m$
+feeds two (or more) layers $L_x$ and $L_y$. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \section{Results}
 \label{sec:experiments}
 In this section, we present the performance of sparsity applied to all
