@@ -105,6 +105,24 @@ P.~D'Alberto, J.~Ma, J.~Li, Y.~Hu, M.~Bollavaram, and S.~Fang, ``{DPUV3INT8:}
   \url{https://arxiv.org/abs/2110.04327}
 \BIBentrySTDinterwordspacing
 
+\bibitem{Hong1981IOCT}
+\BIBentryALTinterwordspacing
+J.-W. Hong and H.~T. Kung, ``I/o complexity: The red-blue pebble game,'' in
+  \emph{Symposium on the Theory of Computing}, 1981. [Online]. Available:
+  \url{https://api.semanticscholar.org/CorpusID:8410593}
+\BIBentrySTDinterwordspacing
+
+\bibitem{BilardiPD00}
+\BIBentryALTinterwordspacing
+G.~Bilardi, A.~Pietracaprina, and P.~D'Alberto, ``On the space and access
+  complexity of computation dags,'' in \emph{Graph-Theoretic Concepts in
+  Computer Science, 26th International Workshop, {WG} 2000, Konstanz, Germany,
+  June 15-17, 2000, Proceedings}, ser. Lecture Notes in Computer Science,
+  U.~Brandes and D.~Wagner, Eds., vol. 1928.\hskip 1em plus 0.5em minus
+  0.4em\relax Springer, 2000, pp. 47--58. [Online]. Available:
+  \url{https://doi.org/10.1007/3-540-40064-8\_6}
+\BIBentrySTDinterwordspacing
+
 \bibitem{frantar2023gptq}
 E.~Frantar, S.~Ashkboos, T.~Hoefler, and D.~Alistarh, ``Gptq: Accurate
   post-training quantization for generative pre-trained transformers,'' 2023.

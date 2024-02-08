@@ -882,46 +882,95 @@ can introduce a graph optimization that will take advantage of
 sparsity and introduce a tiling optimization rarely proposed.
 
 Consider a graph and a schedule describing the computation order. For
-example, the schedule $L_0, L_1, \dots L_n$ represent the order each
-layer in the graph is computed. Each layer is computed once. Each
-layer tensor is computed once and it can be read multiple times. We
-find that the sub-schedule $L_0, L_1, \dots L_j$ with $j<n$ determines
-a convex subgraph with one input and one output and every layer spills
-into DDR. We present an example shortly. Currently, the compiler will
-apply different types of splitting W-split and H-Split to accommodate
-data locality and it does it per layer. Every layer output tensor is
-computed once. This addresses the number of DDR communications. We
-cannot do better unless we are ready to allow re-computation. Let us
-investigate the Depth-Wise Tiling.
+example, the schedule $L_0, L_1, \dots L_n$ represents the layer
+computation order. We compute each layer once $L_i$ and thus its
+output tensor $T_i$. Multiple layers can read $T_i$. Assume, we have a
+sub-schedule $L_0, L_1, \dots L_j$ with $j<n$ that is a convex
+subgraph with one input, one output, and every layer spills into
+DDR. We present an example shortly. Currently, the compiler will apply
+different types of splitting W-split and H-Split to accommodate data
+locality and it does it per layer.  We cannot do better unless we are
+ready to allow re-computation. Let us investigate the Depth-Wise
+Tiling.
 
+\subsection{Generalized Convolution} 
 The layer $L_j$ has a output tensor $T_j$ and an input tensor
 $T_{j-1}$. A projection $\P$ is a function taking an output sub-tensor
-and projects to the input subtensor needed to compute the
+and projects the input subtensor needed to compute the
 output. Obviously, $T_{j-1} + Padding = \P(L_j,T_j)$. Consider a
-single $u = 1\times 1$ output at layer $L_h$. We consider channels
-immaterial and observing unitary width and height. If $L_j$ is a
-convolution with kernel $k_h\times k_w$ and stride $s_h \times
-s_w$. Then we can see that $k_h\times k_w = k = \P(L_j,u)$ and $s+k =
-\P(L_j,2*u)$ (simplified).
+single $u = 1\times 1 = u_h \times u_w$ output at layer $L_j$. We
+consider channels immaterial and observing unitary width and
+height. If $L_j$ is a convolution with kernel $k_h\times k_w$ and
+stride $s_h \times s_w$. Then we can see that $k_h\times k_w = k =
+\P(L_j,u)$ and $s+k = \P(L_j,2*u)$ (simplified).
 
-Take the subgraph schedule and $u$ above. In reverse order, starting
-from $L_j$ compute $\P(L_j,T_j)$. When a layer $L_m$ and tensor $T_m$
-feeds two (or more) layers $L_x$ and $L_y$. 
+Take the subgraph schedule and $u_j$ as above above. In reverse order,
+starting from $L_j$ compute $\P(L_j,u_j)$ and propagate the
+projection. When a layer $L_m$ and tensor $T_m$ feeds two (or more)
+layers $L_x$ and $L_y$. Then $u_m = \max ( \P(L_x,u_x),\P(L_y,u_y))$
+when $u_x$ and $u_y$ are defined completely and {\em max} mean the
+largest.
 
+At the end of the propagation, imagine this is a generalized
+convolution with kernel size $k = \P(L_0, u_0)$. Now if we repeat the
+process with $\dot{u}_j = 2\times 2$ ... $k+s = \P(L_0,
+\dot{u}_0)$. Thus we have an estimate of the generalized stride.  Now
+we can split the computation by selecting a non overlapping
+decomposition of the output tensor: say using M tiles each of size
+$u_o$. The input is split into M tiles of size $(u_o-1)s+k$ and we
+will have an overlap of size $k-1$. With input overlap, we have
+re-computation. 
 
+\subsection{Live analysis and Zero DDR Communication}.
+Assume, we have a output tile size $u_o$. We repeat the projection
+process using the schedule. This time, we keep information of the live
+tensors at any time in the schedule. Projections and live tensors are
+sufficient to represent the maximum live space requirement (not
+including input and outputs). If we want zero DDR spill, we choose a
+output tile for which the maximum live space is smaller than
+MemTile. This a simple heuristics. Say we have M tiles. With an
+architecture for which computation is free (see
+\cite{Hong1981IOCT,BilardiPD00}), we write $T_j$ once, we read $T_0$,
+and we reread $(M-1)(k-1)$.
 
+A compiler can target easily a tiling with zero DDR communications and
+for simplicity we can say that M is the number of iterations.
 
+\subsection{Iteration and Memory allocation}
+The schedule $L_0$ \dots $L_j$ represent a subgraph with a single
+entry and exit. Let perform the live analysis and compute the
+projections for a specific $u_o$ tile with $M$ tiles. This computation
+can be simply represented by adding two custom node such as
+\[ I_b(M), L_0, L_1, ... L_n, I_e(M) \]
 
+The layer $I_b(M)$ is an iteration layer or input boundary that takes
+the input tensor $T_{-1}$ and map it to a tensor of shape and size
+$(u_o-1)s+k$. The layer $I_e(M)$ is an iteration layer or output
+boundary that takes the input tensor $u_o$ and map it to a tensor of
+shape and size $T_j$. For the purpose of the memory allocation, we
+have a legal schedule that describe basically the property of the
+computation.
 
+We can do memory allocation and each tensor will find its place in the
+memory hierarchy.
 
+\subsection{Code Generation}
+A computation is described by a layer and by the address in memory of
+the tensors is going to use for the computation. The code generation
+is going to unroll the loop and $I_b$ and $I_e$ will literally
+generate the proper sub tensor addresses.
 
+The code generation will be for the schedule:
+\[ I_b(0), L_0, L_1, ... L_n, I_e(0), \dots I_b(M-1), L_0, L_1, ... L_n, I_e(M-1) \]
+With a little of book keeping we can write the time estimates as a
+time series and compare performance.
 
-
-
-
-
-
-
+\subsection{Complementary}
+The depth-wise tiling has the tendency to increase the computation
+number and decrease the DDR loads and stores. Sparsity helps in
+reducing the effect of the extra computation. We present experimental
+evidence for VGG16 that depth-wise tiling is beneficial if done
+properly and even more so in combination with sparse convolutions. See Section \ref{sec:res-depth}
 
 
 
@@ -965,8 +1014,8 @@ again an overall 2$\times$ speed up. See Figure
 \ref{fig:incv3-estimate-dense}.
 
 
-
-
+\subsection{Depth-Wise Tiling for VGG16 3x3}
+\label{sec:res-depth}
 
 
 
