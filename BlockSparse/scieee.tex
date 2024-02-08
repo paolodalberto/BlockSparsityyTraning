@@ -882,7 +882,8 @@ in space saving.
 \section{A complementary optimization: Depth-Wise subgraph Tiling}
 We have presented sparsity and performance measure methodologies. We
 can introduce a graph optimization that will take advantage of
-sparsity and introduce a tiling optimization rarely proposed.
+sparsity and introduce a tiling optimization rarely proposed in this
+field.
 
 Consider a graph and a schedule describing the computation order. For
 example, the schedule $L_0, L_1, \dots L_n$ represents the layer
@@ -892,9 +893,8 @@ sub-schedule $L_0, L_1, \dots L_j$ with $j<n$ that is a convex
 subgraph with one input, one output, and every layer spills into
 DDR. We present an example shortly. Currently, the compiler will apply
 different types of splitting W-split and H-Split to accommodate data
-locality and it does it per layer.  We cannot do better unless we are
-ready to allow re-computation. Let us investigate the Depth-Wise
-Tiling.
+locality per layer.  We cannot do better unless we are ready to allow
+re-computation. Let us investigate the Depth-Wise Tiling.
 
 \subsection{Generalized Convolution} 
 The layer $L_j$ has a output tensor $T_j$ and an input tensor
@@ -907,7 +907,7 @@ height. If $L_j$ is a convolution with kernel $k_h\times k_w$ and
 stride $s_h \times s_w$. Then we can see that $k_h\times k_w = k =
 \P(L_j,u)$ and $s+k = \P(L_j,2*u)$ (simplified).
 
-Take the subgraph schedule and $u_j$ as above above. In reverse order,
+Take the subgraph schedule and $u_j$ as above. In reverse order,
 starting from $L_j$ compute $\P(L_j,u_j)$ and propagate the
 projection. When a layer $L_m$ and tensor $T_m$ feeds two (or more)
 layers $L_x$ and $L_y$. Then $u_m = \max ( \P(L_x,u_x),\P(L_y,u_y))$
@@ -924,12 +924,12 @@ $u_o$. The input is split into M tiles of size $(u_o-1)s+k$ and we
 will have an overlap of size $k-1$. With input overlap, we have
 re-computation. 
 
-\subsection{Live analysis and Zero DDR Communication}.
-Assume, we have a output tile size $u_o$. We repeat the projection
+\subsection{Live analysis and Zero DDR Communication}
+Assume, we have an output tile size $u_o$. We repeat the projection
 process using the schedule. This time, we keep information of the live
 tensors at any time in the schedule. Projections and live tensors are
 sufficient to represent the maximum live space requirement (not
-including input and outputs). If we want zero DDR spill, we choose a
+including input and output). If we want zero DDR spill, we choose a
 output tile for which the maximum live space is smaller than
 MemTile. This a simple heuristics. Say we have M tiles. With an
 architecture for which computation is free (see
@@ -958,10 +958,9 @@ We can do memory allocation and each tensor will find its place in the
 memory hierarchy.
 
 \subsection{Code Generation}
-A computation is described by a layer and by the address in memory of
-the tensors is going to use for the computation. The code generation
-is going to unroll the loop and $I_b$ and $I_e$ will literally
-generate the proper sub tensor addresses.
+A computation is described by a layer and by the addresses in memory
+of its input and output tensors. The code generation unrolls the loop
+and $I_b$ and $I_e$ generate the proper sub tensor addresses.
 
 The code generation will be for the schedule:
 \[ I_b(0), L_0, L_1, ... L_n, I_e(0), \dots I_b(M-1), L_0, L_1, ... L_n, I_e(M-1) \]
@@ -970,34 +969,38 @@ time series and compare performance.
 
 \subsection{Complementary}
 The depth-wise tiling has the tendency to increase the computation
-number and decrease the DDR loads and stores. Sparsity helps in
-reducing the effect of the extra computation. We present experimental
-evidence for VGG16 that depth-wise tiling is beneficial if done
-properly and even more so in combination with sparse convolutions. See Section \ref{sec:res-depth}
+number and decrease the DDR loads and stores. Sparsity reduce the
+number of computations and the weights communications. Together have
+the opportunity to work better. We present experimental evidence for
+VGG16. See Section \ref{sec:res-depth}
 
 \section{Results Depth-Wise Tiling for VGG16 3x3}
 \label{sec:res-depth}
 
 
-We take VGG and we instruct the DDR to be 16 times more expensive. In
-Figure \ref{vgg16overall}, we show the performance for VGG16 until
+We take VGG and we instruct the DDR to be 16 times more expensive for
+the purpose to highlight the necessity to reduce DDR communications.
+In Figure \ref{vgg16overall}, we show the performance for VGG16 until
 the last maxpool. In Figure \ref{vggddronly}, we highlight only the
-part that require DDR spills for each layer: 0.025s.
+part that requires DDR spills for each layer: 0.025s.
 \begin{figure}[htb]
 \centering 
 \caption{VGG16 3x3 last Maxpool}
 \includegraphics[width=0.99\linewidth]{vgg16overall.png}
 \label{vgg16overall}
-\caption{VGG16 3x3 DDR only}
 \includegraphics[width=1.2\linewidth,angle=90]{vggddronly.png}
+\caption{VGG16 3x3 DDR only}
 \label{vggddronly}
 \end{figure}
-\newpage
+%\newpage
 We apply depth-wise tiling using three tiles 0.024s and we break
-even. With two tiles we achieve better performance at 0.022s in Figure
-\ref{vgg3tiles} and \ref{vgg2tiles}. We finally show that sparsity
-improves even further 0.014s in Figure \ref{vgg2tilessparse}. Sparsity
-by itself can achieve only 0.021s.
+even. With two tiles, we achieve better performance at 0.022s, see
+Figure \ref{vgg3tiles} and \ref{vgg2tiles}. Sparsity by itself without
+any tiling can achieve only 0.021s. Sparsity and tiling improves even
+further and we achieve 0.014s, see Figure \ref{vgg2tilessparse}. A
+posteriori, we can appreciate the reduction of activation DDR
+communications thanks to depth-wise tiling and the reduction of
+computation and weights communication by sparsity. 
 \begin{figure}[htb]
 \centering 
 \caption{VGG16 3x3 DDR only 3 tiles}
