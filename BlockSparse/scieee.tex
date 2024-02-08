@@ -13,6 +13,9 @@
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 \input{mydef}
+
+\graphicspath{ {./}{./depth} }
+
 \begin{document}
 
 %%%%%%%%%%%---SETME-----%%%%%%%%%%%%%
@@ -972,6 +975,42 @@ reducing the effect of the extra computation. We present experimental
 evidence for VGG16 that depth-wise tiling is beneficial if done
 properly and even more so in combination with sparse convolutions. See Section \ref{sec:res-depth}
 
+\section{Results Depth-Wise Tiling for VGG16 3x3}
+\label{sec:res-depth}
+
+
+We take VGG and we instruct the DDR to be 16 times more expensive. In
+Figure \ref{vgg16overall}, we show the performance for VGG16 until
+the last maxpool. In Figure \ref{vggddronly}, we highlight only the
+part that require DDR spills for each layer: 0.025s.
+\begin{figure}[htb]
+\centering 
+\caption{VGG16 3x3 last Maxpool}
+\includegraphics[width=0.99\linewidth]{vgg16overall.png}
+\label{vgg16overall}
+\caption{VGG16 3x3 DDR only}
+\includegraphics[width=1.2\linewidth,angle=90]{vggddronly.png}
+\label{vggddronly}
+\end{figure}
+\newpage
+We apply depth-wise tiling using three tiles 0.024s and we break
+even. With two tiles we achieve better performance at 0.022s in Figure
+\ref{vgg3tiles} and \ref{vgg2tiles}. We finally show that sparsity
+improves even further 0.014s in Figure \ref{vgg2tilessparse}. Sparsity
+by itself can achieve only 0.021s.
+\begin{figure}[htb]
+\centering 
+\caption{VGG16 3x3 DDR only 3 tiles}
+\includegraphics[width=0.99\linewidth]{vgg3tiles.png}
+\label{vgg3tiles}
+\caption{VGG16 3x3 DDR only 2 tiles}
+\includegraphics[width=0.99\linewidth]{vgg2tiles.png}
+\label{vgg2tiles}
+\caption{VGG16 3x3 DDR only 2 tiles sparse}
+\includegraphics[width=0.99\linewidth]{vgg2tilessparse.png}
+\label{vgg2tilessparse}
+\end{figure}
+\newpage
 
 
 \section{Results}
@@ -1013,9 +1052,6 @@ This allows a limited spill into DDR and the sparsity delivering once
 again an overall 2$\times$ speed up. See Figure
 \ref{fig:incv3-estimate-dense}.
 
-
-\subsection{Depth-Wise Tiling for VGG16 3x3}
-\label{sec:res-depth}
 
 
 
