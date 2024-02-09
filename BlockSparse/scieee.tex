@@ -48,20 +48,19 @@ it takes a forward propagation of a neural network.  As faster and
 tailor-made chip-lets are deployed in the field, larger and larger
 models are dominating the public's attention: quantization and
 sparsification are used to fit these large models into more reasonable
-sized ones. Quantization reduces the foot print per model weight and
-sparsification trims superfluous ones.  We present the main ideas
-about a vertical system where convolution and matrix multiplication
-weights can be trained to exploit an 8x8 block sparsity and compilers
-recognize such a sparsity for both data compaction and computation
-splitting into threads.
+sized architectures. Quantization reduces the foot print per model
+weight and sparsification trims superfluous ones.  We present the main
+ideas about a vertical system where convolution and matrix
+multiplication weights can be trained to exploit an 8x8 block sparsity
+and compilers recognize such a sparsity for both data compaction and
+computation splitting into threads.
 
-Such blocks fully takes advantage of: spatial locality that a vector
-operation can use and temporal locality for good reuse and cost
-amortization. If we take a Resnet50, we can reduce the weight by half
-with little accuracy loss. We can achieve speeds similar to an
-hypothetical Resnet25. We shall present performance estimates with
-accurate and complete code generation for a small and efficient set of
-AIE2 (Versal FPGAs).
+Such blocks fully take advantage of both spatial locality that a
+vector operation can use and temporal locality for reuse and, thus,
+cost amortization. If we take a Resnet50, we can reduce the weight by
+half with little accuracy loss. We can achieve speeds of Resnet25. We
+shall present performance estimates with accurate and complete code
+generation for a small and efficient set of AIE2 (Versal FPGAs).
 \end{abstract}
 
 
