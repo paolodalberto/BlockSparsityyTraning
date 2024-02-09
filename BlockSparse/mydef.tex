@@ -215,6 +215,18 @@
 \label{#5}%
 \end{figure*}}}
 
+\newcommand{\DDDoublefigure}[5]{{\begin{figure}[htb] %
+\centering %
+%\includegraphics[height=#1\linewidth,angle=-90]{#2}%
+%\includegraphics[height=#1\linewidth,angle=-90]{#3} %
+\includegraphics[width=#1\linewidth, angle=90]{#2}   %
+\includegraphics[width=#1\linewidth, angle=90]{#3}%
+%\figurebox{#1\linewidth}{}{}[#2]
+%\figurebox{#1\linewidth}[#3] %
+\caption{#4}%
+\label{#5}%
+\end{figure}}}
+
 \newcommand{\Singlefigure}[4]{{\begin{figure*} %
 \centering %
 \includegraphics[width=#1\linewidth]{#2}%\figurebox{#1\linewidth}{}{}[#2]
