@@ -1,94 +1,111 @@
 \relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
 \citation{rocSPARSE,cuSPARSE}
-\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{}\protected@file@percent }
-\newlabel{sec:introduction}{{I}{1}}
-\newlabel{eq:mat}{{1}{1}}
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:introduction}{{I}{1}{Introduction}{section.1}{}}
+\newlabel{eq:mat}{{1}{1}{Introduction}{equation.1.1}{}}
 \citation{PaoloG2020}
 \citation{chollet2015keras}
 \citation{PaoloK2020}
 \citation{deng2009imagenet}
-\@writefile{toc}{\contentsline {section}{\numberline {II}Block-Sparse Matrix-Matrix Multiplication}{2}{}\protected@file@percent }
-\newlabel{sec:motivation}{{II}{2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Block 1x1 and 8x8 performance}}{2}{}\protected@file@percent }
-\newlabel{fig:block}{{1}{2}}
-\@writefile{toc}{\contentsline {section}{\numberline {III}Block Sparsity: Training and Quantization}{2}{}\protected@file@percent }
-\newlabel{sec:training}{{III}{2}}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Block-Sparse Matrix-Matrix Multiplication}{2}{section.2}\protected@file@percent }
+\newlabel{sec:motivation}{{II}{2}{Block-Sparse Matrix-Matrix Multiplication}{section.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Block 1x1 and 8x8 performance}}{2}{figure.1}\protected@file@percent }
+\newlabel{fig:block}{{1}{2}{Block 1x1 and 8x8 performance}{figure.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Block Sparsity: Training and Quantization}{2}{section.3}\protected@file@percent }
+\newlabel{sec:training}{{III}{2}{Block Sparsity: Training and Quantization}{section.3}{}}
 \citation{PaoloK2020}
 \citation{pytorch_paper}
 \citation{yao2020adahessian,abs-2101-08940,zandonati2022fit}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Keras}{3}{}\protected@file@percent }
-\newlabel{eq:loss}{{9}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}$\Gamma $ Chosen Once and Full Training Ahead}{3}{}\protected@file@percent }
-\newlabel{sec:one-mask}{{\mbox  {III-B}}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}$\Gamma $ Chosen in Steps and Small Fine Tuning}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}$\Gamma $ Trainable as Optimization Problem}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-E}}Hessian and Fisher Information }{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Keras}{3}{subsection.3.1}\protected@file@percent }
+\newlabel{eq:loss}{{9}{3}{Keras}{equation.3.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}$\Gamma $ Chosen Once and Full Training Ahead}{3}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:one-mask}{{\mbox  {III-B}}{3}{$\Gamma $ Chosen Once and Full Training Ahead}{subsection.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}$\Gamma $ Chosen in Steps and Small Fine Tuning}{3}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}$\Gamma $ Trainable as Optimization Problem}{3}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-E}}Hessian and Fisher Information }{3}{subsection.3.5}\protected@file@percent }
 \citation{deng2009imagenet}
 \citation{Caffe}
 \citation{tensorflow}
 \citation{10.1145/3473334,abs-2110-04327}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-F}}Diagonal Hessian}{4}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-G}}PyTorch}{4}{}\protected@file@percent }
-\newlabel{sec:pytorch}{{\mbox  {III-G}}{4}}
-\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Accuracies of the sparsity models}}{4}{}\protected@file@percent }
-\newlabel{tab_acc}{{I}{4}}
-\@writefile{toc}{\contentsline {section}{\numberline {IV}Compiler and its Code Generation for AIE}{4}{}\protected@file@percent }
-\newlabel{sec:compiler}{{IV}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}AIE Hardware Abstraction}{4}{}\protected@file@percent }
-\newlabel{sec:aie2}{{\mbox  {IV-A}}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 4x4 AIE representation}}{5}{}\protected@file@percent }
-\newlabel{fig:aie}{{2}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Sub Volume, Data Compression, and Data Movement}{5}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {IV-B}1}Hidden Problems}{5}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {IV-B}2}Hidden Solutions}{5}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-F}}Diagonal Hessian}{4}{subsection.3.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-G}}PyTorch}{4}{subsection.3.7}\protected@file@percent }
+\newlabel{sec:pytorch}{{\mbox  {III-G}}{4}{PyTorch}{subsection.3.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Accuracies of the sparsity models}}{4}{table.1}\protected@file@percent }
+\newlabel{tab_acc}{{I}{4}{Accuracies of the sparsity models}{table.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Compiler and its Code Generation for AIE}{4}{section.4}\protected@file@percent }
+\newlabel{sec:compiler}{{IV}{4}{Compiler and its Code Generation for AIE}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}AIE Hardware Abstraction}{4}{subsection.4.1}\protected@file@percent }
+\newlabel{sec:aie2}{{\mbox  {IV-A}}{4}{AIE Hardware Abstraction}{subsection.4.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 4x4 AIE representation}}{5}{figure.2}\protected@file@percent }
+\newlabel{fig:aie}{{2}{5}{4x4 AIE representation}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Sub Volume, Data Compression, and Data Movement}{5}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {IV-B}1}Hidden Problems}{5}{subsubsection.4.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\mbox  {IV-B}2}Hidden Solutions}{5}{subsubsection.4.2.2}\protected@file@percent }
 \citation{abs-2110-04327}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Schedule and Memory Allocation}{6}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Code Generation }{6}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Resnet50 for 4x4 AIE with dense weights}}{7}{}\protected@file@percent }
-\newlabel{fig:estimate-dense}{{3}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-E}}Time Estimation}{7}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Resnet single convolution with padding for 4x4: legend AIE: LOAD Activation DDR to Memtile, LOADW weights DDR to Memtile, LOADFM Activation Memtile to AIE2 cores, LOADWM weights Memtile to AIE2, WRITE Memtile to DDR, WRITEFM AIE2 to Memtile, COMP Computation }}{7}{}\protected@file@percent }
-\newlabel{fig:singleconvestimate}{{4}{7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-F}}Time estimates for DDR to Memtile}{7}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-G}}Time Estimates for Memtile to AIEs}{8}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-H}}Convolution Example}{8}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Resnet single convolution with padding and sparsity for 4x4 AIE }}{8}{}\protected@file@percent }
-\newlabel{fig:singleconvestimate2}{{5}{8}}
-\@writefile{toc}{\contentsline {section}{\numberline {V}Depth-Wise subgraph Tiling}{8}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Generalized Convolution}{8}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Schedule and Memory Allocation}{6}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Code Generation }{6}{subsection.4.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Resnet50 for 4x4 AIE with dense weights}}{7}{figure.3}\protected@file@percent }
+\newlabel{fig:estimate-dense}{{3}{7}{Resnet50 for 4x4 AIE with dense weights}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-E}}Time Estimation}{7}{subsection.4.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Resnet single convolution with padding for 4x4: legend AIE: LOAD Activation DDR to Memtile, LOADW weights DDR to Memtile, LOADFM Activation Memtile to AIE2 cores, LOADWM weights Memtile to AIE2, WRITE Memtile to DDR, WRITEFM AIE2 to Memtile, COMP Computation }}{7}{figure.4}\protected@file@percent }
+\newlabel{fig:singleconvestimate}{{4}{7}{Resnet single convolution with padding for 4x4: legend AIE: LOAD Activation DDR to Memtile, LOADW weights DDR to Memtile, LOADFM Activation Memtile to AIE2 cores, LOADWM weights Memtile to AIE2, WRITE Memtile to DDR, WRITEFM AIE2 to Memtile, COMP Computation}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-F}}Time estimates for DDR to Memtile}{7}{subsection.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-G}}Time Estimates for Memtile to AIEs}{8}{subsection.4.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-H}}Convolution Example}{8}{subsection.4.8}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Resnet single convolution with padding and sparsity for 4x4 AIE }}{8}{figure.5}\protected@file@percent }
+\newlabel{fig:singleconvestimate2}{{5}{8}{Resnet single convolution with padding and sparsity for 4x4 AIE}{figure.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Depth-Wise subgraph Tiling}{8}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-A}}Generalized Convolution}{8}{subsection.5.1}\protected@file@percent }
 \citation{Hong1981IOCT,BilardiPD00}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Resnet50 for 4x4 AIE with 50\% sparse weights}}{9}{}\protected@file@percent }
-\newlabel{fig:estimate-sparse}{{6}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Live analysis and Zero DDR Communication}{9}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Iteration and Memory allocation}{9}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Code Generation}{9}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}Complementary}{10}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Inception V3 for 6x6 AIE with dense (left/top) weights and sparse (right/bottom) }}{10}{}\protected@file@percent }
-\newlabel{fig:incv3-estimate-dense}{{7}{10}}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Results}{10}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Results All}{10}{}\protected@file@percent }
-\newlabel{sec:experiments}{{\mbox  {VI-A}}{10}}
-\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Execution Time estimates}}{10}{}\protected@file@percent }
-\newlabel{tab_perf}{{II}{10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Resnet50 for 4x4 AIE with 50\% sparse weights}}{9}{figure.6}\protected@file@percent }
+\newlabel{fig:estimate-sparse}{{6}{9}{Resnet50 for 4x4 AIE with 50\% sparse weights}{figure.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-B}}Live analysis and Zero DDR Communication}{9}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-C}}Iteration and Memory allocation}{9}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-D}}Code Generation}{9}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {V-E}}Complementary}{10}{subsection.5.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Inception V3 for 6x6 AIE with dense (left/top) weights and sparse (right/bottom) }}{10}{figure.7}\protected@file@percent }
+\newlabel{fig:incv3-estimate-dense}{{7}{10}{Inception V3 for 6x6 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Results}{10}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Results All}{10}{subsection.6.1}\protected@file@percent }
+\newlabel{sec:experiments}{{\mbox  {VI-A}}{10}{Results All}{subsection.6.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Execution Time estimates}}{10}{table.2}\protected@file@percent }
+\newlabel{tab_perf}{{II}{10}{Execution Time estimates}{table.2}{}}
 \citation{frantar2023gptq}
 \citation{abs-2102-11289}
 \citation{ahmad2019dense}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}Results Depth-Wise Tiling for VGG16 3x3}{11}{}\protected@file@percent }
-\newlabel{sec:res-depth}{{\mbox  {VI-B}}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces VGG16 3x3 last Maxpool}}{11}{}\protected@file@percent }
-\newlabel{vgg16overall}{{8}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces VGG16 3x3 DDR only}}{11}{}\protected@file@percent }
-\newlabel{vggddronly}{{9}{11}}
-\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusions and Context}{11}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces VGG16 3x3 DDR only 3 tiles}}{11}{}\protected@file@percent }
-\newlabel{vgg3tiles}{{10}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces VGG16 3x3 DDR only 2 tiles}}{11}{}\protected@file@percent }
-\newlabel{vgg2tiles}{{11}{11}}
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces VGG16 3x3 DDR only 2 tiles sparse}}{11}{}\protected@file@percent }
-\newlabel{vgg2tilessparse}{{12}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}Results Depth-Wise Tiling for VGG16 3x3}{11}{subsection.6.2}\protected@file@percent }
+\newlabel{sec:res-depth}{{\mbox  {VI-B}}{11}{Results Depth-Wise Tiling for VGG16 3x3}{subsection.6.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces VGG16 3x3 last Maxpool}}{11}{figure.8}\protected@file@percent }
+\newlabel{vgg16overall}{{8}{11}{VGG16 3x3 last Maxpool}{figure.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces VGG16 3x3 DDR only}}{11}{figure.9}\protected@file@percent }
+\newlabel{vggddronly}{{9}{11}{VGG16 3x3 DDR only}{figure.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusions and Context}{11}{section.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces VGG16 3x3 DDR only 3 tiles}}{11}{figure.10}\protected@file@percent }
+\newlabel{vgg3tiles}{{10}{11}{VGG16 3x3 DDR only 3 tiles}{figure.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces VGG16 3x3 DDR only 2 tiles}}{11}{figure.11}\protected@file@percent }
+\newlabel{vgg2tiles}{{11}{11}{VGG16 3x3 DDR only 2 tiles}{figure.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces VGG16 3x3 DDR only 2 tiles sparse}}{11}{figure.12}\protected@file@percent }
+\newlabel{vgg2tilessparse}{{12}{11}{VGG16 3x3 DDR only 2 tiles sparse}{figure.12}{}}
 \citation{Huang2021CoSASB,Russo2023MemoryAwareDA,Cai2023InterlayerSS}
-\@writefile{toc}{\contentsline {section}{\numberline {VIII}appendix}{12}{}\protected@file@percent }
-\newlabel{sec:appendix}{{VIII}{12}}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}appendix}{12}{section.8}\protected@file@percent }
+\newlabel{sec:appendix}{{VIII}{12}{appendix}{section.8}{}}
 \bibstyle{IEEEtran}
 \bibdata{ref}
 \bibcite{rocSPARSE}{1}
@@ -113,33 +130,33 @@
 \bibcite{Huang2021CoSASB}{20}
 \bibcite{Russo2023MemoryAwareDA}{21}
 \bibcite{Cai2023InterlayerSS}{22}
-\@writefile{toc}{\contentsline {section}{References}{13}{}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Inception for 2x2 AIE with dense (left/top) weights and sparse (right/bottom) }}{14}{}\protected@file@percent }
-\newlabel{fig:incv3-1}{{13}{14}}
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Inception for 3x3 AIE with dense (left/top) weights and sparse (right/bottom) }}{15}{}\protected@file@percent }
-\newlabel{fig:incv3-2}{{14}{15}}
-\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Inception for 4x4 AIE with dense (left/top) weights and sparse (right/bottom) }}{16}{}\protected@file@percent }
-\newlabel{fig:incv3-3}{{15}{16}}
-\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Inception for 5x5 AIE with dense weights and FAILED for sparse weights }}{17}{}\protected@file@percent }
-\newlabel{fig:incv3-4}{{16}{17}}
-\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Inception for 6x6 AIE with dense (left/top) weights and sparse (right/bottom) }}{18}{}\protected@file@percent }
-\newlabel{fig:incv3-5}{{17}{18}}
-\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Inception for 8x8 AIE with dense (left/top) weights and sparse (right/bottom) }}{19}{}\protected@file@percent }
-\newlabel{fig:incv3-6}{{18}{19}}
-\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Resnet for 2x2 AIE with dense (left/top) weights and sparse (right/bottom) }}{20}{}\protected@file@percent }
-\newlabel{fig:incv3-7}{{19}{20}}
-\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Resnet for 3x3 AIE with dense (left/top) weights and sparse (right/bottom) }}{21}{}\protected@file@percent }
-\newlabel{fig:incv3-8}{{20}{21}}
-\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Resnet for 4x4 AIE with dense (left/top) weights and sparse (right/bottom) }}{22}{}\protected@file@percent }
-\newlabel{fig:incv3-9}{{21}{22}}
-\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces Resnet for 5x5 AIE with sparse weights and FAILED for dense weights}}{23}{}\protected@file@percent }
-\newlabel{fig:incv3-10}{{22}{23}}
-\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces Resnet for 6x6 AIE with dense (left/top) weights and sparse (right/bottom) }}{24}{}\protected@file@percent }
-\newlabel{fig:incv3-11}{{23}{24}}
-\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces VGG 16 (No FC) for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)}}{25}{}\protected@file@percent }
-\newlabel{fig:incv3-12}{{24}{25}}
-\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces VGG 16 (No FC) for 4x4 AIE with dense (left/top) weights and sparse (right/bottom)}}{26}{}\protected@file@percent }
-\newlabel{fig:incv3-13}{{25}{26}}
-\@writefile{lof}{\contentsline {figure}{\numberline {26}{\ignorespaces VGG 16 (No FC) for 8x8 AIE with dense (left/top) weights and sparse (right/bottom)}}{27}{}\protected@file@percent }
-\newlabel{fig:incv3-14}{{26}{27}}
+\@writefile{toc}{\contentsline {section}{References}{13}{section*.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Inception for 2x2 AIE with dense (left/top) weights and sparse (right/bottom) }}{14}{figure.13}\protected@file@percent }
+\newlabel{fig:incv3-1}{{13}{14}{Inception for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Inception for 3x3 AIE with dense (left/top) weights and sparse (right/bottom) }}{15}{figure.14}\protected@file@percent }
+\newlabel{fig:incv3-2}{{14}{15}{Inception for 3x3 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.14}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Inception for 4x4 AIE with dense (left/top) weights and sparse (right/bottom) }}{16}{figure.15}\protected@file@percent }
+\newlabel{fig:incv3-3}{{15}{16}{Inception for 4x4 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Inception for 5x5 AIE with dense weights and FAILED for sparse weights }}{17}{figure.16}\protected@file@percent }
+\newlabel{fig:incv3-4}{{16}{17}{Inception for 5x5 AIE with dense weights and FAILED for sparse weights}{figure.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Inception for 6x6 AIE with dense (left/top) weights and sparse (right/bottom) }}{18}{figure.17}\protected@file@percent }
+\newlabel{fig:incv3-5}{{17}{18}{Inception for 6x6 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Inception for 8x8 AIE with dense (left/top) weights and sparse (right/bottom) }}{19}{figure.18}\protected@file@percent }
+\newlabel{fig:incv3-6}{{18}{19}{Inception for 8x8 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Resnet for 2x2 AIE with dense (left/top) weights and sparse (right/bottom) }}{20}{figure.19}\protected@file@percent }
+\newlabel{fig:incv3-7}{{19}{20}{Resnet for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Resnet for 3x3 AIE with dense (left/top) weights and sparse (right/bottom) }}{21}{figure.20}\protected@file@percent }
+\newlabel{fig:incv3-8}{{20}{21}{Resnet for 3x3 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Resnet for 4x4 AIE with dense (left/top) weights and sparse (right/bottom) }}{22}{figure.21}\protected@file@percent }
+\newlabel{fig:incv3-9}{{21}{22}{Resnet for 4x4 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces Resnet for 5x5 AIE with sparse weights and FAILED for dense weights}}{23}{figure.22}\protected@file@percent }
+\newlabel{fig:incv3-10}{{22}{23}{Resnet for 5x5 AIE with sparse weights and FAILED for dense weights}{figure.22}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces Resnet for 6x6 AIE with dense (left/top) weights and sparse (right/bottom) }}{24}{figure.23}\protected@file@percent }
+\newlabel{fig:incv3-11}{{23}{24}{Resnet for 6x6 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.23}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces VGG 16 (No FC) for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)}}{25}{figure.24}\protected@file@percent }
+\newlabel{fig:incv3-12}{{24}{25}{VGG 16 (No FC) for 2x2 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces VGG 16 (No FC) for 4x4 AIE with dense (left/top) weights and sparse (right/bottom)}}{26}{figure.25}\protected@file@percent }
+\newlabel{fig:incv3-13}{{25}{26}{VGG 16 (No FC) for 4x4 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.25}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {26}{\ignorespaces VGG 16 (No FC) for 8x8 AIE with dense (left/top) weights and sparse (right/bottom)}}{27}{figure.26}\protected@file@percent }
+\newlabel{fig:incv3-14}{{26}{27}{VGG 16 (No FC) for 8x8 AIE with dense (left/top) weights and sparse (right/bottom)}{figure.26}{}}
 \gdef \@abspage@last{27}

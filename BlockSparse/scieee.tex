@@ -3,6 +3,7 @@
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{hyperref}
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
@@ -11,6 +12,9 @@
 \usepackage{xcolor}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+
 
 \input{mydef}
 
@@ -1112,10 +1116,10 @@ to reduce the footprint of a CNN network. There are post-training
 techniques that are targeting quantization and unstructured sparsity
 \cite{frantar2023gptq} and all the reference within and its
 citations. For the type of sparsity we are planning, we need to be
-more aggressive and trai for it (as starting point
+more aggressive and train for it (as starting point
 \cite{abs-2102-11289}).  But our sparsity is not really a property of
-the model, it is a sparsity that the software can describe and the
-hardware can take advantage without having any hardware support.
+the model, software/algorithms can describe it and the hardware can
+take advantage of it.
 
 This work stemmed from a collaboration between Xilinx and Numenta and
 the idea set forward by the authors in \cite{ahmad2019dense}, where
@@ -1134,18 +1138,18 @@ total accuracy. In principle, we could use 2 by 4 zero encoding for
 the non-zero blocks to further reduce space and computations.
 
 This is the second attempt to create time estimates given a specific
-AIE configurations. Sourabh Donfaonkar designed the first estimate
-model to shape the architecture and optimize the code for $8\times 2$
-cohort row by column with two memtiles per column, within a $8\times
-8$ shim (i.e., block), and composition of 9-10 of them. This first
-step investigates how split the weight by CIN and by COUT and how the
-random block sparsity affects the coding and actual memory foot-print
-(HW loves symmetric computations and unbalance computations will
-be reduce to balanced ones). This shaped our understanding how to
+AIE configurations. Sourabh Dongaonkar designed the first estimate
+model to shape the architecture and to optimize the code for $8\times
+2$ cohort row by column with two memtiles per column, within a
+$8\times 8$ shim (i.e., block), and composition of 9-10 of them. This
+first step investigates how to split the weight by CIN and by COUT and
+how the random block sparsity affects the coding and actual memory
+foot-print (HW loves symmetric computations and unbalance computations
+will be reduce to balanced ones). This shaped our understanding how to
 compress weights. Now, we write instructions with the intent of
 executing them, we know where the data will be and what amount we
 shall move, and thus we account for most of the idiosyncrasies of the
-model (padding and strides) and of the communications (yes, padding).
+model (padding and strides) and of the communications.
 
 
 The difficulty of generating code for complex architectures can be
@@ -1186,7 +1190,7 @@ main difference:
      estimates can be used to quantify scheduling and HW
      configurations choices. Yes, there is further arbitrary
      connections and hardware configurations that can change and the
-     effects are visible only by writing code for it \dots
+     effects are visible only by writing codes.
 \end{itemize}
 
 For simplicity, we do not provide all the details about the
