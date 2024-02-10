@@ -22,21 +22,21 @@
 \title{Weight Block Sparsity: Training, Compilers, and Accelerators  }
 
 \author{
-  \IEEEauthorblockN{Paolo D'\!Alberto,}
+  \IEEEauthorblockN{P. D'\!Alberto,}
   \and
-  \IEEEauthorblockN{Taehee Jeong,}  
+  \IEEEauthorblockN{T. Jeong,}  
   \and
-  \IEEEauthorblockN{Akshay Jain,}  
+  \IEEEauthorblockN{A. Jain,}  
   \and
-  \IEEEauthorblockN{Shreyas Manjunath,}  
+  \IEEEauthorblockN{S. Manjunath,}  
   \and
-  \IEEEauthorblockN{Mrinal Sarmah,}  
+  \IEEEauthorblockN{M. Sarmah,}  
   \and
-  \IEEEauthorblockN{Samuel Hsu,}
+  \IEEEauthorblockN{S. Hsu,}
   \and
-  \IEEEauthorblockN{Yaswanth Raparti,}
+  \IEEEauthorblockN{Y. Raparti,}
   \and
-  \IEEEauthorblockN{ and Nitesh Pipralia}
+  \IEEEauthorblockN{N. Pipralia}
 }
 
 %\renewcommand{\shortauthors}{D'Alberto, et al.}
@@ -880,9 +880,7 @@ in space saving.
 
 \section{Depth-Wise subgraph Tiling}
 In this section, we introduce an optimization designed to reduce the
-activation's DDR accesses, which sparsity does not. This tiling
-optimization is rare in most computational models computing every
-tensor only once.
+activation's DDR accesses, which sparsity does not.
 
 Consider a graph and a schedule describing the computation order. For
 example, the schedule $L_0, L_1, \dots L_n$ represents the layer
@@ -891,7 +889,7 @@ $T_i$.  Multiple layers can read $T_i$. Assume, we have a sub-schedule
 $L_0, L_1, \dots L_j$ with $j<n$ that is a convex subgraph with one
 input, one output, and every layer spills into DDR. That is, every
 layer $L_i$ will have its inputs and its output in DDR. We present an
-example shortly. The compiler will apply different types of splitting
+example in Section \ref{sec:res-depth}. The compiler will apply different types of splitting
 W-split and H-Split to accommodate data locality per layer into the
 memory hierarchy.  Fusing layers $L_i$ and $L_{i+1}$ may exploit
 better locality of the temporary tensor $T_i$. In this case, consider
@@ -902,7 +900,7 @@ re-computation.
 Depth-wise tiling is the idea of tiling the output tensor $T_j$ into
 tiles $u_i$, then cut the computation accordingly to find the minimum
 corresponding input shape and size of $T_{-1}$ and $T_0$, even
-overlapping, to carry the computation to $u_i$.
+overlapping, to carry the computation to $u_i$. 
 
 \subsection{Generalized Convolution} 
 Take the last layer $L_j$; it has an output tensor $T_j$ and an input
@@ -990,8 +988,9 @@ Section \ref{sec:res-depth}
 
 \section{Results}
 For presentation purpose, we split this section into two. We address
-first depth-wise tiling and sparsity first; second we address dense
-and sparsity overall.
+first the performance of dense and sparsity overall for a set $2\times
+2, \dots, 8\times 8$ AIEs; second, we address the depth-wise tiling and
+sparsity optimizations for VGG16 and a $3\times 3$ AIE configuration.
  
 
 
@@ -999,28 +998,9 @@ and sparsity overall.
 \subsection{Results All}
 \label{sec:experiments}
 In this section, we present the performance of sparsity applied to all
-the convolutions (except the first one) for Resnet 50 Figure and
-Inception V3 Figure \ref{fig:incv3-estimate-dense},
-\ref{fig:estimate-dense} and \ref{fig:estimate-sparse}.
-
-
-When we generate the code for each instruction, we compute the
-execution time. If we inspect the assembly code, we will find time
-information in the context whether or not each instruction contribute
-directly. For data movement to and from DDR and memtile, we reduce the
-contribution (sum directly). There is no streaming or communication
-overlapping, thus the sum.
-
-For memtile to and from core communications and core computations, we
-create a time series. We explain in the previous section how we
-account for the execution time for instruction with and without
-iterations. All of this will be an attribute of the layer (node in the
-graph computation).  To create a complete time estimate, we need to
-take the schedule of the computation and the graph, visit each node
-accordingly to the schedule, write a {\em json} file describing the
-time series and then by {\em javascript} we can visualize the time
-series using a browser. The figures in this paper are generated
-directly.
+the convolutions (except the first one), see Table \ref{tab_perf}, and
+in the appedix we present the complete set of simulation simulations,
+see Section \ref{sec:appendix}.
 
 For a $4\times 4$ AIE setup, Resnet 50 fits in memtile from the
 beginning to the last operation (beside the first convolution and this
@@ -1032,6 +1012,8 @@ For the estimate of Inception V3, we use a $6\times 6$ AIE setup.
 This allows a limited spill into DDR and the sparsity delivering once
 again an overall 2$\times$ speed up. See Figure
 \ref{fig:incv3-estimate-dense}.
+
+
 
 
 \begin{table}[htb]
@@ -1070,9 +1052,12 @@ again an overall 2$\times$ speed up. See Figure
 
 In Table \ref{tab_perf}, we present the estimates of the total
 execution time for three networks and seven configurations. We report
-also the case where the compiler fails to generate code.
+also the case where the compiler fails to generate code. Notice that
+the configuration $8\times 8$ is never beneficial. A full
+investiagation is necessary.
 
-%\newpage
+
+\newpage
 %\newpage
 \subsection{Results Depth-Wise Tiling for VGG16 3x3}
 \label{sec:res-depth}
@@ -1211,7 +1196,7 @@ its entirety as much as we made public some of it.
      
      
 \section{appendix}
-
+\label{sec:appendix}
 
 
 
