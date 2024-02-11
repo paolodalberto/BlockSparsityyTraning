@@ -2,7 +2,7 @@
 %%% Do NOT edit. File created by BibTeX with style
 %%% ACM-Reference-Format-Journals [18-Jan-2012].
 
-\begin{thebibliography}{15}
+\begin{thebibliography}{17}
 
 %%% ====================================================================
 %%% NOTE TO THE USER: you can override these defaults by providing
@@ -37,19 +37,7 @@
 \providecommand\natexlab[1]{#1}
 \providecommand\showeprint[2][]{arXiv:#2}
 
-\bibitem[\protect\citeauthoryear{??}{ten}{[n.d.]}]%
-        {tensorflow}
- \bibinfo{year}{[n.d.]}\natexlab{}.
-\newblock \bibinfo{booktitle}{\emph{{TensorFlow}}}.
-\newblock
-\urldef\tempurl%
-\url{https://www.tensorflow.org/}
-\showURL{%
-\tempurl}
-
-
-\bibitem[\protect\citeauthoryear{Ahmad and Scheinkman}{Ahmad and
-  Scheinkman}{2019}]%
+\bibitem[Ahmad and Scheinkman(2019)]%
         {ahmad2019dense}
 \bibfield{author}{\bibinfo{person}{Subutai Ahmad} {and} \bibinfo{person}{Luiz
   Scheinkman}.} \bibinfo{year}{2019}\natexlab{}.
@@ -57,10 +45,10 @@
   Sparse Representations}.
 \newblock
 \newblock
-\showeprint[arxiv]{cs.LG/1903.11257}
+\showeprint[arxiv]{1903.11257}~[cs.LG]
 
 
-\bibitem[\protect\citeauthoryear{AMD}{AMD}{2020}]%
+\bibitem[AMD(2020)]%
         {rocSPARSE}
 \bibfield{author}{\bibinfo{person}{AMD}.} \bibinfo{year}{2020}\natexlab{}.
 \newblock \bibinfo{title}{rocSPARSE}.
@@ -68,8 +56,7 @@
 \newblock
 
 
-\bibitem[\protect\citeauthoryear{Cai, Wei, Wu, Peng, and Ma}{Cai
-  et~al\mbox{.}}{2023}]%
+\bibitem[Cai et~al\mbox{.}(2023)]%
         {Cai2023InterlayerSS}
 \bibfield{author}{\bibinfo{person}{Jingwei Cai}, \bibinfo{person}{Yuchen Wei},
   \bibinfo{person}{Zuotong Wu}, \bibinfo{person}{Sen Peng}, {and}
@@ -85,8 +72,7 @@
 \tempurl}
 
 
-\bibitem[\protect\citeauthoryear{Chollet et~al\mbox{.}}{Chollet
-  et~al\mbox{.}}{2015}]%
+\bibitem[Chollet et~al\mbox{.}(2015)]%
         {chollet2015keras}
 \bibfield{author}{\bibinfo{person}{Fran\c{c}ois Chollet} {et~al\mbox{.}}}
   \bibinfo{year}{2015}\natexlab{}.
@@ -95,8 +81,26 @@
 \newblock
 
 
-\bibitem[\protect\citeauthoryear{Deng, Dong, Socher, Li, Li, and Fei-Fei}{Deng
-  et~al\mbox{.}}{2009}]%
+\bibitem[D'Alberto(2013)]%
+        {PaoloG2020}
+\bibfield{author}{\bibinfo{person}{Paolo D'Alberto}.}
+  \bibinfo{year}{2013}\natexlab{}.
+\newblock
+  \bibinfo{howpublished}{https://github.com/paolodalberto/SparseFastMM/}.
+\newblock
+
+
+\bibitem[D'Alberto(2020)]%
+        {PaoloK2020}
+\bibfield{author}{\bibinfo{person}{Paolo D'Alberto}.}
+  \bibinfo{year}{2020}\natexlab{}.
+\newblock \bibinfo{title}{Block Sparsity and Training}.
+\newblock
+  \bibinfo{howpublished}{https://github.com/paolodalberto/BlockSparsityyTraning}.
+\newblock
+
+
+\bibitem[Deng et~al\mbox{.}(2009)]%
         {deng2009imagenet}
 \bibfield{author}{\bibinfo{person}{Jia Deng}, \bibinfo{person}{Wei Dong},
   \bibinfo{person}{Richard Socher}, \bibinfo{person}{Li-Jia Li},
@@ -108,8 +112,23 @@
 \newblock
 
 
-\bibitem[\protect\citeauthoryear{Frantar, Ashkboos, Hoefler, and
-  Alistarh}{Frantar et~al\mbox{.}}{2023}]%
+\bibitem[et~al.(2015)]%
+        {tensorflow2015-whitepaper}
+\bibfield{author}{\bibinfo{person}{Mart\'{i}n~Abadi et al.}}
+  \bibinfo{year}{2015}\natexlab{}.
+\newblock \bibinfo{title}{{TensorFlow}: Large-Scale Machine Learning on
+  Heterogeneous Systems}.
+\newblock
+\newblock
+\urldef\tempurl%
+\url{https://www.tensorflow.org/}
+\showURL{%
+\tempurl}
+\newblock
+\shownote{Software available from tensorflow.org}.
+
+
+\bibitem[Frantar et~al\mbox{.}(2023)]%
         {frantar2023gptq}
 \bibfield{author}{\bibinfo{person}{Elias Frantar}, \bibinfo{person}{Saleh
   Ashkboos}, \bibinfo{person}{Torsten Hoefler}, {and} \bibinfo{person}{Dan
@@ -118,11 +137,10 @@
   Generative Pre-trained Transformers}.
 \newblock
 \newblock
-\showeprint[arxiv]{cs.LG/2210.17323}
+\showeprint[arxiv]{2210.17323}~[cs.LG]
 
 
-\bibitem[\protect\citeauthoryear{Gray, Radford, and Kingma}{Gray
-  et~al\mbox{.}}{2017}]%
+\bibitem[Gray et~al\mbox{.}(2017)]%
         {Gray2017GPUKF}
 \bibfield{author}{\bibinfo{person}{Scott Gray}, \bibinfo{person}{Alec Radford},
   {and} \bibinfo{person}{Diederik~P. Kingma}.} \bibinfo{year}{2017}\natexlab{}.
@@ -134,8 +152,7 @@
 \tempurl}
 
 
-\bibitem[\protect\citeauthoryear{Hawks, Duarte, Fraser, Pappalardo, Tran, and
-  Umuroglu}{Hawks et~al\mbox{.}}{2021}]%
+\bibitem[Hawks et~al\mbox{.}(2021)]%
         {abs-2102-11289}
 \bibfield{author}{\bibinfo{person}{Benjamin Hawks}, \bibinfo{person}{Javier~M.
   Duarte}, \bibinfo{person}{Nicholas~J. Fraser}, \bibinfo{person}{Alessandro
@@ -153,8 +170,7 @@
 \tempurl}
 
 
-\bibitem[\protect\citeauthoryear{Huang, Kang, Dinh, Norell, Kalaiah, Demmel,
-  Wawrzynek, and Shao}{Huang et~al\mbox{.}}{2021}]%
+\bibitem[Huang et~al\mbox{.}(2021)]%
         {Huang2021CoSASB}
 \bibfield{author}{\bibinfo{person}{Qijing Huang}, \bibinfo{person}{Minwoo
   Kang}, \bibinfo{person}{Grace Dinh}, \bibinfo{person}{Thomas Norell},
@@ -173,8 +189,7 @@
 \tempurl}
 
 
-\bibitem[\protect\citeauthoryear{Jia, Shelhamer, Donahue, Karayev, Long,
-  Girshick, Guadarrama, and Darrell}{Jia et~al\mbox{.}}{2014}]%
+\bibitem[Jia et~al\mbox{.}(2014)]%
         {Caffe}
 \bibfield{author}{\bibinfo{person}{Yangqing Jia}, \bibinfo{person}{Evan
   Shelhamer}, \bibinfo{person}{Jeff Donahue}, \bibinfo{person}{Sergey Karayev},
@@ -194,8 +209,7 @@
 \showDOI{\tempurl}
 
 
-\bibitem[\protect\citeauthoryear{Kurtz, Kopinsky, Gelashvili, Matveev, Carr,
-  Goin, Leiserson, Moore, Shavit, and Alistarh}{Kurtz et~al\mbox{.}}{2020}]%
+\bibitem[Kurtz et~al\mbox{.}(2020)]%
         {pmlr-v119-kurtz20a}
 \bibfield{author}{\bibinfo{person}{Mark Kurtz}, \bibinfo{person}{Justin
   Kopinsky}, \bibinfo{person}{Rati Gelashvili}, \bibinfo{person}{Alexander
@@ -207,9 +221,10 @@
   Fast Inference on Deep Neural Networks}. In
   \bibinfo{booktitle}{\emph{Proceedings of the 37th International Conference on
   Machine Learning}} \emph{(\bibinfo{series}{Proceedings of Machine Learning
-  Research})}, \bibfield{editor}{\bibinfo{person}{Hal~Daumé III} {and}
-  \bibinfo{person}{Aarti Singh}} (Eds.), Vol.~\bibinfo{volume}{119}.
-  \bibinfo{publisher}{PMLR}, \bibinfo{pages}{5533--5543}.
+  Research}, Vol.~\bibinfo{volume}{119})},
+  \bibfield{editor}{\bibinfo{person}{Hal~Daumé III} {and}
+  \bibinfo{person}{Aarti Singh}} (Eds.). \bibinfo{publisher}{PMLR},
+  \bibinfo{pages}{5533--5543}.
 \newblock
 \urldef\tempurl%
 \url{https://proceedings.mlr.press/v119/kurtz20a.html}
@@ -217,8 +232,7 @@
 \tempurl}
 
 
-\bibitem[\protect\citeauthoryear{Li, Orr, Ohan, costa, Murray, Sanders, Beker,
-  and Masters}{Li et~al\mbox{.}}{2023}]%
+\bibitem[Li et~al\mbox{.}(2023)]%
         {li2023popsparse}
 \bibfield{author}{\bibinfo{person}{Zhiyi Li}, \bibinfo{person}{Douglas Orr},
   \bibinfo{person}{Valeriu Ohan}, \bibinfo{person}{Godfrey~Da costa},
@@ -229,10 +243,10 @@
   multiplication on IPU}.
 \newblock
 \newblock
-\showeprint[arxiv]{cs.LG/2303.16999}
+\showeprint[arxiv]{2303.16999}~[cs.LG]
 
 
-\bibitem[\protect\citeauthoryear{NVIDIA}{NVIDIA}{2020}]%
+\bibitem[NVIDIA(2020)]%
         {cuSPARSE}
 \bibfield{author}{\bibinfo{person}{NVIDIA}.} \bibinfo{year}{2020}\natexlab{}.
 \newblock \bibinfo{title}{cuSPARSE}.
@@ -240,8 +254,7 @@
 \newblock
 
 
-\bibitem[\protect\citeauthoryear{Russo, Palesi, Ascia, Patti, Monteleone, and
-  Catania}{Russo et~al\mbox{.}}{2023}]%
+\bibitem[Russo et~al\mbox{.}(2023)]%
         {Russo2023MemoryAwareDA}
 \bibfield{author}{\bibinfo{person}{Enrico Russo}, \bibinfo{person}{Maurizio
   Palesi}, \bibinfo{person}{Giuseppe Ascia}, \bibinfo{person}{Davide Patti},

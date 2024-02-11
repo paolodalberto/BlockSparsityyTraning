@@ -17,6 +17,7 @@
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \citation{rocSPARSE,cuSPARSE}
+\citation{PaoloG2020}
 \citation{Gray2017GPUKF,li2023popsparse}
 \citation{pmlr-v119-kurtz20a}
 \@writefile{toc}{\contentsline {section}{Abstract}{1}{section*.1}\protected@file@percent }
@@ -26,10 +27,9 @@
 \@writefile{toc}{\contentsline {section}{\numberline {2}Block-Sparse Matrix-Matrix Multiplication}{1}{section.2}\protected@file@percent }
 \newlabel{sec:motivation}{{2}{1}{Block-Sparse Matrix-Matrix Multiplication}{section.2}{}}
 \citation{chollet2015keras}
+\citation{PaoloK2020}
 \citation{deng2009imagenet}
 \citation{deng2009imagenet}
-\citation{Caffe}
-\citation{tensorflow}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Block 1x1 and 8x8 performance\relax }}{2}{figure.caption.4}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{fig:block}{{1}{2}{Block 1x1 and 8x8 performance\relax }{figure.caption.4}{}}
@@ -41,6 +41,8 @@
 \newlabel{sec:pytorch}{{3.2}{2}{$\Gamma $ Chosen Once and Full Training Ahead: PyTorch}{subsection.3.2}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Accuracies of the sparsity models\relax }}{2}{table.caption.5}\protected@file@percent }
 \newlabel{tab_acc}{{1}{2}{Accuracies of the sparsity models\relax }{table.caption.5}{}}
+\citation{Caffe}
+\citation{tensorflow2015-whitepaper}
 \@writefile{toc}{\contentsline {section}{\numberline {4}The Compiler and its Code generation for AIE}{3}{section.4}\protected@file@percent }
 \newlabel{sec:compiler}{{4}{3}{The Compiler and its Code generation for AIE}{section.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}AIE Hardware Abstraction}{3}{subsection.4.1}\protected@file@percent }
@@ -56,10 +58,11 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Convolution example}{5}{subsection.4.6}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Resnet single convolution with padding and sparsity for 4x4 AIE \relax }}{5}{figure.caption.8}\protected@file@percent }
 \newlabel{fig:singleconvestimate2}{{4}{5}{Resnet single convolution with padding and sparsity for 4x4 AIE \relax }{figure.caption.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{5}{section.5}\protected@file@percent }
-\newlabel{sec:experiments}{{5}{5}{Results}{section.5}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Execution Time estimates\relax }}{5}{table.caption.9}\protected@file@percent }
-\newlabel{tab_perf}{{2}{5}{Execution Time estimates\relax }{table.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Depth-wise Tiling}{5}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Results}{5}{section.6}\protected@file@percent }
+\newlabel{sec:experiments}{{6}{5}{Results}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Results Depth-Wise Tiling for VGG16 3x3}{5}{subsection.6.1}\protected@file@percent }
+\newlabel{sec:res-depth}{{6.1}{5}{Results Depth-Wise Tiling for VGG16 3x3}{subsection.6.1}{}}
 \citation{frantar2023gptq}
 \citation{abs-2102-11289}
 \citation{ahmad2019dense}
@@ -68,27 +71,31 @@
 \citation{li2023popsparse}
 \bibstyle{ACM-Reference-Format}
 \bibdata{ref}
-\bibcite{tensorflow}{{1}{[n.d.]}{{ten}}{{??}}}
-\bibcite{ahmad2019dense}{{2}{2019}{{Ahmad and Scheinkman}}{{Ahmad and Scheinkman}}}
-\bibcite{rocSPARSE}{{3}{2020}{{AMD}}{{AMD}}}
-\bibcite{Cai2023InterlayerSS}{{4}{2023}{{Cai et~al\mbox  {.}}}{{Cai, Wei, Wu, Peng, and Ma}}}
-\bibcite{chollet2015keras}{{5}{2015}{{Chollet et~al\mbox  {.}}}{{Chollet et~al\mbox  {.}}}}
-\bibcite{deng2009imagenet}{{6}{2009}{{Deng et~al\mbox  {.}}}{{Deng, Dong, Socher, Li, Li, and Fei-Fei}}}
-\bibcite{frantar2023gptq}{{7}{2023}{{Frantar et~al\mbox  {.}}}{{Frantar, Ashkboos, Hoefler, and Alistarh}}}
-\bibcite{Gray2017GPUKF}{{8}{2017}{{Gray et~al\mbox  {.}}}{{Gray, Radford, and Kingma}}}
-\bibcite{abs-2102-11289}{{9}{2021}{{Hawks et~al\mbox  {.}}}{{Hawks, Duarte, Fraser, Pappalardo, Tran, and Umuroglu}}}
-\bibcite{Huang2021CoSASB}{{10}{2021}{{Huang et~al\mbox  {.}}}{{Huang, Kang, Dinh, Norell, Kalaiah, Demmel, Wawrzynek, and Shao}}}
-\bibcite{Caffe}{{11}{2014}{{Jia et~al\mbox  {.}}}{{Jia, Shelhamer, Donahue, Karayev, Long, Girshick, Guadarrama, and Darrell}}}
-\bibcite{pmlr-v119-kurtz20a}{{12}{2020}{{Kurtz et~al\mbox  {.}}}{{Kurtz, Kopinsky, Gelashvili, Matveev, Carr, Goin, Leiserson, Moore, Shavit, and Alistarh}}}
-\bibcite{li2023popsparse}{{13}{2023}{{Li et~al\mbox  {.}}}{{Li, Orr, Ohan, costa, Murray, Sanders, Beker, and Masters}}}
-\bibcite{cuSPARSE}{{14}{2020}{{NVIDIA}}{{NVIDIA}}}
-\bibcite{Russo2023MemoryAwareDA}{{15}{2023}{{Russo et~al\mbox  {.}}}{{Russo, Palesi, Ascia, Patti, Monteleone, and Catania}}}
+\bibcite{ahmad2019dense}{{1}{2019}{{Ahmad and Scheinkman}}{{}}}
+\bibcite{rocSPARSE}{{2}{2020}{{AMD}}{{}}}
+\bibcite{Cai2023InterlayerSS}{{3}{2023}{{Cai et~al\mbox  {.}}}{{}}}
+\bibcite{chollet2015keras}{{4}{2015}{{Chollet et~al\mbox  {.}}}{{}}}
+\bibcite{PaoloG2020}{{5}{2013}{{D'Alberto}}{{}}}
+\bibcite{PaoloK2020}{{6}{2020}{{D'Alberto}}{{}}}
+\bibcite{deng2009imagenet}{{7}{2009}{{Deng et~al\mbox  {.}}}{{}}}
+\bibcite{tensorflow2015-whitepaper}{{8}{2015}{{et~al.}}{{}}}
+\bibcite{frantar2023gptq}{{9}{2023}{{Frantar et~al\mbox  {.}}}{{}}}
+\bibcite{Gray2017GPUKF}{{10}{2017}{{Gray et~al\mbox  {.}}}{{}}}
+\bibcite{abs-2102-11289}{{11}{2021}{{Hawks et~al\mbox  {.}}}{{}}}
+\bibcite{Huang2021CoSASB}{{12}{2021}{{Huang et~al\mbox  {.}}}{{}}}
+\bibcite{Caffe}{{13}{2014}{{Jia et~al\mbox  {.}}}{{}}}
+\bibcite{pmlr-v119-kurtz20a}{{14}{2020}{{Kurtz et~al\mbox  {.}}}{{}}}
+\bibcite{li2023popsparse}{{15}{2023}{{Li et~al\mbox  {.}}}{{}}}
+\bibcite{cuSPARSE}{{16}{2020}{{NVIDIA}}{{}}}
+\bibcite{Russo2023MemoryAwareDA}{{17}{2023}{{Russo et~al\mbox  {.}}}{{}}}
 \newlabel{tocindent-1}{0pt}
 \newlabel{tocindent0}{0pt}
 \newlabel{tocindent1}{4.185pt}
 \newlabel{tocindent2}{10.34999pt}
 \newlabel{tocindent3}{0pt}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusions and Context}{6}{section.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Execution Time estimates\relax }}{6}{table.caption.9}\protected@file@percent }
+\newlabel{tab_perf}{{2}{6}{Execution Time estimates\relax }{table.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusions and Context}{6}{section.7}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{References}{6}{section*.11}\protected@file@percent }
 \newlabel{TotPages}{{6}{6}{}{page.6}{}}
 \gdef \@abspage@last{6}

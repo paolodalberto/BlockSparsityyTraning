@@ -103,7 +103,7 @@ This is simply the computation:
 \end{equation}}
 and in general with proper $\gamma_i$ (i.e., a mask):
 \begin{equation}
-  \Vc{C}_i = \sum_{k=0}^1 \Vc{A}_{2i+ k} \big(\gamma_{2*k+i} \Vc{B}_{2*k+i}\big)
+  \Vc{C}_i = \sum_{k=0}^1 \Vc{A}_{i+ k} \big(\gamma_{2*k+i} \Vc{B}_{2*k+i}\big)
 \end{equation}
 Where the matrix $\Vc{B}$ is constant, diagonal, and each submatrix
 $\Vc{B_2}$ and $\Vc{B}_1$ can split further down and may have even
@@ -119,7 +119,7 @@ Each block is a constant either non-zero or zero:
 {\small \begin{equation*}
   \Vc{B} = 
   \begin{bmatrix}
-    \gamma_0\Vc{B}_0   &  ... &   \gamma_0\Vc{B}_{n-1} \\
+    \gamma_0\Vc{B}_0   &  ... &   \gamma_{n-1}\Vc{B}_{n-1} \\
     \gamma_n\Vc{B}_{n} &  ... &   \gamma_{2n-1}\Vc{B}_{2n-1} \\
     ...               &  ... &   ... \\
     \gamma_{(n-1)n}\Vc{B}_{(n-1)n} & ... &   \gamma_{(n-1)^2}\Vc{B}_{(n-1)^2} \\

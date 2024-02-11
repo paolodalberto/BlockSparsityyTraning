@@ -127,14 +127,9 @@
 %% Of note is the shared affiliation of the first two authors, and the
 %% "authornote" and "authornotemark" commands
 %% used to denote shared contribution to the research.
-\author{Anonymous} 
-%\author{Paolo D'\!Alberto}
-%\author{Taehee Jeong}
-%\author{Akshay Jain}
-%\author{Shreyas Manjunath}
-%\author{Mrinal Sarmah}
-%\author{Samuel Hsu}
-%\author{Nitesh Pipralia}
+%\author{Anonymous} 
+\author{P. D'\!Alberto,  T. Jeong, A. Jain, S. Manjunath, M. Sarmah, }
+\author{S. Hsu, Y. Raparti, and  N. Pipralia}
 
 %%
 %% By default, the full list of authors will be used in the page
@@ -142,8 +137,8 @@
 %% other information printed in the page headers. This command allows
 %% the author to define a more concise list
 %% of authors' names for this purpose.
-%\renewcommand{\shortauthors}{ D'\!Alberto et al.}
-\renewcommand{\shortauthors}{ Anonymous  et al.}
+\renewcommand{\shortauthors}{ D'\!Alberto et al.}
+%\renewcommand{\shortauthors}{ Anonymous  et al.}
 
 %%
 %% The abstract is a short summary of the work to be presented in the
@@ -199,8 +194,7 @@ little misunderstood. Take a matrix multiplication in Equation
   \begin{pmatrix}
     \Vc{A}_0 & \Vc{A}_1 \\
     \Vc{A}_2 & \Vc{A}_3 \\ 
-  \end{pmatrix}\\
-  \begin{pmatrix}
+  \end{pmatrix}\\  \begin{pmatrix}
     \Vc{0}   & \Vc{B}_1 \\
     \Vc{B}_2 & \Vc{0} \\ 
   \end{pmatrix}\\
@@ -211,7 +205,7 @@ This is the computation {\small \begin{equation} \Vc{C}_0 = \Vc{A}_{1}
 \end{equation}}
 and in general with proper $\gamma_i$ (i.e., a mask)
 \begin{equation}
-  \Vc{C}_i = \sum_{k=0}^1 \Vc{A}_{2i+ k} \big(\gamma_{2*k+i} \Vc{B}_{2*k+i}\big)
+  \Vc{C}_i = \sum_{k=0}^1 \Vc{A}_{i+ k} \big(\gamma_{2*k+i} \Vc{B}_{2*k+i}\big)
 \end{equation}
 Where the matrix $\Vc{B}$ is constant, diagonal, and each submatrix
 $\Vc{B_2}$ and $\Vc{B}_1$ can split further down and may have even
@@ -239,16 +233,17 @@ XIR quantized model (Xilin intermediate representation). See Section
 and an abstraction of a connected set of AIE2. See Section
 \ref{sec:compiler}. The compiler computes the maximum sub-volume
 computation per core. By heuristics and following a schedule, it
-computes a memory allocation in memtile for input, outputs, and
-weights. It formats the weights exploiting spatial distribution to
-memtiles and cores. We generate all the explicit communications
-between DDR, memtile, and cores. We Know the subproblem sizes per
-core, the computation throughput and with a clear specification of
-what is executed in parallel. Then, we can estimate the execution time
-per layer and entire network with an accuracy closer to a simulation.
-We compute time estimates for all parts of the computation. We will
-show estimates for three CNN models and eight different AIE designs;
-see Section \ref{sec:experiments}.
+computes a memory allocation in memtile (i.e., intermediate scratch
+pad) for input, outputs, and weights . It formats the weights
+exploiting spatial distribution to memtiles and cores. We generate all
+the explicit communications between DDR ($L_3$), memtile ($L_2$), and
+cores ($L_1$). We Know the subproblem sizes per core, the computation
+throughput and with a clear specification of what is executed in
+parallel. Then, we can estimate the execution time per layer and
+entire network with an accuracy closer to a simulation.  We compute
+time estimates for all parts of the computation. We will show
+estimates for three CNN models and eight different AIE designs; see
+Section \ref{sec:experiments}.
 
 In the following Section \ref{sec:motivation}, we start with a
 quantitative measure about the advantages of block sparsity.
@@ -268,14 +263,13 @@ More precisely, consider non-zero blocks of size $k\times k$ so that
 
 
 Thanks to the sparsity and if we store only non-zeros, then
-$\gamma_{i*N+k}$ and $\dot{\omega}_{j*N+k}$ are at contiguous. There
-will be a meaningful product to compute if and only if $\gamma_{i*N+k}
-=1$ and $\dot{\omega}_{j*N+k} =1$.  We merge-sort these vectors.  See
-how the sparse sparse matrix multiplication using {\em Coordinate
-  Block Structure} (COO) is applied in Figure \ref{fig:block}.
-\begin{comment}
-  We provide software to reproduce this. % \cite{PaoloG2020}.
-\end{comment}
+$\gamma_{i*N+k}$ and $\dot{\omega}_{j*N+k}$ are contiguous. There will
+be a meaningful product to compute if and only if $\gamma_{i*N+k} =1$
+and $\dot{\omega}_{j*N+k} =1$.  We merge-sort these vectors.  See how
+the sparse sparse matrix multiplication using {\em Coordinate Block
+  Structure} (COO) is applied in Figure \ref{fig:block}.  We provide
+software to reproduce this \cite{PaoloG2020}.
+
 Now, assume we want to achieve a fixed sparsity (i.e., density) of
 50\% for a square matrix of size $N$ and we choose the block size $k
 \times k$. The larger $k$ is, the smaller the overhead will be.  The
@@ -317,7 +311,7 @@ the previous discussions. We explain the training process.
 
 \subsection{Keras}
 We shall provide a repository using Keras \cite{chollet2015keras}
-where we implements the contents of this section. %\cite{PaoloK2020}.
+where we implements the contents of this section. \cite{PaoloK2020}.
 
 We target convolutions only and without quantization. The idea is
 simple: we take any model and we create a copy where we enhance the
@@ -331,7 +325,7 @@ Resnet50 from the Keras application repository, we start with a
 $\Gamma=1$, and we trained one epoch using imagenet repository
 \cite{deng2009imagenet}.  The goal is to choose $\Gamma$ in such a way
 we achieve the required sparsity and the minimum loss in accuracy. We
-can tested different approaches such as incremental, Fisher measure,
+tested different approaches such as incremental, Fisher measure,
 Hessian, diagonal Hessian, and custom penalty losses. We will give
 full description in another venue.
 
@@ -415,7 +409,7 @@ are represented in INT8 with a position where the fraction starts
 with a proper scale. The weights and bias are properties of the
 convolutions. they can be tailored.  The layout of the weight tensor
 is $COUT\times h \times w \times CIN$, which is similar to the caffe
-layout \cite{Caffe} and different from \cite{tensorflow}. 
+layout \cite{Caffe} and different from \cite{tensorflow2015-whitepaper}. 
 \begin{comment}
   (previously DPUV1 and DPUV3int8
   \cite{10.11451/3473334,abs-2110-04327}).
@@ -436,7 +430,7 @@ consumption/production rates).
 
 \singlefigure{0.70}{AIE.png}{4x4 AIE representation}{fig:aie}
 
-see Figure \ref{fig:aie}, we work with a mesh of 4x4 AIE2 cores
+See Figure \ref{fig:aie}, we work with a mesh of 4x4 AIE2 cores
 connected by 4 horizontal and 4 vertical interconnections.  We present
 estimates for square 2x2, .. $i\times i$ .. 8x8 and rectangular shapes
 are in the works. Each core has 8 banks memories for a total 64
@@ -558,9 +552,9 @@ ASM-like code follows:
 \end{verbatim}
 } There is an implicit lock (say \verb2k_x2) that is used for the pong
 and the system cycles between locks (\verb2k_x2 and \verb2k_02).
-These three operations will be execute a number of iterations {\em i}
-and, using a ping/pong, they will load different slices of data and
-compute different slices of data.
+These three operations execute a number of iterations {\em i} and,
+using a ping/pong, they will load different slices of data and compute
+different slices of data.
 
 Equation \ref{eq:convpadding} is encoded as follows: {\small
   %\footnotesize
@@ -682,6 +676,30 @@ helps only in space saving and may be spilling. In principle, now that
 we know we can relax sparsity requirements for those convolutions (and
 restart training).
 
+\section{Depth-wise Tiling}
+Take the subgraph schedule $L_0, L_1, \dots L_j$ and $u_j=1\times1$
+output of $L_j$ subvector of $T_j$. A projection $\P$ is a function
+taking $u$ and projects the input sub-tensor needed to compute $u$.
+In reverse order, starting from $L_j$ compute $\P(L_j,u_j)$ and
+propagate the projection. When a layer $L_m$ and tensor $T_m$ feeds
+two (or more) layers $L_x$ and $L_y$. Then $u_m = \max (
+\P(L_x,u_x),\P(L_y,u_y))$ when $u_x$ and $u_y$ are defined completely
+and {\em max} mean the largest. We carry the propagation of
+$\P(L_m,u_m)$ and we have $T_{-1} \eq \P(L_0, u_0) =\prod_{l=j}^0
+\P(L_l, u_l) $, for which there is no practical advantage. At the end
+of the propagation, imagine this is a generalized convolution with
+kernel size $k = \P(L_0, u_0)$. Now if we repeat the process with
+$\dot{u}_j = 2\times 2$ ... $k+s = \P(L_0, \dot{u}_0)$. Thus we have
+an estimate of the generalized stride.  Now we can split the
+computation by selecting a non overlapping decomposition of the output
+tensor: say using M tiles each of size $u_o$. The input is split into
+M tiles of size $(u_o-1)s+k$ and we will have an overlap of size
+$k-1$. We can choose a tiling in such a way there is zero DDR
+communication in between $L_0$ and $L_j$.  With input overlap, thus
+with extra reads, we have extra computations. Sparsity will improve
+weights communication and reduce the effect of computations. 
+
+
 %\SSinglefigure{2.0}{R4x4-4sharedsparse.png}{Resnet50 for 4x4 AIE with 50\%
 %  sparse weights}{fig:estimate-sparse}
 
@@ -724,28 +742,6 @@ In Table \ref{tab_perf}, we present the performance of sparsity
 applied to all the convolutions (except the first one) for Resnet 50,
 Inception V3, and VGG16.
 
-%\DDoublefigure{0.80}{Iv36x6-6shareddense.png}{Iv36x6-6sharedsparse.png}{Inception V3 for 6x6 AIE
-%  with dense (left/top)  weights and sparse (right/bottom) }{fig:incv3-estimate-dense}
-
-When we generate the code, we compute the execution time. When we
-inspect the assembly code, we will find time information in the
-context whether or not each instruction contribute directly. For data
-movement to and from DDR and memtile, we reduce the contribution (sum
-directly).
-
-For memtile to and from core communications and core computations, we
-create a time series. All of this will be an attribute of the layer
-(node in the graph computation).  To create a complete time estimate,
-we take the schedule of the computation of the graph, visit each node
-accordingly to the schedule, write a {\em json} file describing the
-time series.  By {\em javascript}, we visualize the time series using
-a browser. The figures in this paper are generated directly.
-
-For a $4\times 4$ AIE set up, Resnet 50 fits in memtile from the
-beginning to the last operation (beside the first convolution and this
-is by costruction). The estimates advantage by sparsity is almost
-completely achieved.
-
 Corner cases are represented as failure in Table \ref{tab_perf}. Some
 cases is because of inability to break the weight tensor evenly.
 Sometime is for incorrect data management especially for prime
@@ -755,6 +751,21 @@ sparse.  It may happen because a symmetric computation my use too
 small sub-volume computations and thus more iterations for the same
 amount of data transfers. We will provide a full discussion if space
 permits.
+
+\subsection{Results Depth-Wise Tiling for VGG16 3x3}
+\label{sec:res-depth}
+
+We take VGG and we instruct the DDR to be 16 times slower (4GBs/16)
+highlighting the need of fewer DDR communications. We take only the
+part that requires DDR spills for each layer: 0.025s total time.  We
+apply depth-wise tiling using three tiles and we break even at
+0.024s. With two tiles, we achieve better performance at
+0.022s. Sparsity by itself without any tiling can achieve only
+0.021s. Sparsity and tiling improves even further and we achieve
+0.014s. A posteriori, we can appreciate the reduction of activation
+DDR communications thanks to depth-wise tiling and the reduction of
+computation and weights communication by sparsity.
+
 
 \section{Conclusions and Context}
 This is a multifaceted problem and we present a complete solution from
