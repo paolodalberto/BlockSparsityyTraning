@@ -1,19 +1,17 @@
 \relax 
 \citation{rocSPARSE}
 \citation{cuSPARSE}
-\citation{Gray2017GPUKF}
-\citation{li2023popsparse}
-\citation{pmlr-v119-kurtz20a}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{}\protected@file@percent }
 \newlabel{sec:introduction}{{I}{1}}
 \newlabel{eq:mat}{{1}{1}}
 \@writefile{toc}{\contentsline {section}{\numberline {II}Block-Sparse Matrix-Matrix Multiplication}{1}{}\protected@file@percent }
 \newlabel{sec:motivation}{{II}{1}}
+\citation{Gray2017GPUKF}
+\citation{li2023popsparse}
+\citation{pmlr-v119-kurtz20a}
 \citation{chollet2015keras}
 \citation{deng2009imagenet}
 \citation{deng2009imagenet}
-\citation{Caffe}
-\citation{tensorflow2015-whitepaper}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Block 1x1 and 8x8 performance}}{2}{}\protected@file@percent }
 \newlabel{fig:block}{{1}{2}}
 \@writefile{toc}{\contentsline {section}{\numberline {III}Block Sparsity: Training and Quantization}{2}{}\protected@file@percent }
@@ -24,13 +22,15 @@
 \newlabel{sec:pytorch}{{\mbox  {III-B}}{2}}
 \@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Accuracies of the sparsity models}}{2}{}\protected@file@percent }
 \newlabel{tab_acc}{{I}{2}}
-\@writefile{toc}{\contentsline {section}{\numberline {IV}The Compiler and its Code generation for AIE}{2}{}\protected@file@percent }
-\newlabel{sec:compiler}{{IV}{2}}
+\citation{Caffe}
+\citation{tensorflow2015-whitepaper}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}The Compiler and its Code generation for AIE}{3}{}\protected@file@percent }
+\newlabel{sec:compiler}{{IV}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}AIE Hardware Abstraction}{3}{}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces 4x4 AIE representation}}{3}{}\protected@file@percent }
 \newlabel{fig:aie}{{2}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Subvolumes, Data Compression, and Data Movements}{3}{}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Schedule and Memory Allocation}{3}{}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Schedule and Memory Allocation}{4}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Code Generation }{4}{}\protected@file@percent }
 \newlabel{eq:convpadding}{{8}{4}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Resnet single convolution with padding for 4x4: legend AIE: LOAD activation from DDR to memtile, LOADW weights from DDR to memtile, LOADFM activation from memtile to AIE2 cores, LOADWM weights from memtile to AIE2, WRITE from memtile to DDR, WRITEFM from AIE2 to memtile, COMP Computation. }}{4}{}\protected@file@percent }
@@ -42,8 +42,6 @@
 \@writefile{toc}{\contentsline {section}{\numberline {V}Depth-wise Tiling}{5}{}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {VI}Results}{5}{}\protected@file@percent }
 \newlabel{sec:experiments}{{VI}{5}}
-\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Execution Time estimates}}{5}{}\protected@file@percent }
-\newlabel{tab_perf}{{II}{5}}
 \citation{frantar2023gptq}
 \citation{abs-2102-11289}
 \citation{ahmad2019dense}
@@ -69,6 +67,8 @@
 \bibcite{Huang2021CoSASB}{13}
 \bibcite{Russo2023MemoryAwareDA}{14}
 \bibcite{Cai2023InterlayerSS}{15}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Execution Time estimates}}{6}{}\protected@file@percent }
+\newlabel{tab_perf}{{II}{6}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Results Depth-Wise Tiling for VGG16 3x3}{6}{}\protected@file@percent }
 \newlabel{sec:res-depth}{{\mbox  {VI-A}}{6}}
 \@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusions and Context}{6}{}\protected@file@percent }

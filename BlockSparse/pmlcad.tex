@@ -241,16 +241,28 @@ and an abstraction of a connected set of AIE2. See Section
 \ref{sec:compiler}. The compiler computes the maximum sub-volume
 computation per core. By heuristics and following a schedule, it
 computes a memory allocation in memtile (i.e., intermediate scratch
-pad) for input, outputs, and weights . It formats the weights
-exploiting spatial distribution to memtiles and cores. We generate all
-the explicit communications between DDR ($L_3$), memtile ($L_2$), and
-cores ($L_1$). We Know the subproblem sizes per core, the computation
-throughput and with a clear specification of what is executed in
-parallel. Then, we can estimate the execution time per layer and
-entire network with an accuracy closer to a simulation.  We compute
-time estimates for all parts of the computation. We will show
-estimates for three CNN models and eight different AIE designs; see
-Section \ref{sec:experiments}.
+pad) for input, outputs, and weights . It formats, compresses, and
+organizes the weights exploiting spatial distribution to memtiles and
+cores. We generate all the explicit communications between DDR
+($L_3$), memtile ($L_2$), and cores ($L_1$). These are Gather and
+Scatter instructions with a complete and parametric estimate of their
+execution time by bandwtidh constraints and number of channels. We
+know the subproblem sizes per core, the computation throughput and
+with a clear specification of what is executed in parallel. Then, we
+can estimate the execution time per layer and entire network with an
+accuracy closer to a simulation.  We will show estimates for three CNN
+models and eight different AIE designs; see Section
+\ref{sec:experiments}. To our knowledge, we are the first in applying
+sparsity on AIEs systematically. The ability to provide different
+algorithms and easy to obtain estimates for very different
+configurations, it will allow to explore optimizations like sub-graph
+depth-wise tiling we could not have otherwise. In our context,
+convolution is our main computation. This is because of legacy (how to
+speed up previous FPGA work horses), convolutions provide more
+difficulties than GEMMs (padding, strides, and overlap), have usually
+biases with different precision requirements (weight 8bits and bias
+32), and routinely they can deploy different scaling factors per
+output channels.
 
 In the following Section \ref{sec:motivation}, we start with a
 quantitative measure about the advantages of block sparsity.
@@ -258,7 +270,7 @@ quantitative measure about the advantages of block sparsity.
 \section{Block-Sparse Matrix-Matrix Multiplication}
 \label{sec:motivation}
 
-As a thought experiment, consider $\Gamma$ and $\Omega$ two matrices
+Consider $\Gamma$ and $\Omega$ two matrices
 in $\{0,1\}^{N\times N}$.
 \begin{equation}
   \Vc{C} = (\Gamma \Vc{A}) * (\Omega \Vc{B})^t
@@ -273,16 +285,13 @@ Thanks to the sparsity and if we store only non-zeros, then
 $\gamma_{i*N+k}$ and $\dot{\omega}_{j*N+k}$ are contiguous. There will
 be a meaningful product to compute if and only if $\gamma_{i*N+k} =1$
 and $\dot{\omega}_{j*N+k} =1$.  We merge-sort these vectors.  See how
-the sparse sparse matrix multiplication using {\em Coordinate Block
-  Structure} (COO) is applied in Figure \ref{fig:block}.  We provide
-software to reproduce this []. % \cite{PaoloG2020}.
+the sparse-sparse matrix multiplication using {\em Coordinate list}
+(COO) is applied in Figure \ref{fig:block} where the entry in the list
+is a submatrix.  We provide software to reproduce this []. %\cite{PaoloG2020}.
 
-Now, assume we want to achieve a fixed sparsity (i.e., density) of
-50\% for a square matrix of size $N$ and we choose the block size $k
-\times k$. The larger $k$ is, the smaller the overhead will be.  The
-relative performance of the $k^3$ multiplication is better as $k$ get
-larger because spatial, temporal locality, and further optimized code
-for a constant/parameterized such as $k$.
+If we want to achieve a fixed sparsity of 50\% for a square matrix of
+size $N$ and if we can choose the block size $k \times k$. The larger
+$k$ is, the smaller the overhead will be.
 
 \doublefigure{0.80}{1x1.png}{8x8.png}{Block 1x1 and 8x8
   performance}{fig:block}
@@ -291,11 +300,11 @@ In Figure \ref{fig:block}, we present two scatter plots: on the
 abscissa the effective multiplication-and-addition number, on the
 ordinate the performance in GFLOPS, when the sparse matrix with dense
 block is $1\times 1$ (above) and $8\times8$ (below). Given the same
-problem, we deploy more threads and thus the Jenga effect.  With the
-same number of effective operations, the block permits and exploits
-higher GFLOPS per effective operation (Float is 2x faster than Double
-precision and this can be emphasized further
-\cite{Gray2017GPUKF,li2023popsparse} and \cite{pmlr-v119-kurtz20a}).
+problem, we deploy more threads (more GFLOPS).  With the same number
+of effective operations, the block permits and exploits higher GFLOPS
+per effective operation (Float is 2x faster than Double precision and
+this can be emphasized further \cite{Gray2017GPUKF,li2023popsparse}
+and \cite{pmlr-v119-kurtz20a}).
 
 
 \section{Block Sparsity: Training and Quantization}
@@ -399,24 +408,29 @@ applying 50\% sparsity with a $8\times 8$ block (this is without any
 quantization). We experiment with different block shapes such as
 $16\times 4$ and $4\times 16$ on ResNet-50, but the accuracy is
 slightly worse. Fine-grained sparsity ($1\times 1$ block or
-unstructured) does not sacrifice any accuracy (i.e., almost any).  We
-use the sparsified models, we quantize them using Vitis AI, and we use
-them for time estimates (i.e., Section \ref{sec:experiments}).
+unstructured) does not sacrifice any accuracy (i.e., almost any). This
+is not equivalent to 2 over 4 (or 4 over 8) sparsity now available in
+GPUs, experiments show such constraints make the accuracy worse than
+block sparsity. We use the sparsified models, we quantize them using
+Vitis AI, and we use them for time estimates (i.e., Section
+\ref{sec:experiments}).
 
 
 \section{The Compiler and its Code generation for AIE}
 \label{sec:compiler}
-We can take a PyTorch/Keras model, quantize it using Vitis AI, and
-create an intermediate representation that we call Xilinx Intermediate
+We take a PyTorch/Keras model, quantize it using Vitis AI, and create
+an intermediate representation that we call Xilinx Intermediate
 Representation (XIR). XIR is a graph where each node is an operation
 that reads tensors and writes one tensor.  A convolution has one
 quantized input.  We use the tensor layout format BHWC, the tensors
 are represented in INT8 with a position where the fraction starts
 (power of two scale). It computes a tensor using the same layout and
-with a proper scale. The weights and bias are properties of the
-convolutions. they can be tailored.  The layout of the weight tensor
-is $COUT\times h \times w \times CIN$, which is similar to the caffe
-layout \cite{Caffe} and different from \cite{tensorflow2015-whitepaper} []. 
+with a proper scale. In previous FPGA IPs the scaling could be by {\em
+  channel}. The weights and bias are properties of the
+convolutions. They are tailored and they layout computed and fixed at
+compile time.  The layout of the weight tensor is $COUT\times h \times
+w \times CIN$, which is similar to the caffe layout \cite{Caffe} and
+different from \cite{tensorflow2015-whitepaper} []. 
 %(previously DPUV1 and DPUV3INT8 \cite{10.11451/3473334,abs-2110-04327}).
 
 
@@ -438,12 +452,13 @@ consumption/production rates).
 See Figure \ref{fig:aie}, we work with a mesh of 4x4 AIE2 cores
 connected by 4 horizontal and 4 vertical interconnections.  We present
 estimates for square 2x2, .. $i\times i$ .. 8x8 and rectangular shapes
-are in the works. Each core has 8 banks memories for a total 64
-KB. About six banks are used as input/output/weight buffers and two
-banks are used as temporary space for kernels. Each core can request
-and send data to its direct neighbors (if aware of connection and
-control). Double buffering using ping/pong is used for inputs and
-outputs.
+are in the works ($4\times 1$, $4 \times 2$, and $8\times 2$ into a $8
+\times 8$ with 2 memtiles per column). Each core has 8 banks memories
+for a total 64 KB. About six banks are used as input/output/weight
+buffers and two banks are used as temporary space for kernels. Each
+core can request and send data to its direct neighbors (if aware of
+connection and control). Double buffering using ping/pong is used for
+inputs and outputs.
 
 There are four memtiles: each 512 KB and each is connected to one
 columns and its direct neighbor column, or it is connected to a row
@@ -482,7 +497,10 @@ accumulattion. We call W-Split the distribution of tensor by columns
 in the AIE mesh. We can COUT-split, this requires the partial transfer
 of weights.  We can CIN-split when we need to split by input channel,
 this is the last resort because it is also the most expensive
-(accumulation of the outputs).
+(accumulation of the outputs). CIN split can be implemented as a graph
+optimization by splitting the convolution into two and then use an
+element wise operation to combine the results (this can be done
+recursively).
 
 The subvolume describes the smallest shape of the weights we need to
 manage and the largest computation in the core. We compress the weight
@@ -683,7 +701,7 @@ restart training).
 
 \section{Depth-wise Tiling}
 Take the subgraph schedule $L_0, L_1, \dots L_j$, for every $i$ $L_i$
-is a layer that produce a single tensor $T_i$, $u_j=1\times1$ output
+is a layer that produces a single tensor $T_i$, $u_j=1\times1$ output
 of $L_j$ sub-vector of $T_j$. A projection $\P$ is a function taking
 $u$ and projects the input sub-tensor needed to compute $u$.  In
 reverse order, starting from $L_j$ compute $\P(L_j,u_j)$ and propagate
@@ -692,19 +710,22 @@ more) layers $L_x$ and $L_y$. Then $u_m = \max (
 \P(L_x,u_x),\P(L_y,u_y))$ when $u_x$ and $u_y$ are defined completely
 and {\em max} mean the largest. We carry the propagation of
 $\P(L_m,u_m)$ and we have $T_{-1} \eq \P(L_0, u_0) = \P(L_0, \P(L_1,
-u_1))= \P(L_0, \dots \P(L_l, u_l)$, for which there is no practical
-advantage. At the end of the propagation, imagine this is a
-generalized convolution with kernel size $k = \P(L_0, u_0)$. Now if we
-repeat the process with $\dot{u}_j = 2\times 2$ ... $k+s = \P(L_0,
-\dot{u}_0)$. Thus we have an estimate of the generalized stride.  Now
-we can split the computation by selecting a non overlapping
-decomposition of the output tensor: say using M tiles each of size
-$u_o$. The input is split into M tiles of size $(u_o-1)s+k$ and we
-will have an overlap of size $k-1$. We can choose a tiling in such a
-way there is zero DDR communication in between $L_0$ and $L_j$.  With
-input overlap, thus with extra reads, we have extra
-computations. Sparsity will improve weights communication and reduce
-the effect of computations.
+u_1))= \P(L_0, \dots \P(L_l, u_l)$. At the end of the propagation,
+imagine this is a generalized convolution with kernel size $k =
+\P(L_0, u_0)$. Now if we repeat the process with $\dot{u}_j = 2\times
+2$ ... $k+s = \P(L_0, \dot{u}_0)$. Thus we have an estimate of the
+generalized stride.  Now we can split the computation by selecting a
+non overlapping decomposition of the output tensor: say using M tiles
+each of size $u_o$. The input is split into M tiles of size
+$(u_o-1)s+k$ and we will have an overlap of size $k-1$. We can choose
+a tiling in such a way there is zero DDR communication in between
+$L_0$ and $L_j$.  With input overlap, thus with extra reads, we have
+extra computations. Sparsity will improve weights communication and
+reduce the effect of computations. We use the term generalized
+convolution but it is not a convolution and it is applied to a graph
+computation (with element wise operations and transpose convolutions,
+we do not think it is applicable to height and width softmax or layer
+norms).
 
 
 %\SSinglefigure{2.0}{R4x4-4sharedsparse.png}{Resnet50 for 4x4 AIE with 50\%
