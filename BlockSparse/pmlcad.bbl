@@ -70,13 +70,6 @@ Y.~Jia, E.~Shelhamer, J.~Donahue, S.~Karayev, J.~Long, R.~Girshick,
   675–678. [Online]. Available: \url{https://doi.org/10.1145/2647868.2654889}
 \BIBentrySTDinterwordspacing
 
-\bibitem{tensorflow2015-whitepaper}
-\BIBentryALTinterwordspacing
-M.~A. et~al., ``{TensorFlow}: Large-scale machine learning on heterogeneous
-  systems,'' 2015, software available from tensorflow.org. [Online]. Available:
-  \url{https://www.tensorflow.org/}
-\BIBentrySTDinterwordspacing
-
 \bibitem{frantar2023gptq}
 E.~Frantar, S.~Ashkboos, T.~Hoefler, and D.~Alistarh, ``Gptq: Accurate
   post-training quantization for generative pre-trained transformers,'' 2023.

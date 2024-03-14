@@ -14,45 +14,45 @@ Database file #1: ref.bib
 Warning--empty booktitle in Gray2017GPUKF
 
 Done.
-You've used 15 entries,
+You've used 14 entries,
             4024 wiz_defined-function locations,
-            901 strings with 10736 characters,
-and the built_in function-call counts, 9723 in all, are:
-= -- 719
-> -- 329
+            896 strings with 10556 characters,
+and the built_in function-call counts, 9316 in all, are:
+= -- 683
+> -- 325
 < -- 31
-+ -- 165
-- -- 73
-* -- 471
-:= -- 1507
-add.period$ -- 33
-call.type$ -- 15
-change.case$ -- 18
++ -- 163
+- -- 72
+* -- 455
+:= -- 1427
+add.period$ -- 31
+call.type$ -- 14
+change.case$ -- 16
 chr.to.int$ -- 75
-cite$ -- 16
-duplicate$ -- 730
-empty$ -- 825
-format.name$ -- 86
-if$ -- 2184
+cite$ -- 15
+duplicate$ -- 697
+empty$ -- 788
+format.name$ -- 85
+if$ -- 2098
 int.to.chr$ -- 0
-int.to.str$ -- 15
-missing$ -- 166
-newline$ -- 84
-num.names$ -- 17
-pop$ -- 456
+int.to.str$ -- 14
+missing$ -- 158
+newline$ -- 79
+num.names$ -- 16
+pop$ -- 434
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 734
+skip$ -- 702
 stack$ -- 0
-substring$ -- 210
-swap$ -- 518
+substring$ -- 207
+swap$ -- 499
 text.length$ -- 6
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 15
+type$ -- 14
 warning$ -- 1
-while$ -- 28
-width$ -- 17
-write$ -- 171
+while$ -- 27
+width$ -- 16
+write$ -- 160
 (There was 1 warning)

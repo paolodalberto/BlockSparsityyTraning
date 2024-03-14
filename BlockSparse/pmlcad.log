@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.1.13)  10 MAR 2024 19:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2023.11.13)  13 MAR 2024 17:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -407,51 +407,51 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    Trying to load font information for OT1+ntxtlf on input lin
-e 195.
+e 194.
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/ot1ntxtlf.fd
 File: ot1ntxtlf.fd 2021/05/24 v1.0 font definition file for OT1/ntx/tlf
 )
 LaTeX Font Info:    Trying to load font information for U+ntxmia on input line 
-195.
+194.
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxmia.fd
 File: untxmia.fd 2018/04/14 Fontinst v1.933 font definitions for U/ntxmia.
 )
 LaTeX Font Info:    Trying to load font information for U+ntxsym on input line 
-195.
+194.
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxsym.fd
 File: untxsym.fd 2015/03/20 Fontinst v1.933 font definitions for U/ntxsym.
 )
 LaTeX Font Info:    Trying to load font information for U+ntxsyc on input line 
-195.
+194.
 
 (/usr/share/texlive/texmf-dist/tex/latex/newtx/untxsyc.fd
 File: untxsyc.fd 2012/04/12 Fontinst v1.933 font definitions for U/ntxsyc.
-)
-<1x1.png, id=1, 607.26875pt x 341.275pt>
+) [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+
+
+]
+<1x1.png, id=19, 607.26875pt x 341.275pt>
 File: 1x1.png Graphic file (type png)
 <use 1x1.png>
-Package pdftex.def Info: 1x1.png  used on input line 297.
+Package pdftex.def Info: 1x1.png  used on input line 301.
 (pdftex.def)             Requested size: 201.60077pt x 113.29285pt.
-<8x8.png, id=3, 607.26875pt x 341.275pt>
+<8x8.png, id=21, 607.26875pt x 341.275pt>
 File: 8x8.png Graphic file (type png)
 <use 8x8.png>
-Package pdftex.def Info: 8x8.png  used on input line 297.
+Package pdftex.def Info: 8x8.png  used on input line 301.
 (pdftex.def)             Requested size: 201.60077pt x 113.29285pt.
- [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
-
-
-] [2 <./1x1.png> <./8x8.png>]
+ [2 <./1x1.png> <./8x8.png>]
 <AIE.png, id=28, 819.06pt x 1059.96pt>
 File: AIE.png Graphic file (type png)
 <use AIE.png>
-Package pdftex.def Info: AIE.png  used on input line 450.
+Package pdftex.def Info: AIE.png  used on input line 454.
 (pdftex.def)             Requested size: 176.39923pt x 228.27512pt.
  [3 <./AIE.png>]
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 5
-71.
+70.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
@@ -459,7 +459,7 @@ File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 <singledenseconv.png, id=33, 1131.22626pt x 549.05125pt>
 File: singledenseconv.png Graphic file (type png)
 <use singledenseconv.png>
-Package pdftex.def Info: singledenseconv.png  used on input line 609.
+Package pdftex.def Info: singledenseconv.png  used on input line 608.
 (pdftex.def)             Requested size: 249.48138pt x 121.08487pt.
  [4 <./singledenseconv.png>]
 <singlesparseconv.png, id=39, 1130.2225pt x 549.05125pt>
@@ -469,12 +469,12 @@ Package pdftex.def Info: singlesparseconv.png  used on input line 665.
 (pdftex.def)             Requested size: 251.74622pt x 122.29128pt.
  [5 <./singlesparseconv.png>] (./pmlcad.bbl) [6] (./pmlcad.aux) ) 
 Here is how much of TeX's memory you used:
- 6236 strings out of 478287
- 86506 string characters out of 5849289
- 390935 words of memory out of 5000000
- 24315 multiletter control sequences out of 15000+600000
+ 6235 strings out of 480171
+ 86479 string characters out of 5894488
+ 385132 words of memory out of 5000000
+ 24070 multiletter control sequences out of 15000+600000
  555506 words of font info for 193 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
+ 59 hyphenation exceptions out of 8191
  74i,12n,79p,427b,273s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/te
 xlive/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/share/texlive/texmf-dist/fon
@@ -492,7 +492,7 @@ e/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fo
 nts/type1/urw/times/utmri8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
 ic/newtx/ztmb.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/newtx/ztmr.
 pfb>
-Output written on pmlcad.pdf (6 pages, 330718 bytes).
+Output written on pmlcad.pdf (6 pages, 330551 bytes).
 PDF statistics:
  111 PDF objects out of 1000 (max. 8388607)
  62 compressed objects within 1 object stream
