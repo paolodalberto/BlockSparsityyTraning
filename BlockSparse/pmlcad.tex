@@ -246,15 +246,18 @@ cores. We generate all the explicit communications between DDR
 Scatter instructions with a complete and parametric estimate of their
 execution time by bandwtidh constraints and number of channels. We
 know the subproblem sizes per core, the computation throughput and
-with a clear specification of what is executed in parallel. Then, we
-can estimate the execution time per layer and entire network with an
-accuracy closer to a simulation.  We will show estimates for three CNN
-models and eight different AIE designs; see Section
-\ref{sec:experiments}. To our knowledge, we are the first in applying
-sparsity on AIEs systematically. The ability to provide different
-algorithms and easy to obtain estimates for very different
-configurations, it will allow to explore optimizations like sub-graph
-depth-wise tiling we could not have otherwise.
+with a clear specification of what is executed in parallel. The data
+movement codes and AIE core codes for simple convolutions were
+simulated and run in hardware for simple layers. Our focus here, we
+can give consistent execution time estimates per layer and of the
+entire network with an accuracy closer to a simulation (realistic
+although optimistic).  We will show estimates for three CNN models and
+eight different AIE designs; see Section \ref{sec:experiments}. To our
+knowledge, we are the first in applying sparsity on AIEs
+systematically. The ability to provide different algorithms and easy
+to obtain estimates for very different configurations, it will allow
+to explore optimizations like sub-graph depth-wise tiling we could not
+have otherwise.
 
 In our context, convolution is our main computation and CNN are
 networks we can train reasonably. This is because of legacy, we want
@@ -263,10 +266,11 @@ difficulties than GEMMs (padding, strides, and overlap), have usually
 biases with different precision requirements (weight 8bits and bias
 32), routinely they can deploy different scaling factors per output
 channels, and GEMM is transformed into a $1 \times 1$ convolution
-immediately (the other way around is possible with proper activation
-preparation a convolution can be represented as a GEMM but the
-activation tensors explode and the preparation is more suitable for
-CPUs than FPGAs, but we have digressed).
+immediately. The other way around is possible with proper activation
+preparation; in fact, a convolution can be represented as a GEMM but
+the activation tensors explode in space by a factor of the kernel size
+and the preparation is more suitable for CPUs than FPGAs; we have
+digressed.
 
 In the following Section \ref{sec:motivation}, we start with a
 quantitative measure about the advantages of block sparsity.
