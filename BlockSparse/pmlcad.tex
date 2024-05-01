@@ -160,8 +160,8 @@ loss. We can achieve speeds similar to an hypothetical Resnet25. We
 shall present performance estimates by accurate and complete code
 generation for AIE2 configuration sets (AMD Versal FPGAs) using
 Resnet50, Inception V3, and VGG16, in order to highlight necessary
-symbiosis between HW overlay designs and the software stack to compile
-and to execute machine learning applications.
+symbiosis between the HW-overlay designs and the software design in
+order to compile and to execute machine learning applications.
 \end{abstract}
 
 %%
@@ -219,8 +219,8 @@ smaller zero blocks. In this work, we chose the basic block of
 $\Vc{B}_i = 8\times 8$. It is the smallest for architectures based on
 AMD AIE2 products and we support others (i.e., they are parameters).
 This is a well known data structure in the sparse computation field.
-We can use {\em compress block row} (CBR) or {\em }column format (CBC)
-or generalization of the coordinate format (COO). There are standard
+We can use {\em compress block row} (CBR) or {\em block column} (CBC)
+or a generalization of the {\em coordinate format} (COO). There are standard
 matrix sparse-matrix multiplication interfaces and algorithms for CPU
 and GPUs using this data format (where only one operand is sparse or
 both) \cite{rocSPARSE,cuSPARSE}. There is no counterparts for AIE2 as
@@ -231,11 +231,11 @@ training techniques (PyTorch and the Keras).  The most successful is
 the simplest. We take a pre-trained model. We compute a mask $\Gamma$
 of zeros/ones per layer by zeroing the more likely blocks (using a
 Norm). Then we train the model till convergence or accuracy are
-achieved. We take the sparse model and we quantize to 8-bit integer
-computations with the Vitis-AI quantizer. The final model is a XIR
-quantized model (Xilin intermediate representation). See Section
+achieved. We take the sparse model and we quantize to 8-bit integers
+by the Vitis-AI quantizer. The final model is a XIR quantized model
+(Xilin intermediate representation). See Section
 \ref{sec:training}. We have a custom compiler that takes the XIR model
-and an abstraction of a connected set of AIE2. See Section
+and an abstraction of a AIE2 connected set. See Section
 \ref{sec:compiler}. The compiler computes the maximum sub-volume
 computation per core. By heuristics and following a schedule, it
 computes a memory allocation in memtile (i.e., intermediate scratch
@@ -254,10 +254,10 @@ entire network with an accuracy closer to a simulation (realistic
 although optimistic).  We will show estimates for three CNN models and
 eight different AIE designs; see Section \ref{sec:experiments}. To our
 knowledge, we are the first in applying sparsity on AIEs
-systematically. The ability to provide different algorithms and easy
-to obtain estimates for very different configurations, it will allow
-to explore optimizations like sub-graph depth-wise tiling we could not
-have otherwise.
+systematically. The automatic code generation and time estimates will
+allow to explore optimizations like sub-graph depth-wise tiling
+(presented here) and open the door to advanced and optimal tiling
+optimizations (beyond this scope).
 
 In our context, convolution is our main computation and CNN are
 networks we can train reasonably. This is because of legacy, we want
@@ -266,11 +266,7 @@ difficulties than GEMMs (padding, strides, and overlap), have usually
 biases with different precision requirements (weight 8bits and bias
 32), routinely they can deploy different scaling factors per output
 channels, and GEMM is transformed into a $1 \times 1$ convolution
-immediately. The other way around is possible with proper activation
-preparation; in fact, a convolution can be represented as a GEMM but
-the activation tensors explode in space by a factor of the kernel size
-and the preparation is more suitable for CPUs than FPGAs; we have
-digressed.
+immediately (although not optimally). 
 
 In the following Section \ref{sec:motivation}, we start with a
 quantitative measure about the advantages of block sparsity.
@@ -290,16 +286,17 @@ More precisely, consider non-zero blocks of size $k\times k$ so that
 
 
 Thanks to the sparsity and if we store only non-zeros, then
-$\gamma_{i*N+k}$ and $\dot{\omega}_{j*N+k}$ are contiguous (so their counterparts of $\Vc{A}$ and $\Vc{B}$). There will
-be a meaningful product to compute if and only if $\gamma_{i*N+k} =1$
-and $\dot{\omega}_{j*N+k} =1$.  We merge-sort these vectors.  See how
-the sparse-sparse matrix multiplication using {\em Coordinate list}
-(COO) is applied in Figure \ref{fig:block} where the entry in the list
-is a submatrix.  We provide software to reproduce this []. %\cite{PaoloG2020}.
-
+$\gamma_{i*N+k}$ and $\dot{\omega}_{j*N+k}$ are contiguous (so their
+counterparts of $\Vc{A}$ and $\Vc{B}$). There will be a meaningful
+product to compute if and only if $\gamma_{i*N+k} =1$ and
+$\dot{\omega}_{j*N+k} =1$.  We merge-sort these vectors.  See how the
+sparse-sparse matrix multiplication using {\em Coordinate list} (COO)
+is applied in Figure \ref{fig:block} where the entry in the list is a
+submatrix.  We provide software to reproduce it. %\cite{PaoloG2020}.
 If we want to achieve a fixed sparsity of 50\% for a square matrix of
 size $N$ and if we can choose the block size $k \times k$. The larger
-$k$ is, the smaller the overhead will be.
+$k$ is, the smaller the overhead will be, and it is not all about
+latency.
 
 \doublefigure{0.80}{1x1.png}{8x8.png}{Block 1x1 and 8x8
   performance}{fig:block}
@@ -314,27 +311,27 @@ per effective operation (Float is 2x faster than Double precision and
 this can be emphasized further \cite{Gray2017GPUKF,li2023popsparse}
 and \cite{pmlr-v119-kurtz20a}). We are working with operands of size 8
 bits and the size $8 \times 8$ will exploit the maximum throughput (8
-bits 256 multiply-add per cycle per AIE core, 16 bits 128 MAC, 32bits
+bits 256 multiply-add per cycle per AIE core, 16 bits 128 MAC, 32 bits
 64 MAC).
 
 
 \section{Block Sparsity: Training and Quantization}
 \label{sec:training}
 
-The block sparsity is not recurring naturally.  We must train the
-network for it.  A convolution has a weight tensor in four dimension:
-$\Vc{W} \in \R^{c_{out}\times h \times k \times c_{in}}$. In the
-hyperplane of the $h$ and $k$, we can simplify the weight as
-$\dot{\Vc{W}} \in \R^{c_{out} \times c_{in}}$ and block sparsity can
-be simply described by a mask $\Gamma\dot{\Vc{W}}$. Although, we speak
-of a $8\times 8$ of non-zeros, this is in practice a $8\times h\times
-k\times 8$ block. For the matrix multiply $h=k=1$. We explain the
-training process.
+We train the network for block sparsity.  A convolution has a weight
+tensor in four dimension: $\Vc{W} \in \R^{c_{out}\times h \times k
+  \times c_{in}}$. In the hyperplane of the $h$ and $k$, we can
+simplify the weight as $\dot{\Vc{W}} \in \R^{c_{out} \times c_{in}}$
+and block sparsity can be simply described by a mask
+$\Gamma\dot{\Vc{W}}$. Although, we speak of a $8\times 8$ of
+non-zeros, this is in practice a $8\times h\times k\times 8$
+block. For the matrix multiply $h=k=1$. We explain the training
+process.
 
 
 \subsection{Keras}
 We shall provide a repository using Keras \cite{chollet2015keras}
-where we implements the contents of this section []. %\cite{PaoloK2020}.
+where we implements the contents of this section. %\cite{PaoloK2020}.
 
 We target convolutions only and without quantization. The idea is
 simple: we take any model and we create a copy where we enhance the
